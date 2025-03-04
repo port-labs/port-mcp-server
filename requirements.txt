@@ -1,0 +1,3 @@
+mcp-sdk>=1.0.1
+httpx>=0.26.0
+python-dotenv>=1.0.0
