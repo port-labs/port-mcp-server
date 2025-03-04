@@ -48,6 +48,13 @@ Add the following to your `claude_desktop_config.json`:
 }
 ```
 
+### Usage with Cursor
+
+Under the settings, MCP Servers, select
+* Name - `Port`
+* Type - `Command`
+* Command - `uvx mcp-server-port --client-id=your-client-id --client-secret=your-client-secret`
+
 ### Troubleshooting
 
 If you encounter authentication errors, verify that:
