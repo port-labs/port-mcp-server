@@ -4,11 +4,6 @@ MCP Server for the Port.io API, enabling Claude to interact with Port.io's AI ag
 
 ## Tools
 
-1. `get_port_token`
-   - Get a Port.io authentication token
-   - No inputs required
-   - Returns: Authentication token with expiration information
-
 2. `trigger_port_agent`
    - Trigger the Port.io AI agent with a prompt and wait for completion
    - Required inputs:
@@ -32,34 +27,64 @@ MCP Server for the Port.io API, enabling Claude to interact with Port.io's AI ag
 Add the following to your `claude_desktop_config.json`:
 
 ```json
+
+
 {
   "mcpServers": {
     "port": {
-      "command": "/path/to/your/venv/bin/python",
+      "command": "uvx",
       "args": [
-        "/path/to/port-mcp-server/src/mcp_server_port/server.py"
-      ],
-      "env": {
-        "PORT_CLIENT_ID": "your-client-id",
-        "PORT_CLIENT_SECRET": "your-client-secret"
-      }
+        "mcp-server-port",
+        "--client-id", "YOUR_CLIENT_ID",
+        "--client-secret", "YOUR_CLIENT_SECRET",
+        "--region", "REGION", # US or EU
+      ]
     }
   }
-}
+} 
 ```
 
 ### Usage with Cursor
 
-Under the settings, MCP Servers, select
+Make sure `uvx` is installed
+```bash
+pip install uvx
+```
+
+Get its location
+```bash
+which uvx
+
+# /Users/janedoe/.local/bin/uvx
+```
+
+Next, create a script to run the server
+```bash
+# run-port-mcp.sh
+
+cd /Users/janedoe/.local/bin/uvx
+
+# Run the server with the specified credentials
+./.venv/bin/uvx mcp-server-port==0.1.2 --client-id YOUR_CLIENT_ID --client-secret YOUR_CLIENT_SECRET --region YOUR_REGION
+```
+
+Make it executable
+```bash
+chmod +x /path/to/your/file/run-port-mcp.sh
+```
+
+Finally, under Cursor settings, MCP Servers, select
 * Name - `Port`
 * Type - `Command`
-* Command - `uvx mcp-server-port --client-id=your-client-id --client-secret=your-client-secret`
+* Command - `/path/to/your/file/run-port-mcp.sh`
+
+![Cursor MCP Screenshot](/assets/cursor_mcp_screenshot.png)
 
 ### Troubleshooting
 
 If you encounter authentication errors, verify that:
-1. Your Port.io credentials are correctly set in the environment variables
-2. The API key has the necessary permissions
+1. Your Port credentials are correctly set in the arguments
+2. You have the necessary permissions
 3. The credentials are properly copied to your configuration
 
 ## Run
@@ -77,7 +102,7 @@ source .venv/bin/activate  # On Unix/macOS
 pip install -e .
 
 # Run server
-python -m mcp_server_port
+python -m src.mcp_server_port --client-id "CLIENT_ID" --client-secret "CLIENT_SECRET" --region "REGION"
 ```
 
 ## License

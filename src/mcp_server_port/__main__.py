@@ -2,7 +2,7 @@
 Entry point for the Port.io MCP server.
 """
 
-from mcp_server_port import main
+from .cli import cli_main
 
 if __name__ == "__main__":
-    main() 
+    cli_main() 

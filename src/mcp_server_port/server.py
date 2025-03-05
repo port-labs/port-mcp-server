@@ -2,9 +2,10 @@
 
 import asyncio
 import sys
+import os
+import argparse
 from mcp.server.fastmcp import FastMCP
 from .client import PortClient
-from .config import PORT_CLIENT_ID, PORT_CLIENT_SECRET
 from .utils import setup_logging, PortError
 
 # Initialize logging
@@ -14,29 +15,14 @@ logger = setup_logging()
 mcp = FastMCP("Port")
 
 # Initialize Port.io client
-port_client = PortClient()
-
-@mcp.tool()
-async def get_port_token() -> str:
-    """Get a Port.io authentication token."""
-    if not PORT_CLIENT_ID or not PORT_CLIENT_SECRET:
-        raise PortError("Missing Port.io credentials. Please set PORT_CLIENT_ID and PORT_CLIENT_SECRET environment variables.")
-    
-    try:
-        token = await port_client.get_token(PORT_CLIENT_ID, PORT_CLIENT_SECRET)
-        return token.to_text()
-    except Exception as e:
-        return f"❌ Error getting Port.io token: {str(e)}"
+port_client = None
 
 @mcp.tool()
 async def trigger_port_agent(prompt: str) -> str:
     """Trigger the Port.io AI agent with a prompt and wait for completion."""
     try:
-        # Get token
-        token = await port_client.get_token(PORT_CLIENT_ID, PORT_CLIENT_SECRET)
-        
         # Trigger agent
-        response = await port_client.trigger_agent(token.access_token, prompt)
+        response = await port_client.trigger_agent(prompt)
         
         # Get identifier from response
         identifier = (
@@ -50,46 +36,58 @@ async def trigger_port_agent(prompt: str) -> str:
             return "❌ Error: Could not get invocation identifier from response"
         
         # Poll for completion
-        max_attempts = 30
-        attempt = 0
+        max_attempts = 10
+        attempt = 1
         while attempt < max_attempts:
-            status = await port_client.get_invocation_status(token.access_token, identifier)
+            status = await port_client.get_invocation_status(identifier)
             if status.status.lower() in ["completed", "failed", "error"]:
                 return status.to_text()
-            await asyncio.sleep(2)
+            await asyncio.sleep(5)
             attempt += 1
         
         return f"⏳ Operation timed out. You can check the status later with identifier: {identifier}"
     except Exception as e:
         return f"❌ Error: {str(e)}"
 
-async def cleanup():
-    """Cleanup resources."""
-    try:
-        await port_client.close()
-        logger.info("Port client closed successfully")
-    except Exception as e:
-        logger.error(f"Error closing Port client: {e}")
-
-def main():
-    """Main entry point."""
+def main(client_id=None, client_secret=None, region="EU", **kwargs):
+    """
+    Main entry point.
+    
+    Args:
+        client_id (str, optional): Port.io client ID
+        client_secret (str, optional): Port.io client secret
+        region (str, optional): Port.io API region (EU or US)
+    """
+    global port_client
+    
     try:
         logger.info("Starting Port MCP server...")
-        if not PORT_CLIENT_ID or not PORT_CLIENT_SECRET:
+        
+        # Get credentials from environment variables if not provided
+        if not client_id:
+            client_id = os.environ.get("PORT_CLIENT_ID")
+        if not client_secret:
+            client_secret = os.environ.get("PORT_CLIENT_SECRET")
+        
+        # Debug logging
+        logger.info(f"Initializing Port.io client with:")
+        logger.info(f"  CLIENT_ID: {client_id}")
+        logger.info(f"  CLIENT_SECRET: {client_secret[:5]}...{client_secret[-5:] if client_secret else ''}")
+        logger.info(f"  REGION: {region}")
+        
+        if not client_id or not client_secret:
             logger.error("Missing Port.io credentials")
-            print("Error: Missing Port.io credentials. Please set PORT_CLIENT_ID and PORT_CLIENT_SECRET environment variables.", file=sys.stderr)
+            print("Error: Missing Port.io credentials. Please provide client_id and client_secret as arguments or set PORT_CLIENT_ID and PORT_CLIENT_SECRET environment variables.", file=sys.stderr)
             sys.exit(1)
+            
+        # Initialize Port.io client
+        port_client = PortClient(client_id=client_id, client_secret=client_secret, region=region)
         
         # Run the server
         mcp.run(transport='stdio')
     except KeyboardInterrupt:
         logger.info("Server shutting down...")
-        asyncio.run(cleanup())
     except Exception as e:
         logger.error(f"Server error: {e}", exc_info=True)
         print(f"Error: {e}", file=sys.stderr)
-        asyncio.run(cleanup())
-        sys.exit(1)
-
-if __name__ == "__main__":
-    main() 
+        sys.exit(1) 
