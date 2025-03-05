@@ -78,7 +78,7 @@ Finally, under Cursor settings, MCP Servers, select
 * Type - `Command`
 * Command - `/path/to/your/file/run-port-mcp.sh`
 
-![Cursor MCP Screenshot](@cursor_mcp_screenshot.png)
+![Cursor MCP Screenshot](/assets/cursor_mcp_screenshot.png)
 
 ### Troubleshooting
 
