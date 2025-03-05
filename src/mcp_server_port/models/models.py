@@ -42,28 +42,22 @@ class PortAgentResponse:
     """Data model for Port.io AI agent response."""
     identifier: str
     status: str
+    raw_output: Optional[str] = None
     output: Optional[str] = None
     error: Optional[str] = None
     action_url: Optional[str] = None
-    action_type: Optional[str] = None
 
     def to_text(self) -> str:
         if self.error:
             return f"❌ Error: {self.error}"
         
-        if self.status == "Completed":
+        if self.status.lower() == "completed":
             response_text = f"✅ Completed!\n\nResponse:\n{self.output}"
             
             # If there's an action URL, add clear instructions
             if self.action_url:
                 response_text += f"\n\n🔍 Action Required:\n"
-                if self.action_type == "bug_report":
-                    response_text += f"To view and manage this bug report, please visit:\n{self.action_url}"
-                elif self.action_type == "action":
-                    response_text += f"To complete this action, please visit:\n{self.action_url}"
-                else:
-                    response_text += f"To view the result, please visit:\n{self.action_url}"
-            
+                response_text += f"To complete this action, please visit:\n{self.action_url}"
             return response_text
             
         return f"Status: {self.status}\nIdentifier: {self.identifier}" 

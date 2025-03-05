@@ -7,6 +7,7 @@ load_dotenv(override=False)
 # Port.io API configuration
 PORT_API_BASE = "https://api.getport.io/v1"
 
-# Environment variables for credentials
-PORT_CLIENT_ID = os.environ.get("PORT_CLIENT_ID")
-PORT_CLIENT_SECRET = os.environ.get("PORT_CLIENT_SECRET") 
+# Default values (can be overridden by args or env vars)
+PORT_CLIENT_ID = None
+PORT_CLIENT_SECRET = None
+REGION = "EU"

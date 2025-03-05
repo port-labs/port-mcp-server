@@ -1,6 +1,9 @@
 [project]
 name = "mcp-server-port"
-version = "0.0.12"
+version = "0.1.2"
+authors = [
+  { name = "Matan Grady", email = "matan.g@getport.io" }
+]
 description = "A Model Context Protocol (MCP) server for Port.io integration"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -8,6 +11,7 @@ dependencies = [
     "httpx>=0.26.0",
     "mcp[cli]>=1.0.1",
     "python-dotenv>=1.0.0",
+    "pyport>=0.1.17"
 ]
 
 [build-system]
@@ -15,12 +19,15 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-mcp-server-port = "mcp_server_port:main"
+mcp-server-port = "src.mcp_server_port.cli:cli_main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/mcp_server_port"]
+packages = ["src"]
 
 [tool.hatch.build]
 include = [
     "src/mcp_server_port/**/*.py",
 ]
+
+[tool.uv]
+dev-dependencies = ["pyright>=1.1.389", "pytest>=8.0.0", "ruff>=0.7.3"]
