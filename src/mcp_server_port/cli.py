@@ -2,7 +2,6 @@
 Command-line interface for the Port.io MCP Server.
 """
 
-import sys
 import argparse
 from .server import main
 
@@ -33,4 +32,4 @@ def cli_main():
     )
 
 if __name__ == "__main__":
-    cli_main() 
+    cli_main()

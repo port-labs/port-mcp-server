@@ -16,4 +16,4 @@ def setup_logging():
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         stream=sys.stderr
     )
-    return logging.getLogger(__name__) 
+    return logging.getLogger(__name__)

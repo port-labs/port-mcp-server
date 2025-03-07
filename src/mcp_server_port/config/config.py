@@ -1,4 +1,3 @@
-import os
 from dotenv import load_dotenv
 
 # Load environment variables from .env file if it exists, but don't override existing env vars

@@ -11,9 +11,9 @@ class PortToken:
 
     def to_text(self) -> str:
         return f"""Authentication successful.
-Token: {self.access_token}
-Expires in: {self.expires_in} seconds
-Token type: {self.token_type}"""
+                Token: {self.access_token}
+                Expires in: {self.expires_in} seconds
+                Token type: {self.token_type}"""
 
     def to_prompt_result(self) -> GetPromptResult:
         return GetPromptResult(
@@ -60,4 +60,4 @@ class PortAgentResponse:
                 response_text += f"To complete this action, please visit:\n{self.action_url}"
             return response_text
             
-        return f"Status: {self.status}\nIdentifier: {self.identifier}" 
+        return f"Status: {self.status}\nIdentifier: {self.identifier}"
