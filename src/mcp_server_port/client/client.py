@@ -1,11 +1,9 @@
 import logging
 import pyport
 from typing import Dict, Any, Optional
-import json
-import requests
 from ..models import PortAgentResponse
 from ..config import PORT_API_BASE
-from ..utils import PortError, PortAuthError
+from ..utils import PortError
 
 logger = logging.getLogger(__name__)
 

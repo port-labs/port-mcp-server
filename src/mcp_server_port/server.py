@@ -3,10 +3,10 @@
 import asyncio
 import sys
 import os
-import argparse
+
 from mcp.server.fastmcp import FastMCP
 from .client import PortClient
-from .utils import setup_logging, PortError
+from .utils import setup_logging
 
 # Initialize logging
 logger = setup_logging()
@@ -77,7 +77,8 @@ def main(client_id=None, client_secret=None, region="EU", **kwargs):
         
         if not client_id or not client_secret:
             logger.error("Missing Port.io credentials")
-            print("Error: Missing Port.io credentials. Please provide client_id and client_secret as arguments or set PORT_CLIENT_ID and PORT_CLIENT_SECRET environment variables.", file=sys.stderr)
+            print("Error: Missing Port.io credentials. Please provide client_id and client_secret as arguments or "
+                  "set PORT_CLIENT_ID and PORT_CLIENT_SECRET environment variables.", file=sys.stderr)
             sys.exit(1)
             
         # Initialize Port.io client
@@ -90,4 +91,4 @@ def main(client_id=None, client_secret=None, region="EU", **kwargs):
     except Exception as e:
         logger.error(f"Server error: {e}", exc_info=True)
         print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1) 
+        sys.exit(1)
