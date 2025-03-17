@@ -60,17 +60,40 @@ class PortClient:
             raise PortError("Cannot get invocation status: Port.io client not initialized with credentials")
             
         try:
-            endpoint = f"blueprints/ai_invocations/entities/{identifier}"
+            endpoint = f"agent/invoke/{identifier}"
             
-            # Use the make_request method directly
             response = self._client.make_request(
                 method="GET",
                 endpoint=endpoint
             )
             
             response_data = response.json()
+            logger.debug(f"Get invocation response: {response_data}")
             
-            # Get the properties from the entity
+            # Handle the new response format where data is in result field
+            if response_data.get("ok") and "result" in response_data:
+                result = response_data["result"]
+                status = result.get("status", "Unknown")
+                message = result.get("message", "")
+                selected_agent = result.get("selectedAgent", "")
+                
+                # Generate action URL from port URLs in message if present
+                action_url = None
+                if message:
+                    import re
+                    urls = re.findall(r'https://app\.getport\.io/self-serve[^\s<>"]*', message)
+                    if urls:
+                        action_url = urls[0]
+                
+                return PortAgentResponse(
+                    identifier=identifier,
+                    status=status,
+                    output=message,
+                    error=None if status.lower() != "error" else message,
+                    action_url=action_url
+                )
+            
+            # Fallback to old format (entity.properties)
             properties = response_data.get("entity", {}).get("properties", {})
             
             # Extract action URL if present
