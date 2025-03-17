@@ -81,7 +81,7 @@ class PortClient:
                 action_url = None
                 if message:
                     import re
-                    urls = re.findall(r'https://app\.getport\.io/[^\s<>"]+', message)
+                    urls = re.findall(r'https://app\.getport\.io/self-serve[^\s<>"]*', message)
                     if urls:
                         action_url = urls[0]
                 
