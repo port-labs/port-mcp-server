@@ -65,7 +65,7 @@ Next, create a script to run the server
 cd /Users/janedoe/.local/bin/uvx
 
 # Run the server with the specified credentials
-./.venv/bin/uvx mcp-server-port==0.1.2 --client-id YOUR_CLIENT_ID --client-secret YOUR_CLIENT_SECRET --region YOUR_REGION
+./.venv/bin/uvx mcp-server-port@0.1.2 --client-id YOUR_CLIENT_ID --client-secret YOUR_CLIENT_SECRET --region YOUR_REGION
 ```
 
 Make it executable
