@@ -60,9 +60,8 @@ class PortClient:
             raise PortError("Cannot get invocation status: Port.io client not initialized with credentials")
             
         try:
-            endpoint = f"blueprints/ai_invocations/entities/{identifier}"
+            endpoint = f"agent/invoke/{identifier}"
             
-            # Use the make_request method directly
             response = self._client.make_request(
                 method="GET",
                 endpoint=endpoint
