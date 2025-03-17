@@ -1,6 +1,6 @@
 [project]
 name = "mcp-server-port"
-version = "0.1.2"
+version = "0.1.3"
 authors = [
   { name = "Matan Grady", email = "matan.g@getport.io" }
 ]
