@@ -27,8 +27,6 @@ MCP Server for the Port.io API, enabling Claude to interact with Port.io's AI ag
 Add the following to your `claude_desktop_config.json`:
 
 ```json
-
-
 {
   "mcpServers": {
     "port": {
@@ -104,6 +102,31 @@ pip install -e .
 # Run server
 python -m src.mcp_server_port --client-id "CLIENT_ID" --client-secret "CLIENT_SECRET" --region "REGION"
 ```
+
+## Publish a new version
+
+To build and publish a new version to PyPI:
+
+```bash
+# Ensure you have the latest build tools
+pip install --upgrade build twine
+
+# Update version pyproject.toml
+
+# Build the package
+python -m build
+
+# Check the package
+twine check dist/*
+
+# Upload to PyPI
+twine upload dist/mcp_server_port-0.1.3*
+```
+
+Make sure to:
+1. Update the version number in your package configuration files
+2. Test your package before publishing
+3. Have PyPI credentials configured in your `~/.pypirc` file or be ready to enter them when prompted
 
 ## License
 
