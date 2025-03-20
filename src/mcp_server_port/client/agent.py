@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 import re
 from ..models.models import PortAgentResponse
 from ..utils import PortError
@@ -64,7 +64,6 @@ class PortAgentClient:
                 result = response_data["result"]
                 status = result.get("status", "Unknown")
                 message = result.get("message", "")
-                selected_agent = result.get("selectedAgent", "")
                 
                 # Generate action URL from port URLs in message if present
                 action_url = None

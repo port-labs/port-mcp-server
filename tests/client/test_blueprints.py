@@ -1,6 +1,5 @@
 import os
 import pytest
-import asyncio
 import sys
 import json
 from dotenv import load_dotenv

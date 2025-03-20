@@ -189,7 +189,7 @@ class PortAgentResponse:
             
             # If there's an action URL, add clear instructions
             if self.action_url:
-                response_text += f"\n\n🔍 Action Required:\n"
+                response_text += "\n\n🔍 Action Required:\n"
                 response_text += f"To complete this action, please visit:\n{self.action_url}"
             return response_text
             

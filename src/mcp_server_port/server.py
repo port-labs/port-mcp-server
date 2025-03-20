@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-import asyncio
 import sys
 import os
-import logging
 
 from mcp.server.fastmcp import FastMCP
 from .client import PortClient

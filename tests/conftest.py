@@ -1,5 +1,4 @@
 """Configuration file for pytest."""
-import pytest
 import os
 from dotenv import load_dotenv
 import sys

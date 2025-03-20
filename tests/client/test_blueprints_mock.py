@@ -66,7 +66,7 @@ class TestPortBlueprintClientMock:
             
             # Check for relations if they exist
             if "relations" in mock_blueprint:
-                print(f"  Relations:")
+                print("  Relations:")
                 for rel_name, rel_info in mock_blueprint["relations"].items():
                     print(f"    - {rel_name}: targets {rel_info['target']}, " +
                           f"required: {rel_info['required']}, many: {rel_info['many']}")
@@ -74,7 +74,7 @@ class TestPortBlueprintClientMock:
                 
             # Check for schema if it exists
             if "schema" in mock_blueprint and "properties" in mock_blueprint["schema"]:
-                print(f"  Properties:")
+                print("  Properties:")
                 for prop_name in mock_blueprint["schema"]["properties"].keys():
                     print(f"    - {prop_name}")
                 assert blueprint.schema is not None 
