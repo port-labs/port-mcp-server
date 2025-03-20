@@ -1,14 +1,16 @@
 import logging
 import pyport
-from typing import Dict, Any, Optional
-from ..models import PortAgentResponse
+from typing import Dict, Any, Optional, Union
+from ..models.models import PortAgentResponse, PortBlueprint, PortBlueprintList, PortEntity, PortEntityList
 from ..config import PORT_API_BASE
-from ..utils import PortError
+from .agent import PortAgentClient
+from .blueprints import PortBlueprintClient
+from .entities import PortEntityClient
 
 logger = logging.getLogger(__name__)
 
 class PortClient:
-    """Client for interacting with the Port.io API."""
+    """Client for interacting with the Port API."""
     
     def __init__(self, client_id: Optional[str] = None, client_secret: Optional[str] = None, region: str = "EU", base_url: str = PORT_API_BASE):
         self.base_url = base_url
@@ -17,103 +19,102 @@ class PortClient:
         self.region = region
         
         if not client_id or not client_secret:
-            logger.warning("Port.io client initialized without credentials")
+            logger.warning("Port client initialized without credentials")
             self._client = None
+            self.agent = None
+            self.blueprints = None
+            self.entities = None
         else:
             self._client = pyport.PortClient(client_id=client_id, client_secret=client_secret, us_region=(region == "US"))
+            self.agent = PortAgentClient(self._client)
+            self.blueprints = PortBlueprintClient(self._client)
+            self.entities = PortEntityClient(self._client)
 
     async def trigger_agent(self, prompt: str) -> Dict[str, Any]:
-        """Trigger the Port.io AI agent with a prompt."""
-        if not self._client:
-            raise PortError("Cannot trigger agent: Port.io client not initialized with credentials")
-            
-        try:
-            endpoint = "agent/invoke"
-            data = {"prompt": prompt}
-            
-            # Use the make_request method directly since custom is not available
-            response = self._client.make_request(
-                method="POST",
-                endpoint=endpoint,
-                json=data
-            )
-            
-            response_data = response.json()
-            
-            # Check for nested identifier in invocation object
-            if response_data.get("ok") and response_data.get("invocation", {}).get("identifier"):
-                return response_data
-            
-            # Fallback to direct identifier fields
-            identifier = response_data.get("identifier") or response_data.get("id") or response_data.get("invocationId")
-            if not identifier:
-                logger.error("Response missing identifier")
-                raise PortError("Response missing identifier")
-            return response_data
-        except Exception as e:
-            logger.error(f"Error in trigger_agent: {str(e)}")
-            raise
+        """Trigger the Port AI agent with a prompt."""
+        return await self.agent.trigger_agent(prompt)
     
     async def get_invocation_status(self, identifier: str) -> PortAgentResponse:
         """Get the status of an AI agent invocation."""
-        if not self._client:
-            raise PortError("Cannot get invocation status: Port.io client not initialized with credentials")
+        return await self.agent.get_invocation_status(identifier)
+    
+    # Blueprint methods
+    
+    async def get_blueprints(self) -> Union[PortBlueprintList, str]:
+        """
+        Get all blueprints from Port.
+        
+        Returns:
+            PortBlueprintList: A list of blueprints
+            str: Formatted text representation of blueprints if to_text=True
+        """
+        return await self.blueprints.get_blueprints()
+
+    async def get_blueprint(self, blueprint_identifier: str) -> Union[PortBlueprint, str]:
+        """
+        Get a specific blueprint by identifier.
+        
+        Args:
+            blueprint_identifier: The identifier of the blueprint
             
-        try:
-            endpoint = f"agent/invoke/{identifier}"
+        Returns:
+            PortBlueprint: The blueprint object
+            str: Formatted text representation of the blueprint if to_text=True
+        """
+        return await self.blueprints.get_blueprint(blueprint_identifier)
+    
+    # Entity methods
+    
+    async def get_entities(self, blueprint_identifier: str) -> Union[PortEntityList, str]:
+        """
+        Get all entities for a specific blueprint.
+        
+        Args:
+            blueprint_identifier: The identifier of the blueprint
             
-            response = self._client.make_request(
-                method="GET",
-                endpoint=endpoint
-            )
+        Returns:
+            PortEntityList: A list of entities
+            str: Formatted text representation of entities if to_text=True
+        """
+        return await self.entities.get_entities(blueprint_identifier)
+    
+    async def get_entity(self, blueprint_identifier: str, entity_identifier: str) -> Union[PortEntity, str]:
+        """
+        Get a specific entity by identifier.
+        
+        Args:
+            blueprint_identifier: The identifier of the blueprint
+            entity_identifier: The identifier of the entity
             
-            response_data = response.json()
-            logger.debug(f"Get invocation response: {response_data}")
+        Returns:
+            PortEntity: The entity object
+            str: Formatted text representation of the entity if to_text=True
+        """
+        return await self.entities.get_entity(blueprint_identifier, entity_identifier)
+    
+    async def create_entity(self, blueprint_identifier: str, entity_data: Dict[str, Any]) -> PortEntity:
+        """
+        Create a new entity for a blueprint.
+        
+        Args:
+            blueprint_identifier: The identifier of the blueprint
+            entity_data: Data for the entity to create
             
-            # Handle the new response format where data is in result field
-            if response_data.get("ok") and "result" in response_data:
-                result = response_data["result"]
-                status = result.get("status", "Unknown")
-                message = result.get("message", "")
-                selected_agent = result.get("selectedAgent", "")
-                
-                # Generate action URL from port URLs in message if present
-                action_url = None
-                if message:
-                    import re
-                    urls = re.findall(r'https://app\.getport\.io/self-serve[^\s<>"]*', message)
-                    if urls:
-                        action_url = urls[0]
-                
-                return PortAgentResponse(
-                    identifier=identifier,
-                    status=status,
-                    output=message,
-                    error=None if status.lower() != "error" else message,
-                    action_url=action_url
-                )
+        Returns:
+            PortEntity: The created entity
+        """
+        return await self.entities.create_entity(blueprint_identifier, entity_data)
+    
+    async def update_entity(self, blueprint_identifier: str, entity_identifier: str, entity_data: Dict[str, Any]) -> PortEntity:
+        """
+        Update an existing entity.
+        
+        Args:
+            blueprint_identifier: The identifier of the blueprint
+            entity_identifier: The identifier of the entity to update
+            entity_data: Updated data for the entity
             
-            # Fallback to old format (entity.properties)
-            properties = response_data.get("entity", {}).get("properties", {})
-            
-            # Extract action URL if present
-            output = properties.get("outputMessage") or properties.get("output")
-            action_url = None
-            
-            if output:
-                # Look for URLs in the output
-                import re
-                urls = re.findall(r'https://app\.getport\.io/[^\s<>"]+', output)
-                if urls:
-                    action_url = urls[0]
-            
-            return PortAgentResponse(
-                identifier=identifier,
-                status=properties.get("status", "Unknown"),
-                output=output,
-                error=properties.get("error"),
-                action_url=action_url
-            )
-        except Exception as e:
-            logger.error(f"Error getting invocation status: {str(e)}")
-            raise PortError(f"Error getting invocation status: {str(e)}") 
+        Returns:
+            PortEntity: The updated entity
+        """
+        return await self.entities.update_entity(blueprint_identifier, entity_identifier, entity_data) 

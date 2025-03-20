@@ -1,16 +1,16 @@
 [project]
 name = "mcp-server-port"
-version = "0.1.3"
+version = "0.1.4"
 authors = [
-  { name = "Matan Grady", email = "matan.g@getport.io" }
+  { name = "Matan Grady", email = "matan.grady@getport.io" }
 ]
-description = "A Model Context Protocol (MCP) server for Port.io integration"
+description = "A Model Context Protocol (MCP) server for Port.io"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "httpx>=0.26.0",
-    "mcp[cli]>=1.0.1",
-    "python-dotenv>=1.0.0",
+    "httpx>=0.28.1",
+    "mcp[cli]>=1.3.0",
+    "python-dotenv>=1.0.1",
     "pyport>=0.1.17"
 ]
 
