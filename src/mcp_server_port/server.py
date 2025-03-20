@@ -82,12 +82,6 @@ def main(client_id=None, client_secret=None, region="EU", **kwargs):
         if not client_secret:
             client_secret = os.environ.get("PORT_CLIENT_SECRET")
         
-        # Debug logging
-        logger.info(f"Initializing Port.io client with:")
-        logger.info(f"  CLIENT_ID: {client_id}")
-        logger.info(f"  CLIENT_SECRET: {client_secret[:5]}...{client_secret[-5:] if client_secret else ''}")
-        logger.info(f"  REGION: {region}")
-        
         if not client_id or not client_secret:
             logger.error("Missing Port.io credentials")
             print("Error: Missing Port.io credentials. Please provide client_id and client_secret as arguments or "

@@ -1,10 +1,10 @@
-from dataclasses import dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from typing import Optional, Dict, List, Any
 from mcp.types import TextContent, GetPromptResult, PromptMessage
 
 @dataclass
 class PortToken:
-    """Data model for Port.io authentication token."""
+    """Data model for Port authentication token."""
     access_token: str
     expires_in: int
     token_type: str
@@ -28,18 +28,106 @@ class PortToken:
 
 @dataclass
 class PortBlueprint:
-    """Data model for Port.io blueprint."""
+    """Data model for Port blueprint."""
     title: str
     identifier: str
     description: Optional[str] = None
-
+    icon: Optional[str] = None
+    schema: Optional[Dict[str, Any]] = None
+    relations: Optional[Dict[str, Any]] = None
+    created_at: Optional[str] = None
+    created_by: Optional[str] = None
+    updated_at: Optional[str] = None
+    updated_by: Optional[str] = None
+    
     def to_text(self) -> str:
         desc = f"\nDescription: {self.description}" if self.description else ""
-        return f"{self.title} (ID: {self.identifier}){desc}"
+        created = f"\nCreated: {self.created_at}" if self.created_at else ""
+        updated = f"\nUpdated: {self.updated_at}" if self.updated_at else ""
+        return f"{self.title} (ID: {self.identifier}){desc}{created}{updated}"
+
+@dataclass
+class PortBlueprintList:
+    """Data model for a list of Port blueprints."""
+    blueprints: List[PortBlueprint] = field(default_factory=list)
+    
+    def to_text(self) -> str:
+        if not self.blueprints:
+            return "No blueprints found."
+        
+        result = "# Port Blueprints\n\n"
+        for i, blueprint in enumerate(self.blueprints, 1):
+            result += f"## {i}. {blueprint.title} (ID: {blueprint.identifier})\n"
+            if blueprint.description:
+                result += f"Description: {blueprint.description}\n"
+            if blueprint.created_at:
+                result += f"Created: {blueprint.created_at}\n"
+            result += "\n"
+        
+        return result
+
+@dataclass
+class PortEntity:
+    """Data model for Port entity."""
+    identifier: str
+    title: str
+    blueprint: str
+    properties: Dict[str, Any] = field(default_factory=dict)
+    relations: Dict[str, Any] = field(default_factory=dict)
+    icon: Optional[str] = None
+    team: Optional[List[str]] = None
+    created_at: Optional[str] = None
+    created_by: Optional[str] = None
+    updated_at: Optional[str] = None
+    updated_by: Optional[str] = None
+    
+    def to_text(self) -> str:
+        result = f"# {self.title} (ID: {self.identifier})\n"
+        result += f"Blueprint: {self.blueprint}\n"
+        
+        if self.properties:
+            result += "\n## Properties\n"
+            for key, value in self.properties.items():
+                result += f"- {key}: {value}\n"
+        
+        if self.relations:
+            result += "\n## Relations\n"
+            for key, value in self.relations.items():
+                result += f"- {key}: {value}\n"
+        
+        if self.created_at:
+            result += f"\nCreated: {self.created_at}\n"
+        if self.updated_at:
+            result += f"Updated: {self.updated_at}\n"
+        
+        return result
+
+@dataclass
+class PortEntityList:
+    """Data model for a list of Port entities."""
+    entities: List[PortEntity] = field(default_factory=list)
+    blueprint_identifier: str = ""
+    
+    def to_text(self) -> str:
+        if not self.entities:
+            return f"No entities found for blueprint '{self.blueprint_identifier}'."
+        
+        result = f"# Entities for '{self.blueprint_identifier}'\n\n"
+        for i, entity in enumerate(self.entities, 1):
+            result += f"## {i}. {entity.title} (ID: {entity.identifier})\n"
+            
+            if entity.properties:
+                result += "Properties:\n"
+                for key, value in entity.properties.items():
+                    result += f"- {key}: {value}\n"
+            
+            result += "\n"
+        
+        return result
 
 @dataclass
 class PortAgentResponse:
-    """Data model for Port.io AI agent response."""
+    """Data model for Port AI agent response."""
     identifier: str
     status: str
     raw_output: Optional[str] = None
