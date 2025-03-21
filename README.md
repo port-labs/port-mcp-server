@@ -131,13 +131,40 @@ python -m src.mcp_server_port --client-id "CLIENT_ID" --client-secret "CLIENT_SE
 
 ### Publishing a New Version
 
-To build and publish a new version to PyPI:
+There are two ways to publish a new version: manually following all steps, or using the automated Make commands.
 
+#### Manual Process
+
+1. Ensure you're on the main branch and it's up to date:
+```bash
+git checkout main
+git pull origin main
+```
+
+2. Merge the feature/release branch with changelog updates:
+```bash
+git merge feature/your-release-branch
+```
+
+3. Update version in `pyproject.toml`
+
+4. Commit version bump:
+```bash
+git add pyproject.toml
+git commit -m "chore: bump version to X.Y.Z"
+git push origin main
+```
+
+5. Create and push a new Git tag:
+```bash
+git tag -a vX.Y.Z -m "Release version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+6. Build and publish to PyPI:
 ```bash
 # Ensure you have the latest build tools
 pip install --upgrade build twine
-
-# Update version in pyproject.toml
 
 # Build the package
 python -m build
@@ -146,8 +173,33 @@ python -m build
 twine check dist/*
 
 # Upload to PyPI
-twine upload dist/mcp_server_port-0.1.4*
+twine upload dist/mcp_server_port-X.Y.Z*
 ```
+
+7. Create a GitHub release:
+   - Go to the repository's Releases page
+   - Click "Create new release"
+   - Select the tag you just pushed
+   - Title it "Release X.Y.Z"
+   - Include the changelog in the description
+   - Publish the release
+
+#### Automated Process
+
+You can use the provided Makefile commands to automate the release process:
+
+```bash
+# Update version and create release
+make release VERSION=X.Y.Z
+
+# Or run steps individually:
+make bump-version VERSION=X.Y.Z  # Updates pyproject.toml
+make tag VERSION=X.Y.Z          # Creates and pushes git tag
+make build                      # Builds the package
+make publish                    # Publishes to PyPI
+```
+
+Note: The automated process still requires you to manually create the GitHub release with changelog information.
 
 ### Troubleshooting
 
