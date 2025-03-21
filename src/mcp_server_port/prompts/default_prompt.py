@@ -41,10 +41,8 @@ Tools:
   - Try other tools if this doesn't provide desired results
 
 Resource patterns:
-- port-blueprints: - List of all blueprints (summary)
-- port-blueprints-detailed: - List of all blueprints (detailed)
-- port-blueprint://{blueprint_identifier} - Specific blueprint (detailed)
-- port-blueprint-summary://{blueprint_identifier} - Specific blueprint (summary)
+- port-blueprints: - Summarized list of all blueprints
+- port-blueprints-detailed: - Detailed list of all blueprints (with schema properties and relations)
 
 Note: While tools offer parameter flexibility, resources provide fixed formats with dedicated endpoints.
 """
