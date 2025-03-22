@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 
 from mcp_server_port.client import PortClient
 from .blueprints import MOCK_BLUEPRINTS_DATA
+from .entities import MOCK_ENTITIES_DATA
 
 @pytest.fixture
 def mock_client():
@@ -15,11 +16,11 @@ def mock_client():
         
         # Set up the blueprints property on the SDK client mock
         sdk_client_mock.blueprints = MagicMock()
+        sdk_client_mock.entities = MagicMock()
         
-        # Set up the get_blueprints method on the blueprints property
+        # Set up the blueprints methods
         sdk_client_mock.blueprints.get_blueprints = MagicMock(return_value=MOCK_BLUEPRINTS_DATA)
         
-        # Set up the get_blueprint method to return a specific blueprint by ID
         def mock_get_blueprint(blueprint_id):
             for bp in MOCK_BLUEPRINTS_DATA:
                 if bp["identifier"] == blueprint_id:
@@ -27,6 +28,22 @@ def mock_client():
             raise Exception(f"Blueprint with ID {blueprint_id} not found")
             
         sdk_client_mock.blueprints.get_blueprint = MagicMock(side_effect=mock_get_blueprint)
+        
+        # Set up the entities methods
+        def mock_get_entities(blueprint_id):
+            if blueprint_id in MOCK_ENTITIES_DATA:
+                return MOCK_ENTITIES_DATA[blueprint_id]
+            return []
+            
+        def mock_get_entity(blueprint_id, entity_id):
+            if blueprint_id in MOCK_ENTITIES_DATA:
+                for entity in MOCK_ENTITIES_DATA[blueprint_id]:
+                    if entity["identifier"] == entity_id:
+                        return entity
+            raise Exception(f"Entity with ID {entity_id} not found in blueprint {blueprint_id}")
+            
+        sdk_client_mock.entities.get_entities = MagicMock(side_effect=mock_get_entities)
+        sdk_client_mock.entities.get_entity = MagicMock(side_effect=mock_get_entity)
         
         # Mock returns the SDK client mock
         mock_port_client.return_value = sdk_client_mock
