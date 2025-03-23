@@ -15,22 +15,11 @@ def register(mcp: FastMCP, port_client: Any) -> None:
         mcp: The FastMCP server instance
         port_client: The Port client instance
         
-    Note on Blueprint Format:
-        The Blueprint model provides multiple representation methods:
-        - to_summary(): Always returns just the basic information
+    Blueprint model provides these methods:
+        - to_summary(): Always returns just the basic information like name, identifier, description
         - to_text(detailed=False): Returns summary view (same as to_summary())
-        - to_text(detailed=True): Returns detailed view (default for individual blueprints)
-        
-        The BlueprintList model follows the same pattern, with detailed=False as default.
-        
-        Summary format includes:
-        - Title and identifier
-        - Description (if available)
-        
-        Detailed format includes all summary fields plus:
-        - Schema properties with title, type, and format
-        - Relations with target blueprint, title, and cardinality
-        - Creation/update information when available
+        - to_text(detailed=True): Returns detailed view (with schema properties and relations)
+
     """
     @mcp.tool()
     async def get_blueprints(detailed: bool = False) -> str:
@@ -43,15 +32,8 @@ def register(mcp: FastMCP, port_client: Any) -> None:
         
         Returns:
             A formatted text representation of all available blueprints in your Port instance.
-            
-            Summary format (default) includes:
-            - Title and identifier for each blueprint
-            - Description (if available)
-            
-            Detailed format includes all summary fields plus:
-            - Schema properties with title, type, and format
-            - Relations with target blueprint, title, and cardinality
-            - Creation/update information when available
+            Summary format includes title, identifier and description.
+            Detailed format includes schema properties and relations as well.
         """
         try:
             logger.info(f"Retrieving all blueprints from Port (detailed={detailed})")
@@ -72,16 +54,9 @@ def register(mcp: FastMCP, port_client: Any) -> None:
                      If False, returns summary information only.
             
         Returns:
-            A formatted text representation of the specified blueprint.
-            
-            Summary format includes:
-            - Title and identifier
-            - Description (if available)
-            
-            Detailed format (default) includes all summary fields plus:
-            - Schema properties with title, type, and format
-            - Relations with target blueprint, title, and cardinality
-            - Creation/update information when available
+            A formatted text representation of the blueprint.
+            Summary format includes title, identifier and description.
+            Detailed format includes schema properties and relations as well.
         """
         try:
             logger.info(f"Retrieving blueprint with identifier: {blueprint_identifier} (detailed={detailed})")

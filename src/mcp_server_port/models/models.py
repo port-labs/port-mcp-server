@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, List, Any, Union
 from mcp.types import TextContent, GetPromptResult, PromptMessage
 
 @dataclass
@@ -106,9 +106,9 @@ class PortEntity:
     title: str
     blueprint: str
     properties: Dict[str, Any] = field(default_factory=dict)
-    relations: Dict[str, Any] = field(default_factory=dict)
+    relations: Dict[str, Union[str, List[str]]] = field(default_factory=dict)
     icon: Optional[str] = None
-    team: Optional[List[str]] = None
+    team: Optional[str] = None
     created_at: Optional[str] = None
     created_by: Optional[str] = None
     updated_at: Optional[str] = None
@@ -139,7 +139,10 @@ class PortEntity:
         if self.relations:
             result += "\n## Relations\n"
             for key, value in self.relations.items():
-                result += f"- {key}: {value}\n"
+                if isinstance(value, list):
+                    result += f"- {key}: {', '.join(value)}\n"
+                else:
+                    result += f"- {key}: {value}\n"
         
         if self.created_at:
             result += f"\nCreated: {self.created_at}\n"

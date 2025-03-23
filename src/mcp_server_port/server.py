@@ -8,6 +8,7 @@ from .client import PortClient
 from .utils import setup_logging
 from .tools.agent_tools import register as register_agent_tools
 from .tools.blueprint_tools import register as register_blueprint_tools
+from .tools.entity_tools import register as register_entity_tools
 from .resources import register_all as register_all_resources
 from .prompts import register_all as register_all_prompts
 
@@ -47,6 +48,7 @@ def main(client_id=None, client_secret=None, region="EU", **kwargs):
         # Register tools
         register_agent_tools(mcp, port_client)
         register_blueprint_tools(mcp, port_client)
+        register_entity_tools(mcp, port_client)
         
         # Register resources
         register_all_resources(mcp, port_client)
