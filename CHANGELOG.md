@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2025-03-23
+
+### Added
+- New `get_entities` tool to list all entities for a specific blueprint
+- New `get_entity` tool to retrieve detailed information about specific entities
+- Added entity models with support for properties and relations
+- Added comprehensive test coverage for entity operations
+
+### Changed
+- Updated default prompt to include entity-related capabilities and workflow
+- Improved team field typing in PortEntity model
+
 ## [0.1.5] - 2025-03-21
 
 ### Removed
