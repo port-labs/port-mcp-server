@@ -174,6 +174,109 @@ class PortEntityList:
         return result
 
 @dataclass
+class PortScorecard:
+    """Data model for Port scorecard."""
+    identifier: str
+    title: str
+    blueprint: str
+    rules: List[Dict[str, Any]] = field(default_factory=list)
+    description: Optional[str] = None
+    calculation_method: Optional[str] = None
+    levels: List[Dict[str, Any]] = field(default_factory=list)
+    id: Optional[str] = None
+    created_at: Optional[str] = None
+    created_by: Optional[str] = None
+    updated_at: Optional[str] = None
+    updated_by: Optional[str] = None
+    
+    def to_summary(self) -> str:
+        """Returns a summary of the scorecard (title, identifier, blueprint)."""
+        desc = f"\nDescription: {self.description}" if self.description else ""
+        return f"{self.title} (ID: {self.identifier})\nBlueprint: {self.blueprint}{desc}"
+    
+    def to_text(self, detailed: bool = True) -> str:
+        """
+        Returns a textual representation of the scorecard.
+        
+        Args:
+            detailed: If True, includes rules and calculation method.
+                     If False, returns summary.
+        """
+        if not detailed:
+            return self.to_summary()
+            
+        result = f"# {self.to_summary()}\n"
+        
+        if self.calculation_method:
+            result += f"\nCalculation Method: {self.calculation_method}\n"
+        
+        if self.levels:
+            result += "\n## Levels\n"
+            for level in self.levels:
+                level_title = level.get("title", "No Title")
+                level_color = level.get("color", "No Color")
+                result += f"- {level_title} (Color: {level_color})\n"
+        
+        if self.rules:
+            result += "\n## Rules\n"
+            for i, rule in enumerate(self.rules, 1):
+                rule_title = rule.get("title", f"Rule {i}")
+                rule_id = rule.get("identifier", "No ID")
+                rule_description = rule.get("description", "No description")
+                rule_level = rule.get("level", "No Level")
+                
+                result += f"### {rule_title} (ID: {rule_id})\n"
+                result += f"Description: {rule_description}\n"
+                result += f"Level: {rule_level}\n"
+                
+                # Add rule details if present
+                if "weight" in rule:
+                    result += f"Weight: {rule.get('weight')}\n"
+                if "query" in rule:
+                    query = rule.get("query", {})
+                    result += f"Query Type: {query.get('combinator', 'Not specified')}\n"
+                    
+                    # Include a simplified version of the query conditions
+                    if "conditions" in query:
+                        result += "Conditions:\n"
+                        for condition in query.get("conditions", []):
+                            property_name = condition.get("property", "unknown")
+                            operator = condition.get("operator", "unknown")
+                            value = condition.get("value", "") if "value" in condition else ""
+                            
+                            value_str = f" {value}" if value != "" else ""
+                            result += f"  - {property_name} {operator}{value_str}\n"
+                result += "\n"
+        
+        if self.created_at:
+            result += f"\nCreated: {self.created_at}\n"
+        if self.updated_at:
+            result += f"Updated: {self.updated_at}\n"
+        
+        return result
+
+@dataclass
+class PortScorecardList:
+    """Data model for a list of Port scorecards."""
+    scorecards: List[PortScorecard] = field(default_factory=list)
+    
+    def to_text(self, detailed: bool = False) -> str:
+        """
+        Returns a textual representation of the scorecard list.
+        
+        Args:
+            detailed: If True, includes detailed information for each scorecard.
+        """
+        if not self.scorecards:
+            return "No scorecards found."
+        
+        result = "# Port Scorecards\n\n"
+        for i, scorecard in enumerate(self.scorecards, 1):
+            result += f"## {i}. {scorecard.to_text(detailed=detailed)}\n\n"
+        
+        return result
+
+@dataclass
 class PortAgentResponse:
     """Data model for Port AI agent response."""
     identifier: str

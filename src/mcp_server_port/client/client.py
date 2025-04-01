@@ -1,11 +1,12 @@
 import logging
 import pyport
-from typing import Dict, Any, Optional, Union
-from ..models.models import PortAgentResponse, PortBlueprint, PortBlueprintList, PortEntity, PortEntityList
+from typing import Dict, Any, Optional, Union, List
+from ..models.models import PortAgentResponse, PortBlueprint, PortBlueprintList, PortEntity, PortEntityList, PortScorecard, PortScorecardList
 from ..config import PORT_API_BASE
 from .agent import PortAgentClient
 from .blueprints import PortBlueprintClient
 from .entities import PortEntityClient
+from .scorecards import PortScorecardClient
 
 logger = logging.getLogger(__name__)
 
@@ -24,11 +25,13 @@ class PortClient:
             self.agent = None
             self.blueprints = None
             self.entities = None
+            self.scorecards = None
         else:
             self._client = pyport.PortClient(client_id=client_id, client_secret=client_secret, us_region=(region == "US"))
             self.agent = PortAgentClient(self._client)
             self.blueprints = PortBlueprintClient(self._client)
             self.entities = PortEntityClient(self._client)
+            self.scorecards = PortScorecardClient(self._client)
 
     async def trigger_agent(self, prompt: str) -> Dict[str, Any]:
         """Trigger the Port AI agent with a prompt."""
@@ -117,4 +120,55 @@ class PortClient:
         Returns:
             PortEntity: The updated entity
         """
-        return await self.entities.update_entity(blueprint_identifier, entity_identifier, entity_data) 
+        return await self.entities.update_entity(blueprint_identifier, entity_identifier, entity_data)
+        
+    # Scorecard methods
+    
+    async def get_all_scorecards(self) -> Union[PortScorecardList, str]:
+        """
+        Get all scorecards from Port.
+        
+        Returns:
+            PortScorecardList: A list of scorecards
+        """
+        return await self.scorecards.get_scorecards()
+    
+    async def get_scorecard_details(self, scorecard_id: str, blueprint_id: str = None) -> Union[PortScorecard, str]:
+        """
+        Get a specific scorecard by its identifier.
+        
+        Args:
+            scorecard_id: The unique identifier of the scorecard
+            blueprint_id: The identifier of the blueprint the scorecard belongs to
+                         If not provided, will try to find it from the list of scorecards
+            
+        Returns:
+            PortScorecard: The scorecard object
+        """
+        return await self.scorecards.get_scorecard(scorecard_id, blueprint_id)
+    
+    async def create_new_scorecard(self, blueprint_id: str, scorecard_data: Dict[str, Any]) -> PortScorecard:
+        """
+        Create a new scorecard.
+        
+        Args:
+            blueprint_id: The identifier of the blueprint to create the scorecard for
+            scorecard_data: Data for the scorecard to create
+            
+        Returns:
+            PortScorecard: The created scorecard
+        """
+        return await self.scorecards.create_scorecard(blueprint_id, scorecard_data)
+    
+    async def delete_scorecard(self, scorecard_id: str, blueprint_id: str) -> bool:
+        """
+        Delete a scorecard by ID.
+        
+        Args:
+            scorecard_id: The identifier of the scorecard to delete
+            blueprint_id: The identifier of the blueprint the scorecard belongs to
+            
+        Returns:
+            bool: True if deletion was successful
+        """
+        return await self.scorecards.delete_scorecard(scorecard_id, blueprint_id) 

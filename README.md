@@ -1,6 +1,27 @@
 # Port MCP Server
 
-A Model Context Protocol (MCP) server for the [Port.io API](https://www.getport.io/), enabling Claude to interact with Port.io's developer platform capabilities.
+A Model Context Protocol (MCP) server for the [Port.io API](https://www.getport.io/), enabling Claude to interact with Port.io's developer platform capabilities using natural language.
+
+## What You Can Do With Port MCP
+
+Transform how you work with Port.io using natural language:
+
+### Find Information Quickly
+- **Get entity details** - "Who is the owner of service X?"
+- **Check on-call status** - "Who is on call right now?"
+- **Get catalog insights** - "How many services do we have in production?"
+
+### Analyze Scorecards 
+- **Identify weak points** - "Which services are failing for the gold level and why?"
+- **Get compliance status** - "Show me all services that don't meet our security requirements"
+- **Improve quality** - "What do I need to fix to reach the next scorecard level?"
+
+### Create Resources
+- **Build scorecards** - "Create a new scorecard called 'Security Posture' with levels Basic, Silver, and Gold"
+- **Define rules** - "Add a rule that requires services to have a team owner to reach the Silver level"
+- **Setup quality gates** - "Create a rule that checks if services have proper documentation"
+
+We're continuously expanding Port MCP's capabilities. Have a suggestion? We'd love to hear your feedback on our [roadmap](https://roadmap.getport.io/ideas)!
 
 ## Installation
 
@@ -71,16 +92,7 @@ chmod +x /path/to/your/file/run-port-mcp.sh
 
 ![Cursor MCP Screenshot](/assets/cursor_mcp_screenshot.png)
 
-## Capabilities
-
-### Agent Tools
-
-1. `trigger_port_agent`
-   - Trigger the Port.io AI agent with a prompt and wait for completion
-   - Required inputs:
-     - `prompt` (string): The prompt to send to the Port.io AI agent
-   - Returns: Agent response with status, output, and any required actions
-   - Note: The agent may return action URLs for bug reports or other tasks that require user interaction
+## Available Tools
 
 ### Blueprint Tools
 
@@ -96,112 +108,36 @@ chmod +x /path/to/your/file/run-port-mcp.sh
      - `blueprint_identifier` (string): The unique identifier of the blueprint to retrieve
    - Optional inputs:
      - `detailed` (boolean, default: true): Return complete schema details
-   - Returns: Formatted text representation of the specified blueprint
 
-### Entity Tools
+### Scorecard Tools
 
-Will be added in the future.
+1. `get_scorecards`
+   - Retrieve all scorecards from Port
+   - Optional inputs:
+     - `detailed` (boolean, default: false): Return complete scorecard details
 
-## Development
+2. `get_scorecard`
+   - Retrieve information about a specific scorecard by its identifier
+   - Required inputs:
+     - `scorecard_id` (string): The unique identifier of the scorecard to retrieve
+     - `blueprint_id` (string, optional): The identifier of the blueprint the scorecard belongs to
 
-### Local Setup
+3. `create_scorecard`
+   - Create a new scorecard for a specific blueprint
+   - Required inputs:
+     - `blueprint_id` (string): The identifier of the blueprint to create the scorecard for
+     - `identifier` (string): The unique identifier for the new scorecard
+     - `title` (string): The display title of the scorecard
+     - `levels` (list): List of levels for the scorecard
+   - Optional inputs:
+     - `rules` (list): List of rules for the scorecard
+     - `description` (string): Description for the scorecard
 
-1. Create and activate a virtual environment:
-```bash
-# Create and activate virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Unix/macOS
-# or
-.venv\Scripts\activate  # On Windows
-```
+## Feedback and Roadmap
 
-2. Install dependencies:
-```bash
-# Install in development mode
-pip install -e .
+We're continuously improving Port MCP and would love to hear from you! Please share your feedback and feature requests on our [roadmap page](https://roadmap.getport.io/ideas).
 
-# Install development dependencies
-pip install -r requirements-dev.txt
-```
-
-3. Run the server locally:
-```bash
-python -m src.mcp_server_port --client-id "CLIENT_ID" --client-secret "CLIENT_SECRET" --region "REGION"
-```
-
-### Publishing a New Version
-
-There are two ways to publish a new version: manually following all steps, or using the automated Make commands.
-
-#### Manual Process
-
-1. Ensure you're on the main branch and it's up to date:
-```bash
-git checkout main
-git pull origin main
-```
-
-2. Merge the feature/release branch with changelog updates:
-```bash
-git merge feature/your-release-branch
-```
-
-3. Update version in `pyproject.toml`
-
-4. Commit version bump:
-```bash
-git add pyproject.toml
-git commit -m "chore: bump version to X.Y.Z"
-git push origin main
-```
-
-5. Create and push a new Git tag:
-```bash
-git tag -a vX.Y.Z -m "Release version X.Y.Z"
-git push origin vX.Y.Z
-```
-
-6. Build and publish to PyPI:
-```bash
-# Ensure you have the latest build tools
-pip install --upgrade build twine
-
-# Build the package
-python -m build
-
-# Check the package
-twine check dist/*
-
-# Upload to PyPI
-twine upload dist/mcp_server_port-X.Y.Z*
-```
-
-7. Create a GitHub release:
-   - Go to the repository's Releases page
-   - Click "Create new release"
-   - Select the tag you just pushed
-   - Title it "Release X.Y.Z"
-   - Include the changelog in the description
-   - Publish the release
-
-#### Automated Process
-
-You can use the provided Makefile commands to automate the release process:
-
-```bash
-# Update version and create release
-make release VERSION=X.Y.Z
-
-# Or run steps individually:
-make bump-version VERSION=X.Y.Z  # Updates pyproject.toml
-make tag VERSION=X.Y.Z          # Creates and pushes git tag
-make build                      # Builds the package
-make publish                    # Publishes to PyPI
-```
-
-Note: The automated process still requires you to manually create the GitHub release with changelog information.
-
-### Troubleshooting
+## Troubleshooting
 
 If you encounter authentication errors, verify that:
 1. Your Port credentials are correctly set in the arguments
