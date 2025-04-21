@@ -4,7 +4,7 @@ import sys
 # Add the src directory to the path so we can import our modules
 sys.path.append('src')
 
-from mcp_server_port.models.models import PortEntityList, PortEntity
+from src.mcp_server_port.models.entities import PortEntityList, PortEntity
 from .fixtures.entities import MOCK_ENTITIES_DATA
 
 class TestPortEntityClientMock:

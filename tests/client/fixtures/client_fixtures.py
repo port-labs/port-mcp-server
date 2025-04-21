@@ -3,7 +3,7 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-from mcp_server_port.client import PortClient
+from src.mcp_server_port.client import PortClient
 from .blueprints import MOCK_BLUEPRINTS_DATA
 from .entities import MOCK_ENTITIES_DATA
 from .scorecards import MOCK_SCORECARDS_DATA, MOCK_SCORECARD_DICT

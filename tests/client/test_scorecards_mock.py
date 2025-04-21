@@ -4,7 +4,7 @@ import sys
 # Add the src directory to the path so we can import our modules
 sys.path.append('src')
 
-from mcp_server_port.models.models import PortScorecardList, PortScorecard
+from src.mcp_server_port.models.scorecards import PortScorecardList, PortScorecard
 from .fixtures.scorecards import MOCK_SCORECARDS_DATA
 
 class TestPortScorecardClientMock:

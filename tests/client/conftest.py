@@ -1,4 +1,4 @@
-from mcp_server_port.client import PortClient
+from src.mcp_server_port.client.client import PortClient
 
 # Import fixtures from fixtures directory
 from .fixtures.blueprints import MOCK_BLUEPRINTS_DATA

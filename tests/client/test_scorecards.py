@@ -8,9 +8,9 @@ from unittest.mock import MagicMock, AsyncMock
 # Add the src directory to the path so we can import our modules
 sys.path.append('src')
 
-from mcp_server_port.client import PortClient
-from mcp_server_port.models.models import PortScorecardList, PortScorecard
-from mcp_server_port.utils import PortError
+from src.mcp_server_port.client.client import PortClient
+from src.mcp_server_port.models.scorecards import PortScorecardList, PortScorecard
+from src.mcp_server_port.utils import PortError
 
 # Load environment variables from .env file
 load_dotenv()

@@ -1,5 +1,7 @@
-"""Utility functions and error classes for Port.io MCP server."""
+"""Utility functions for the Port MCP Server."""
 
-from .utils import PortError, PortAuthError, setup_logging
+# Import and re-export setup_logging function
+from .logging import setup_logging
+from .errors import PortError, PortAuthError
 
-__all__ = ['PortError', 'PortAuthError', 'setup_logging'] 
+__all__ = ["setup_logging", "PortError", "PortAuthError"] 

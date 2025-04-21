@@ -5,9 +5,11 @@ from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
+from ..client.client import PortClient
+
 logger = logging.getLogger(__name__)
 
-def register(mcp: FastMCP, port_client: Any) -> None:
+def register(mcp: FastMCP, port_client: PortClient) -> None:
     """
     Register blueprint resources with the FastMCP server.
     
@@ -24,8 +26,9 @@ def register(mcp: FastMCP, port_client: Any) -> None:
         logger.info(f"Resource: Retrieving all blueprints from Port (detailed={detailed})")
         blueprints = await port_client.get_blueprints()
         return blueprints.to_text(detailed=detailed) if hasattr(blueprints, 'to_text') else str(blueprints)
-       
-    @mcp.resource("port-blueprints:")
+    
+    print("Registering blueprint resources")
+    @mcp.resource("blueprints://summary")
     async def get_all_blueprints_summary() -> str:
         """
         List all available blueprints in Port (summary format).
@@ -41,7 +44,7 @@ def register(mcp: FastMCP, port_client: Any) -> None:
             logger.error(f"Error in get_all_blueprints_summary resource: {str(e)}", exc_info=True)
             return f"❌ Error retrieving blueprints: {str(e)}"
 
-    @mcp.resource("port-blueprints-detailed:")
+    @mcp.resource("blueprints://detailed")
     async def get_all_blueprints_detailed() -> str:
         """
         List all available blueprints in Port with complete details.

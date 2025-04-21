@@ -11,7 +11,8 @@ dependencies = [
     "httpx>=0.28.1",
     "mcp[cli]>=1.3.0",
     "python-dotenv>=1.0.1",
-    "pyport>=0.1.17"
+    "pyport>=0.1.17",
+    "loguru>=0.7.2"
 ]
 
 [build-system]

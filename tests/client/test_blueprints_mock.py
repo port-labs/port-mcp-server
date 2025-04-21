@@ -4,7 +4,7 @@ import sys
 # Add the src directory to the path so we can import our modules
 sys.path.append('src')
 
-from mcp_server_port.models.models import PortBlueprintList, PortBlueprint
+from src.mcp_server_port.models.blueprints import PortBlueprintList, PortBlueprint
 from .conftest import MOCK_BLUEPRINTS_DATA
 
 class TestPortBlueprintClientMock:
