@@ -3,20 +3,14 @@ import re
 
 from loguru import logger
 
-from ..models import PortAgentResponse
-from ..utils import PortError
+from src.server.models import PortAgentResponse
+from src.server.utils import PortError
 
 class PortAgentClient:
-    """Client for interacting with Port AI Agent APIs."""
-    
     def __init__(self, client):
         self._client = client
 
     async def trigger_agent(self, prompt: str) -> Dict[str, Any]:
-        """Trigger the Port AI agent with a prompt."""
-        if not self._client:
-            raise PortError("Cannot trigger agent: Port client not initialized with credentials")
-            
         endpoint = "agent/invoke"
         data = {"prompt": prompt}
         
@@ -40,9 +34,6 @@ class PortAgentClient:
         return response_data
     
     async def get_invocation_status(self, identifier: str) -> PortAgentResponse:
-        if not self._client:
-            raise PortError("Cannot get invocation status: Port client not initialized with credentials")
-            
         endpoint = f"agent/invoke/{identifier}"
         
         response = self._client.make_request(
@@ -60,6 +51,8 @@ class PortAgentClient:
             message = result.get("message", "")
             
             # Generate action URL from port URLs in message if present
+            # Necesarry to continue the interaction with the agent
+            # Present them is the response for the agent to take action
             action_url = None
             if message:
                 urls = re.findall(r'https://app\.getport\.io/self-serve[^\s<>"]*', message)

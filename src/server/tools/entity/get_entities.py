@@ -35,9 +35,10 @@ class GetEntitiesTool(Tool):
 
     async def get_entities(self, props: GetEntitiesToolSchema) -> Dict[str, Any]:
         args = props.model_dump()
+        
         blueprint_identifier = args.get("blueprint_identifier")
         detailed = args.get("detailed")
-        logger.info(f"Retrieving entities for blueprint '{blueprint_identifier}' from Port (detailed={detailed})")
+
         raw_entities = await self.port_client.get_entities(blueprint_identifier)
         processed_entities = [entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities]
         

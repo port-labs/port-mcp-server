@@ -34,10 +34,12 @@ class GetEntityTool(Tool):
 
     async def get_entity(self, props: GetEntityToolSchema) -> List[Dict[str, Any]]:
         args = props.model_dump()
+        
         blueprint_identifier = args.get("blueprint_identifier")
         entity_identifier = args.get("entity_identifier")
         detailed = args.get("detailed")
-        logger.info(f"Retrieving entity '{entity_identifier}' from blueprint '{blueprint_identifier}' (detailed={detailed})")
+        
         result = await self.port_client.get_entity(blueprint_identifier, entity_identifier)
         result_dict = result.model_dump(exclude_unset=True, exclude_none=True)
+        
         return result_dict

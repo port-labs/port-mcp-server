@@ -1,30 +1,14 @@
 """Port.io AI agent response model."""
 
-from dataclasses import dataclass
+from dataclasses import Field, dataclass
 from typing import Optional
 
-@dataclass
-class PortAgentResponse:
-    """Data model for Port AI agent response."""
-    identifier: str
-    status: str
-    raw_output: Optional[str] = None
-    output: Optional[str] = None
-    error: Optional[str] = None
-    action_url: Optional[str] = None
+from src.server.models import BaseModel
 
-    def to_text(self) -> str:
-        """Convert agent response to text format."""
-        if self.error:
-            return f"❌ Error: {self.error}"
-        
-        if self.status.lower() == "completed":
-            response_text = f"✅ Completed!\n\nResponse:\n{self.output}"
-            
-            # If there's an action URL, add clear instructions
-            if self.action_url:
-                response_text += "\n\n🔍 Action Required:\n"
-                response_text += f"To complete this action, please visit:\n{self.action_url}"
-            return response_text
-            
-        return f"Status: {self.status}\nIdentifier: {self.identifier}" 
+class PortAgentResponse(BaseModel):
+    identifier: str = Field(..., description="The identifier of the agent response")
+    status: str = Field(..., description="The status of the agent response")
+    raw_output: Optional[str] = Field(None, description="The raw output of the agent response")
+    output: Optional[str] = Field(None, description="The output of the agent response")
+    error: Optional[str] = Field(None, description="The error of the agent response")
+    action_url: Optional[str] = Field(None, description="The action URL of requied to visit to complete the action")

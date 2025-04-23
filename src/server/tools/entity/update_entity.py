@@ -18,7 +18,7 @@ class UpdateEntityTool(Tool):
     def __init__(self, port_client: PortClient):
         super().__init__(
             name="update_entity",
-            description="Update an entity for a specific blueprint using it's identifier",
+            description="Update an entity for a specific blueprint using its identifier",
             input_schema=UpdateEntityToolSchema,
             output_schema=Entity,
             annotations=Annotations(
@@ -35,10 +35,10 @@ class UpdateEntityTool(Tool):
     async def update_entity(self, props: UpdateEntityToolSchema) -> Dict[str, Any]:
         blueprint_identifier = props.blueprint_identifier
         entity_identifier = props.entity_identifier
-        logger.info(f"Updating entity for blueprint '{blueprint_identifier}' in Port")
         
         data = props.entity.model_dump(exclude_unset=True, exclude_none=True)
  
         result = await self.port_client.update_entity(blueprint_identifier, entity_identifier, data)
         result_dict = result.model_dump(exclude_unset=True, exclude_none=True)
+        
         return result_dict

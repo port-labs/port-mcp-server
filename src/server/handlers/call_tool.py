@@ -10,6 +10,8 @@ from src.server.models import Tool
 
 async def execute_tool(tool: Tool, arguments:Dict[str, Any]):
     tool_name = tool.name
+    logger.info(f"Executing tool {tool_name}")
+    logger.debug(f"Executing tool {tool_name} with arguments: {arguments}")
     try:
         validated_args = tool.validate_input(arguments)
         result = await tool.function(validated_args)

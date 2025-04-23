@@ -16,7 +16,7 @@ class DeleteBlueprintTool(Tool):
     def __init__(self, port_client: PortClient):
         super().__init__(
             name="delete_blueprint",
-            description="Delete a blueprint using it's identifier",
+            description="Delete a blueprint using its identifier",
             input_schema=DeleteBlueprintToolSchema,
             output_schema=Blueprint,
             annotations=Annotations(
@@ -33,6 +33,5 @@ class DeleteBlueprintTool(Tool):
     async def delete_blueprint(self, props: DeleteBlueprintToolSchema) -> Dict[str, Any]:
         args = props.model_dump()
         blueprint_identifier = args.get('blueprint_identifier')
-        logger.info(f"Deleting blueprint with identifier: {blueprint_identifier}")
         result = await self.port_client.delete_blueprint(blueprint_identifier)
         return {"success": result}

@@ -6,8 +6,6 @@ from src.server.client.client import PortClient
 
 class CreateBlueprintToolSchema(CreateBlueprint):
     pass    
-
-
 class CreateBlueprintTool(Tool):
     port_client: PortClient
 
@@ -29,8 +27,6 @@ class CreateBlueprintTool(Tool):
         self.port_client = port_client
 
     async def create_blueprint(self, props: CreateBlueprintToolSchema) -> Dict[str, Any]:
-        args = props.model_dump()
-        logger.info(f"Creating blueprint with identifier: {args.get('identifier')}")
         blueprint = await self.port_client.create_blueprint(props.model_dump(exclude_none=True,exclude_defaults=True,exclude_unset=True))
         blueprint_dict = blueprint.model_dump(exclude_unset=True, exclude_none=True)
         return blueprint_dict

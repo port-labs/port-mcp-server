@@ -1,7 +1,5 @@
-#!/usr/bin/env python3
 from src.server.config import config
 
-import json
 import sys
 import anyio
 from typing import Any
@@ -14,14 +12,12 @@ from src.server.client import PortClient
 from src.server.utils import setup_logging
 
 def main():
-
-    logger = setup_logging()
-
     try:
+        logger = setup_logging()
         # Set logging level based on debug flag
             
         logger.info("Starting Port MCP server...")
-        
+        logger.debug(f"Server config: {config}")
         # Initialize Port.io client
         port_client = PortClient(client_id=config.port_client_id, client_secret=config.port_client_secret, region=config.region)
         

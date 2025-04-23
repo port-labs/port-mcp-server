@@ -15,7 +15,7 @@ class UpdateBlueprintTool(Tool):
     def __init__(self, port_client: PortClient):
         super().__init__(
             name="update_blueprint",
-            description="Update a blueprint using it's identifier",
+            description="Update a blueprint using its identifier",
             input_schema=UpdateBlueprintToolSchema,
             output_schema=Blueprint,
             annotations=Annotations(

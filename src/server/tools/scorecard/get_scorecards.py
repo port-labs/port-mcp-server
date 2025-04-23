@@ -35,12 +35,13 @@ class GetScorecardsTool(Tool):
 
     async def get_scorecards(self, props: GetScorecardsToolSchema) -> Dict[str, Any]:
         args = props.model_dump()
+        
         blueprint_identifier = args.get("blueprint_identifier")
         detailed = args.get("detailed")
-        logger.info(f"Retrieving all scorecards from Port (detailed={detailed})")
         
         raw_scorecards = await self.port_client.get_scorecards(blueprint_identifier)
         processed_scorecards = [scorecard.model_dump(exclude_unset=True, exclude_none=True) for scorecard in raw_scorecards]
         
         response = GetScorecardsToolResponse(scorecards=processed_scorecards)
+        
         return response.model_dump(exclude_unset=True, exclude_none=True)

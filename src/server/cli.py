@@ -14,7 +14,7 @@ def parse_args():
     parser.add_argument("--client-id", help="Port.io Client ID", required=True)
     parser.add_argument("--client-secret", help="Port.io Client Secret", required=True)
     parser.add_argument("--region", default="EU", help="Port.io API region (EU or US)")
-    parser.add_argument("--debug", action="store_true", help="Enable debug output")
+    parser.add_argument("--log-level", default="ERROR", help="Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)")
     
     return parser.parse_args()
 
@@ -25,7 +25,7 @@ def cli_main():
     """
     # Parse command-line arguments
     args = parse_args()
-    init_server_config(McpServerConfig(port_client_id=args.client_id, port_client_secret=args.client_secret, region=args.region, log_level="DEBUG" if args.debug else "ERROR").model_dump())
+    init_server_config(McpServerConfig(port_client_id=args.client_id, port_client_secret=args.client_secret, region=args.region, log_level=args.log_level).model_dump())
     # Call the main function with command-line arguments
     main()
 

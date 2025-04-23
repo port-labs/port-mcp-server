@@ -41,10 +41,10 @@ class CreateEntityTool(Tool):
     async def create_entity(self, props: CreateEntityToolSchema) -> Dict[str, Any]:
         blueprint_identifier = props.blueprint_identifier
 
-        logger.info(f"Creating entity for blueprint '{blueprint_identifier}' in Port")
-        
         data = props.entity.model_dump(exclude_unset=True, exclude_none=True)
         query = props.query.model_dump(exclude_unset=True, exclude_none=True) or {}
+        
         result = await self.port_client.create_entity(blueprint_identifier, data, query)
         result_dict = result.model_dump(exclude_unset=True, exclude_none=True)
+        
         return result_dict

@@ -41,21 +41,20 @@ class CreateScorecardTool(Tool):
         levels = args.get("levels")
         rules = args.get("rules")
         description = args.get("description")
-            # Validate that rules don't reference the first level (base level)
+
+        # Validate that rules don't reference the first level (base level)
         if rules and len(levels) > 0:
             base_level = levels[0]
             for rule in rules:
                 if rule.get("level") == base_level.get("title"):
-                    return f"❌ Error creating scorecard: The base level '{base_level}' cannot have rules associated with it."
+                    message = f"❌ Error creating scorecard: The base level '{base_level}' cannot have rules associated with it."
+                    logger.error(message)
+                    raise Exception(message)
         
-        logger.info(f"Creating scorecard '{identifier}' for blueprint '{blueprint_identifier}'")
-        logger.debug(f"Scorecard data: {props}")
         
-        # Convert dataclass to dict for API            
-        # Create the scorecard
         scorecard_data = props.model_dump(exclude_none=True,exclude_unset=True)
-        #remove the blueprint_identifier from the scorecard_data
         scorecard_data.pop("blueprint_identifier")
+
         created_scorecard = await self.port_client.create_scorecard(blueprint_identifier, scorecard_data)
         created_scorecard_dict = created_scorecard.model_dump(exclude_unset=True, exclude_none=True)
         return created_scorecard_dict

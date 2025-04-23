@@ -16,7 +16,7 @@ class GetBlueprintTool(Tool):
     def __init__(self, port_client: PortClient):
         super().__init__(
             name="get_blueprint",
-            description="Get a blueprint using it's identifier",
+            description="Get a blueprint using its identifier",
             input_schema=GetBlueprintToolSchema,
             output_schema=Blueprint,
             annotations=Annotations(
@@ -35,9 +35,7 @@ class GetBlueprintTool(Tool):
         blueprint_id = args.get("blueprint_identifier")
         detailed = args.get("detailed")
         
-        logger.info(f"Retrieving blueprint with identifier: {blueprint_id} (detailed={detailed})")
         blueprint = await self.port_client.get_blueprint(blueprint_id)
         blueprint_dict = blueprint.model_dump(exclude_unset=True, exclude_none=True)
         
-        logger.info(f"Blueprint: {blueprint_dict}")
         return blueprint_dict

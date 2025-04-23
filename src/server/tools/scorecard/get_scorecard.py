@@ -31,18 +31,14 @@ class GetScorecardTool(Tool):
         self.port_client = port_client
 
     async def get_scorecard(self, props: GetScorecardToolSchema) -> Dict[str, Any]:
-  
             args = props.model_dump()
+            
             scorecard_identifier = args.get("scorecard_identifier")
             blueprint_identifier = args.get("blueprint_identifier")
             detailed = args.get("detailed")
             
-            logger.info(f"Retrieving scorecard '{scorecard_identifier}' (detailed={detailed})")
-            
-            if blueprint_identifier:
-                logger.info(f"Blueprint ID provided: {blueprint_identifier}")
-                
             scorecard = await self.port_client.get_scorecard(scorecard_identifier, blueprint_identifier)
             scorecard_dict = scorecard.model_dump(exclude_unset=True, exclude_none=True)
+            
             return scorecard_dict
     

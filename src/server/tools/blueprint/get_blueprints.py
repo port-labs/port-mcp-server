@@ -35,12 +35,9 @@ class GetBlueprintsTool(Tool):
         self.port_client = port_client
     
     async def get_blueprints(self, props: GetBlueprintsToolSchema) -> Dict[str, Any]:
-        logger.info(f"Getting blueprints with props: {props}")
         args = props.model_dump()
         detailed = args.get("detailed")
         
-        logger.info(f"Retrieving all blueprints from Port (detailed={detailed})")
         blueprints = await self.port_client.get_blueprints()
-        logger.info(f"Blueprints: {blueprints}")
         blueprints = GetBlueprintsToolResponse(blueprints=blueprints)
         return blueprints.model_dump()

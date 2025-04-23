@@ -5,7 +5,6 @@ This package contains all data models used for interacting with the Port.io API,
 organized into specialized modules:
 
 - common: Common types, base classes and utilities
-- auth: Authentication models (PortToken)
 - agent: AI agent response models
 - blueprints: Blueprint models
 - entities: Entity models 
@@ -15,8 +14,6 @@ organized into specialized modules:
 # Common models
 from .common import PortApiResource, Singleton, BaseModel, Annotations
 
-# Authentication models
-from .auth import PortToken
 # Agent models
 from .agent import PortAgentResponse
 
@@ -41,9 +38,6 @@ from .resources import (
 __all__ = [
     # Common
     'Singleton', 'BaseModel', 'PortApiResource', 'Annotations',
-    
-    # Auth
-    'PortToken',
     
     # Agent
     'PortAgentResponse',

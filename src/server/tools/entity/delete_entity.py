@@ -19,7 +19,7 @@ class DeleteEntityTool(Tool):
     def __init__(self, port_client: PortClient):
         super().__init__(
             name="delete_entity",
-            description="Delete an entity for a specific blueprint using it's identifier",
+            description="Delete an entity for a specific blueprint using its identifier",
             input_schema=DeleteEntityToolSchema,
             output_schema=Entity,
             annotations=Annotations(
@@ -37,7 +37,7 @@ class DeleteEntityTool(Tool):
         blueprint_identifier = props.blueprint_identifier
         entity_identifier = props.entity_identifier
         delete_dependents = props.delete_dependents
-        logger.info(f"Deleting entity for blueprint '{blueprint_identifier}' in Port")
         
         result = await self.port_client.delete_entity(blueprint_identifier, entity_identifier,delete_dependents)
+        
         return {"success": result}
