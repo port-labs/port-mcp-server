@@ -1,0 +1,41 @@
+# Ruff configuration
+line-length = 100
+target-version = "py310"
+
+select = [
+    "E",  # pycodestyle errors
+    "F",  # pyflakes
+    "I",  # isort
+    "C4", # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "UP", # pyupgrade
+    "N",  # pep8-naming
+    "SIM", # flake8-simplify
+    "TCH", # type-checking imports
+]
+
+ignore = [
+    "E203",  # See https://github.com/psf/black/issues/315
+    "F403",  # 'from module import *' used
+    "N818",  # Exception names should be named with Error suffix
+]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[isort]
+known-first-party = ["src"]
+force-single-line = false
+single-line-exclusions = ["typing"]
+
+[flake8-quotes]
+docstring-quotes = "double"
+
+[per-file-ignores]
+"__init__.py" = ["F401", "F403"]
+"*/tests/*" = ["N802", "B011"]
+
+[mccabe]
+max-complexity = 10 
