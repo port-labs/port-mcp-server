@@ -76,9 +76,7 @@ class PortScorecardClient:
         return True
 
     async def update_scorecard(self, blueprint_id: str, scorecard_id: str, scorecard_data: Dict[str, Any]) -> Scorecard:
-        logger.info(
-            f"Updating scorecard '{scorecard_id}' in blueprint '{blueprint_id}'"
-        )
+        logger.info(f"Updating scorecard '{scorecard_id}' in blueprint '{blueprint_id}'")
         rules = scorecard_data.get("rules", [])
         levels = scorecard_data.get("levels", [])
         # Validate that rules don't reference the first level (base level)
@@ -102,9 +100,7 @@ class PortScorecardClient:
             logger.warning(message)
             raise PortError(message)
 
-        logger.info(
-            f"Updated scorecard '{scorecard_id}' in blueprint '{blueprint_id}'"
-        )
+        logger.info(f"Updated scorecard '{scorecard_id}' in blueprint '{blueprint_id}'")
 
         data = updated_data.get("scorecard", {})
 

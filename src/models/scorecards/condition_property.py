@@ -2,9 +2,11 @@ from typing import Literal
 from src.models.common.base_pydantic import BaseModel
 from pydantic import Field
 import datetime
+
+
 class DateRangeSchema(BaseModel):
-    from_date: datetime.datetime = Field(..., description="The start date of the range", alias="from",serialization_alias="from")
-    to_date: datetime.datetime = Field(..., description="The end date of the range", alias="to",serialization_alias="to")
+    from_date: datetime.datetime = Field(..., description="The start date of the range", alias="from", serialization_alias="from")
+    to_date: datetime.datetime = Field(..., description="The end date of the range", alias="to", serialization_alias="to")
 
 
 class DatePresetSchema(BaseModel):
@@ -19,6 +21,7 @@ class DatePresetSchema(BaseModel):
         "last6Months",
         "last12Months",
     ] = Field(..., description="Presets of date ranges")
+
 
 class ScorecardConditionPropertyBetweenConditionSchema(BaseModel):
     property: str = Field(..., description="A date property defined in the blueprint")
@@ -48,6 +51,7 @@ class ScorecardConditionRelationComparisonConditionSchema(BaseModel):
     ] = Field(..., description="Operator to use when evaluating this rule")
     value: str | int | float | bool = Field(..., description="Value to compare to")
 
+
 class ScorecardConditionPropertyComparisonConditionSchema(BaseModel):
     property: str = Field(..., description="A property defined in the blueprint")
     operator: Literal[
@@ -65,7 +69,6 @@ class ScorecardConditionPropertyComparisonConditionSchema(BaseModel):
         "doesNotEndsWith",
     ] = Field(..., description="Operator to use when evaluating this rule")
     value: str | int | bool = Field(..., description="Value to compare to")
-
 
 
 class ScorecardConditionPropertyEmptyConditionSchema(BaseModel):

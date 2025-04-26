@@ -12,6 +12,7 @@ from src.models.tools.tool import Tool
 class DeleteBlueprintToolSchema(BaseModel):
     blueprint_identifier: str = Field(..., description="The identifier of the blueprint to delete")
 
+
 class DeleteBlueprintTool(Tool):
     port_client: PortClient
 

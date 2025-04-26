@@ -119,7 +119,10 @@ class AggregationPropertiesSchema(BaseModel):
     type: Literal["number"] | SkipJsonSchema[None] = Field(None, description="The type of the aggregation property")
     target: str = Field(..., description="The target blueprint identifier")
     calculation_spec: Dict[str, Any] = Field(
-        ..., description="The functions to transform properties into an aggregation", alias="calculationSpec",serialization_alias="calculationSpec"
+        ...,
+        description="The functions to transform properties into an aggregation",
+        alias="calculationSpec",
+        serialization_alias="calculationSpec",
     )
     query: Dict[str, Any] | SkipJsonSchema[None] = Field(None, description="The query to get the aggregation")
 
@@ -140,29 +143,31 @@ class BlueprintCommon(BaseModel):
     )
     title: str = Field(..., max_length=30, description="The title of the blueprint")
     icon: Icon = Field("Template", description="The icon of the blueprint")
-    blueprint_schema: BluePrintSchema = Field(..., description="The schema of the blueprint", alias="schema",serialization_alias="schema")
+    blueprint_schema: BluePrintSchema = Field(
+        ..., description="The schema of the blueprint", alias="schema", serialization_alias="schema"
+    )
     calculation_properties: Dict[str, CalculationPropertiesSchema] = Field(
         {},
         description="Calculation properties allow you to use existing properties defined on blueprints, either directly or by using relations and mirror properties, in order to create new properties by using the jq processor for JSON",
         alias="calculationProperties",
-        serialization_alias="calculationProperties"
+        serialization_alias="calculationProperties",
     )
     aggregation_properties: Dict[str, AggregationPropertiesSchema] = Field(
         {},
         description="Aggregation properties allow you to aggregate data from related entities to your entity. Aggregation property can be used for blueprints that have relations defined.",
         alias="aggregationProperties",
-        serialization_alias="aggregationProperties"
+        serialization_alias="aggregationProperties",
     )
     mirror_properties: Dict[str, MirrorPropertiesSchema] = Field(
         {},
         description="Mirror property allows you to map data from related entities to your entity. Mirror property can be used for blueprints that have relations defined.",
         alias="mirrorProperties",
-        serialization_alias="mirrorProperties"
+        serialization_alias="mirrorProperties",
     )
     relations: Dict[str, RelationSchema] = Field(
         {},
         description="Relations define connections between blueprints, consequently connecting the entities based on these blueprints. This provides logical context to the software catalog.",
-        serialization_alias="relations"
+        serialization_alias="relations",
     )
 
 
@@ -180,5 +185,8 @@ class CreateBlueprint(BlueprintCommon):
         alias="teamInheritance",
     )
     changelog_destination: Dict[str, Any] | SkipJsonSchema[None] = Field(
-        None, description="The destination of the changelog", alias="changelogDestination",serialization_alias="changelogDestination"
+        None,
+        description="The destination of the changelog",
+        alias="changelogDestination",
+        serialization_alias="changelogDestination",
     )

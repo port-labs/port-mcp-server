@@ -1,10 +1,26 @@
 import datetime
 from typing import Annotated, Any, Literal
 
-from pydantic import Field,  ValidatorFunctionWrapHandler, WrapValidator
+from pydantic import Field, ValidatorFunctionWrapHandler, WrapValidator
 from src.models.common.base_pydantic import BaseModel
-from .condition_property_tool import ScorecardConditionPropertyBetweenConditionSchemaExplicitForTool, ScorecardConditionPropertyContainsAnyConditionSchemaExplicitForTool, ScorecardConditionRelationComparisonConditionSchemaExplicitForTool, ScorecardConditionPropertyComparisonConditionSchemaExplicitForTool, ScorecardConditionPropertyEmptyConditionSchemaExplicitForTool, ScorecardConditionRelationEmptyConditionSchemaExplicitForTool
-from .condition_property import ScorecardConditionPropertyBetweenConditionSchema, ScorecardConditionPropertyContainsAnyConditionSchema, ScorecardConditionRelationComparisonConditionSchema, ScorecardConditionPropertyComparisonConditionSchema, ScorecardConditionPropertyEmptyConditionSchema, ScorecardConditionRelationEmptyConditionSchema
+from .condition_property_tool import (
+    ScorecardConditionPropertyBetweenConditionSchemaExplicitForTool,
+    ScorecardConditionPropertyContainsAnyConditionSchemaExplicitForTool,
+    ScorecardConditionRelationComparisonConditionSchemaExplicitForTool,
+    ScorecardConditionPropertyComparisonConditionSchemaExplicitForTool,
+    ScorecardConditionPropertyEmptyConditionSchemaExplicitForTool,
+    ScorecardConditionRelationEmptyConditionSchemaExplicitForTool,
+)
+from .condition_property import (
+    ScorecardConditionPropertyBetweenConditionSchema,
+    ScorecardConditionPropertyContainsAnyConditionSchema,
+    ScorecardConditionRelationComparisonConditionSchema,
+    ScorecardConditionPropertyComparisonConditionSchema,
+    ScorecardConditionPropertyEmptyConditionSchema,
+    ScorecardConditionRelationEmptyConditionSchema,
+)
+
+
 class ScorecardLevelSchema(BaseModel):
     title: str = Field(..., description="The title of the level to create")
     color: Literal[
@@ -24,6 +40,7 @@ class ScorecardLevelSchema(BaseModel):
         "bronze",
     ] = Field(..., description="The color of the level to create")
 
+
 class ScorecardQuerySchema(BaseModel):
     combinator: Literal["and", "or"] = Field(..., description="The combinator of the rule to create")
     conditions: list[
@@ -37,6 +54,7 @@ class ScorecardQuerySchema(BaseModel):
         ...,
         description="Pay extreme attention to the conditions schema and the required fields, they are small boolean checks that help when determining the final status of a query according to the specified combinator",
     )
+
 
 class ScorecardQuerySchemaExplicitForTool(BaseModel):
     combinator: Literal["and", "or"] = Field(..., description="The combinator of the rule to create")
@@ -52,6 +70,7 @@ class ScorecardQuerySchemaExplicitForTool(BaseModel):
         description="Pay extreme attention to the conditions schema and the required fields, they are small boolean checks that help when determining the final status of a query according to the specified combinator",
     )
 
+
 class ScorecardRuleSchema(BaseModel):
     identifier: str = Field(
         ...,
@@ -66,6 +85,7 @@ class ScorecardRuleSchema(BaseModel):
     )
     query: ScorecardQuerySchema = Field(..., description="The query of the rule to create")
     description: str = Field(..., description="The description of the rule to create")
+
 
 class ScorecardRuleSchemaExplicitForTool(BaseModel):
     identifier: str = Field(

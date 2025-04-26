@@ -22,7 +22,6 @@ def main():
         logger.debug(f"Server config: {config}")
         # Initialize Port.io client
 
-
         # Initialize FastMCP server
         mcp = Server("Port MCP Server")
 

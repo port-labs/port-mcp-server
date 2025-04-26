@@ -3,8 +3,10 @@ from typing import Any
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic import ConfigDict as PydanticConfigDict
 
+
 class BaseModel(PydanticBaseModel):
-    model_config = PydanticConfigDict(validate_by_name=True, validate_by_alias=True,serialize_by_alias=True)
+    model_config = PydanticConfigDict(validate_by_name=True, validate_by_alias=True, serialize_by_alias=True)
+
     class ConfigDict:
         @staticmethod
         def json_schema_extra(schema: dict[str, Any], model: Any) -> None:

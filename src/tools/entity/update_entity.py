@@ -45,4 +45,3 @@ class UpdateEntityTool(Tool):
         result_dict = result.model_dump(exclude_unset=True, exclude_none=True)
 
         return result_dict
-

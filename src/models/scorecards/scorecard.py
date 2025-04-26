@@ -18,6 +18,7 @@ class ScorecardCommon(BaseModel):
         description="Rules enable you to generate checks inside a scorecard only for entities and properties. Rules are not allowed to reference the first level defined in the levels array(MUST).",
     )
 
+
 class ScorecardCommonExplicitForTool(BaseModel):
     identifier: str = Field(..., description="The identifier of the scorecard to create")
     title: str = Field(..., description="The title of the scorecard to create")
@@ -30,6 +31,7 @@ class ScorecardCommonExplicitForTool(BaseModel):
         description="Rules enable you to generate checks inside a scorecard only for entities and properties. Rules are not allowed to reference the first level defined in the levels array(MUST).",
     )
 
+
 class Scorecard(ScorecardCommon):
     blueprint: str = Field(..., description="The blueprint of the scorecard")
     id: str = Field(..., description="The id of the scorecard")
@@ -40,14 +42,15 @@ class Scorecard(ScorecardCommon):
 
 
 class ScorecardCreate(ScorecardCommonExplicitForTool):
-    
-    @model_validator(mode='wrap')
+    @model_validator(mode="wrap")
     @classmethod
     def log_failed_validation(cls, data: Any, handler: ModelWrapValidatorHandler[Self]) -> Self:
         try:
             return handler(data)
         except ValidationError as e:
             for error in e.errors():
-                if error['type'] == 'missing' and 'condition_name' in error['loc']:
-                    raise ValueError(f"condition_name is required within rules[index].query.conditions[index].condition_name") from e
+                if error["type"] == "missing" and "condition_name" in error["loc"]:
+                    raise ValueError(
+                        f"condition_name is required within rules[index].query.conditions[index].condition_name"
+                    ) from e
             raise e
