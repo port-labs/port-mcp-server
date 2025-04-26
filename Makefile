@@ -3,16 +3,9 @@
 # Default target executed when no arguments are given to make.
 all: help
 
-# Check if poetry is installed, use pip as fallback
 POETRY_CHECK := $(shell command -v poetry 2> /dev/null)
-ifdef POETRY_CHECK
-    POETRY := poetry
-    RUN_CMD := poetry run
-else
-    POETRY := pip
-    RUN_CMD := python -m
-endif
-
+POETRY := poetry
+RUN_CMD := poetry run
 PYTHON := python
 
 help:
@@ -34,7 +27,7 @@ help:
 lint:
 	@echo "Running linting checks..."
 	$(RUN_CMD) ruff check src
-	$(RUN_CMD) mypy src
+	$(RUN_CMD) mypy server
 
 format:
 	@echo "Formatting code..."
@@ -76,13 +69,10 @@ clean:
 
 install:
 	@echo "Installing dependencies..."
-ifdef POETRY_CHECK
+	if [ -z "$(POETRY_CHECK)" ]; then \
+		$(PYTHON) -m pip install poetry 2> /dev/null 1> /dev/null; \
+	fi
 	$(POETRY) install
-	$(POETRY) add --group dev pytest pytest-cov pytest-asyncio ruff mypy pre-commit
-else
-	$(POETRY) install -r requirements.txt
-	$(POETRY) install pytest pytest-cov pytest-asyncio ruff mypy pre-commit
-endif
 	
 bump-version:
 ifndef VERSION

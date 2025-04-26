@@ -1,6 +1,6 @@
 ARG VERSION="dev"
 
-FROM python:3.10-slim AS build
+FROM python:3.13-alpine AS build
 
 # Set build arguments
 ARG VERSION
@@ -10,24 +10,19 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on
-
-# Set working directory
+    # Set working directory
 WORKDIR /app
 
-# Copy only the dependency files first
-COPY requirements.txt .
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apk add build-base
 
 # Copy the source code
 COPY . .
 
 # Build the package
-RUN pip install --no-cache-dir -e .
+RUN make install
 
 # Create a runtime stage with minimal dependencies
-FROM python:3.10-slim
+FROM python:3.13-alpine
 
 # Set working directory
 WORKDIR /app
@@ -37,7 +32,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 # Copy installed packages and application from build stage
-COPY --from=build /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY --from=build /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 COPY --from=build /app /app
 
 # Make entrypoint script executable
