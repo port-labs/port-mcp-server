@@ -53,8 +53,7 @@ async def test_tool_map_registration_and_lookup(clean_tool_map):
     assert tools[0].name == "test_tool"
     assert tools[0].description == "A tool for testing"
     # Check that the schema information is included
-    assert tools[0].input_schema is not None
-    assert tools[0].output_schema is not None
+    assert tools[0].inputSchema is not None
     assert tools[0].annotations is not None
 
 

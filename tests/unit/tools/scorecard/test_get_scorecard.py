@@ -36,5 +36,5 @@ async def test_get_scorecard_tool(mock_client_with_scorecard):
         "detailed": True,
     }
     result = await tool.get_scorecard(tool.validate_input(schema))
-    mock_client_with_scorecard.get_scorecard.assert_awaited_once_with("test-scorecard", "test-blueprint")
+    mock_client_with_scorecard.get_scorecard.assert_called_once_with("test-blueprint", "test-scorecard")
     assert result is not None

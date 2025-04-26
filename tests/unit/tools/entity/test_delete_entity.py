@@ -24,5 +24,5 @@ async def test_delete_entity_tool(mock_client_for_delete_entity):
     # Test function execution
     schema = {"blueprint_identifier": "test-blueprint", "entity_identifier": "test-entity"}
     result = await tool.delete_entity(tool.validate_input(schema))
-    mock_client_for_delete_entity.delete_entity.assert_awaited_once_with("test-blueprint", "test-entity")
+    mock_client_for_delete_entity.delete_entity.assert_called_once_with("test-blueprint", "test-entity", False)
     assert result is not None

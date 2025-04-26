@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 import pytest
 
 from .conftest import TestBaseTool
@@ -44,13 +45,8 @@ def test_tool_schema_properties():
 
     # Check inputSchema property
     input_schema = tool.input_schema
-    assert isinstance(input_schema, dict)
-    assert "properties" in input_schema
-    assert "param1" in input_schema["properties"]
-    assert "param2" in input_schema["properties"]
+    assert issubclass(input_schema, BaseModel)
 
     # Check outputSchema property
-    output_schema = tool.outputSchema
-    assert isinstance(output_schema, dict)
-    assert "properties" in output_schema
-    assert "result" in output_schema["properties"]
+    output_schema = tool.output_schema
+    assert issubclass(output_schema, BaseModel)

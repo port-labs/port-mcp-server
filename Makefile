@@ -47,7 +47,7 @@ test:
 	export PORT_CLIENT_SECRET=1234567890
 	export PORT_REGION=EU
 	export PORT_LOG_LEVEL=DEBUG
-	$(PYTHON) -m pytest src/tests/ -v
+	$(PYTHON) -m pytest tests/ -v
 	unset PORT_CLIENT_ID
 	unset PORT_CLIENT_SECRET
 	unset PORT_REGION
