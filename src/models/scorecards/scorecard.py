@@ -1,4 +1,5 @@
 from typing import Any, Self
+
 from pydantic import Field, ModelWrapValidatorHandler, ValidationError, model_validator
 from pydantic.json_schema import SkipJsonSchema
 
@@ -51,6 +52,6 @@ class ScorecardCreate(ScorecardCommonExplicitForTool):
             for error in e.errors():
                 if error["type"] == "missing" and "condition_name" in error["loc"]:
                     raise ValueError(
-                        f"condition_name is required within rules[index].query.conditions[index].condition_name"
+                        "condition_name is required within rules[index].query.conditions[index].condition_name"
                     ) from e
             raise e

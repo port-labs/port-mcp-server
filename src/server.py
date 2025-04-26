@@ -6,11 +6,9 @@ import mcp.types as types
 from mcp.server.lowlevel import Server
 
 from src.handlers import execute_tool
-from src.models.tools import ToolMap
-from src.utils import setup_logging
-from src.client import PortClient
-from src.config import config
 from src.maps.tool_map import tool_map
+from src.utils import setup_logging
+from src.config import config
 
 
 def main():

@@ -1,6 +1,6 @@
 from typing import Any
 
-from pydantic import Field, ValidationError
+from pydantic import Field
 
 from src.client.client import PortClient
 from src.models.common.annotations import Annotations

@@ -1,7 +1,9 @@
-from typing import Literal
-from src.models.common.base_pydantic import BaseModel
-from pydantic import Field
 import datetime
+from typing import Literal
+
+from pydantic import Field
+
+from src.models.common.base_pydantic import BaseModel
 
 
 class DateRangeSchema(BaseModel):

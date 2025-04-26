@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, List
+from typing import Any
 
 from loguru import logger
 from pyport import PortClient
@@ -14,7 +14,7 @@ class PortScorecardClient:
     def __init__(self, client: PortClient):
         self._client = client
 
-    async def get_scorecards(self, blueprint_identifier: str) -> List[Scorecard]:
+    async def get_scorecards(self, blueprint_identifier: str) -> list[Scorecard]:
         logger.info(f"Getting all scorecards for blueprint '{blueprint_identifier}' from Port")
 
         scorecards_data = self._client.scorecards.get_scorecards(blueprint_identifier)
@@ -40,7 +40,7 @@ class PortScorecardClient:
         logger.error(f"Could not find scorecard '{scorecard_id}' in blueprint '{blueprint_id}'")
         raise PortError(f"Could not find scorecard '{scorecard_id}' in blueprint '{blueprint_id}'")
 
-    async def create_scorecard(self, blueprint_id: str, scorecard_data: Dict[str, Any]) -> Scorecard:
+    async def create_scorecard(self, blueprint_id: str, scorecard_data: dict[str, Any]) -> Scorecard:
         logger.info(f"Creating scorecard in blueprint '{blueprint_id}'")
         json_data = json.dumps(scorecard_data)
         logger.debug(f"Input for create scorecard: {json_data}")
@@ -75,7 +75,7 @@ class PortScorecardClient:
         logger.debug(f"Response for delete scorecard: {deleted_data}")
         return True
 
-    async def update_scorecard(self, blueprint_id: str, scorecard_id: str, scorecard_data: Dict[str, Any]) -> Scorecard:
+    async def update_scorecard(self, blueprint_id: str, scorecard_id: str, scorecard_data: dict[str, Any]) -> Scorecard:
         logger.info(f"Updating scorecard '{scorecard_id}' in blueprint '{blueprint_id}'")
         rules = scorecard_data.get("rules", [])
         levels = scorecard_data.get("levels", [])

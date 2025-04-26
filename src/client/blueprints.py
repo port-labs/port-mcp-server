@@ -1,12 +1,11 @@
 import json
-from typing import Any, Dict, List
+from typing import Any
 
+from loguru import logger
 from pyport import PortClient
 
 from src.models.blueprints import Blueprint
 from src.utils.errors import PortError
-
-from loguru import logger
 
 
 class PortBlueprintClient:
@@ -15,7 +14,7 @@ class PortBlueprintClient:
     def __init__(self, client: PortClient):
         self._client = client
 
-    async def get_blueprints(self) -> List[Blueprint]:
+    async def get_blueprints(self) -> list[Blueprint]:
         logger.info("Getting blueprints from Port")
 
         blueprints = self._client.blueprints.get_blueprints()
@@ -37,7 +36,7 @@ class PortBlueprintClient:
 
         return Blueprint(**bp_data)
 
-    async def create_blueprint(self, blueprint_data: Dict[str, Any]) -> Blueprint:
+    async def create_blueprint(self, blueprint_data: dict[str, Any]) -> Blueprint:
         data_json = json.dumps(blueprint_data)
 
         logger.info("Creating blueprint in Port")
@@ -56,7 +55,7 @@ class PortBlueprintClient:
         logger.debug(f"Response for create blueprint: {blueprint}")
         return blueprint
 
-    async def update_blueprint(self, blueprint_data: Dict[str, Any]) -> Blueprint:
+    async def update_blueprint(self, blueprint_data: dict[str, Any]) -> Blueprint:
         data_json = json.dumps(blueprint_data)
 
         logger.info("Updating blueprint in Port")

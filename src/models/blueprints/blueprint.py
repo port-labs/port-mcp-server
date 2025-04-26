@@ -1,6 +1,6 @@
 """Port.io blueprint model."""
 
-from typing import Any, Dict, List, Literal
+from typing import Any, Literal
 
 from pydantic import Field
 from pydantic.json_schema import SkipJsonSchema
@@ -36,11 +36,11 @@ class PropertySchema(BaseModel):
 
 
 class BluePrintSchema(BaseModel):
-    properties: Dict[str, PropertySchema] = Field(
+    properties: dict[str, PropertySchema] = Field(
         ...,
         description="Properties are customizable data fields of blueprints, used to save and display information from external data sources.",
     )
-    required: List[str] = Field(
+    required: list[str] = Field(
         ...,
         description="The required properties of the blueprint, these must be provided when creating an entity based on this blueprint. This is an array of the required properties' identifiers.",
     )
@@ -86,7 +86,7 @@ class CalculationPropertiesSchema(BaseModel):
         None,
         description="Boolean flag to define whether the calculation property should be colorized",
     )
-    colors: Dict[str, Any] | SkipJsonSchema[None] = Field(None, description="The color of the calculation property")
+    colors: dict[str, Any] | SkipJsonSchema[None] = Field(None, description="The color of the calculation property")
     items: CalculationProperyItemsSchema | SkipJsonSchema[None] = Field(None, description="The items of the calculation property")
 
 
@@ -118,13 +118,13 @@ class AggregationPropertiesSchema(BaseModel):
     icon: Icon | SkipJsonSchema[None] = Field(None, description="The icon of the aggregation property")
     type: Literal["number"] | SkipJsonSchema[None] = Field(None, description="The type of the aggregation property")
     target: str = Field(..., description="The target blueprint identifier")
-    calculation_spec: Dict[str, Any] = Field(
+    calculation_spec: dict[str, Any] = Field(
         ...,
         description="The functions to transform properties into an aggregation",
         alias="calculationSpec",
         serialization_alias="calculationSpec",
     )
-    query: Dict[str, Any] | SkipJsonSchema[None] = Field(None, description="The query to get the aggregation")
+    query: dict[str, Any] | SkipJsonSchema[None] = Field(None, description="The query to get the aggregation")
 
 
 class TeamInheritanceSchema(BaseModel):
@@ -146,25 +146,25 @@ class BlueprintCommon(BaseModel):
     blueprint_schema: BluePrintSchema = Field(
         ..., description="The schema of the blueprint", alias="schema", serialization_alias="schema"
     )
-    calculation_properties: Dict[str, CalculationPropertiesSchema] = Field(
+    calculation_properties: dict[str, CalculationPropertiesSchema] = Field(
         {},
         description="Calculation properties allow you to use existing properties defined on blueprints, either directly or by using relations and mirror properties, in order to create new properties by using the jq processor for JSON",
         alias="calculationProperties",
         serialization_alias="calculationProperties",
     )
-    aggregation_properties: Dict[str, AggregationPropertiesSchema] = Field(
+    aggregation_properties: dict[str, AggregationPropertiesSchema] = Field(
         {},
         description="Aggregation properties allow you to aggregate data from related entities to your entity. Aggregation property can be used for blueprints that have relations defined.",
         alias="aggregationProperties",
         serialization_alias="aggregationProperties",
     )
-    mirror_properties: Dict[str, MirrorPropertiesSchema] = Field(
+    mirror_properties: dict[str, MirrorPropertiesSchema] = Field(
         {},
         description="Mirror property allows you to map data from related entities to your entity. Mirror property can be used for blueprints that have relations defined.",
         alias="mirrorProperties",
         serialization_alias="mirrorProperties",
     )
-    relations: Dict[str, RelationSchema] = Field(
+    relations: dict[str, RelationSchema] = Field(
         {},
         description="Relations define connections between blueprints, consequently connecting the entities based on these blueprints. This provides logical context to the software catalog.",
         serialization_alias="relations",
@@ -184,7 +184,7 @@ class CreateBlueprint(BlueprintCommon):
         description="A relation to another blueprint from which to inherit the team. Can be any blueprint connected to this one via any number of relations.",
         alias="teamInheritance",
     )
-    changelog_destination: Dict[str, Any] | SkipJsonSchema[None] = Field(
+    changelog_destination: dict[str, Any] | SkipJsonSchema[None] = Field(
         None,
         description="The destination of the changelog",
         alias="changelogDestination",

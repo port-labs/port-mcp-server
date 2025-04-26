@@ -1,13 +1,15 @@
 from typing import Literal
+
+from pydantic import Field
+
 from .condition_property import (
     ScorecardConditionPropertyBetweenConditionSchema,
-    ScorecardConditionPropertyContainsAnyConditionSchema,
-    ScorecardConditionRelationComparisonConditionSchema,
     ScorecardConditionPropertyComparisonConditionSchema,
+    ScorecardConditionPropertyContainsAnyConditionSchema,
     ScorecardConditionPropertyEmptyConditionSchema,
+    ScorecardConditionRelationComparisonConditionSchema,
     ScorecardConditionRelationEmptyConditionSchema,
 )
-from pydantic import Field
 
 
 class ScorecardConditionPropertyBetweenConditionSchemaExplicitForTool(ScorecardConditionPropertyBetweenConditionSchema):

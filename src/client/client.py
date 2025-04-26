@@ -1,15 +1,15 @@
 from collections.abc import Callable
-from typing import Any, Dict, List
+from typing import Any
 
 import pyport
 import requests
 from loguru import logger
 
-from src.config import config
 from src.client.agent import PortAgentClient
 from src.client.blueprints import PortBlueprintClient
 from src.client.entities import PortEntityClient
 from src.client.scorecards import PortScorecardClient
+from src.config import config
 from src.models.agent import PortAgentResponse
 from src.models.blueprints import Blueprint
 from src.models.entities import Entity
@@ -58,7 +58,7 @@ class PortClient:
         except requests.exceptions.HTTPError as e:
             self.handle_http_error(e)
 
-    async def trigger_agent(self, prompt: str) -> Dict[str, Any]:
+    async def trigger_agent(self, prompt: str) -> dict[str, Any]:
         return await self.wrap_request(lambda: self.agent.trigger_agent(prompt))
 
     async def get_invocation_status(self, identifier: str) -> PortAgentResponse:
@@ -82,13 +82,13 @@ class PortClient:
     async def get_entity(self, blueprint_identifier: str, entity_identifier: str) -> Entity:
         return await self.wrap_request(lambda: self.entities.get_entity(blueprint_identifier, entity_identifier))
 
-    async def get_entities(self, blueprint_identifier: str) -> List[Entity]:
+    async def get_entities(self, blueprint_identifier: str) -> list[Entity]:
         return await self.wrap_request(lambda: self.entities.get_entities(blueprint_identifier))
 
-    async def create_entity(self, blueprint_identifier: str, entity_data: Dict[str, Any], query: Dict[str, Any]) -> Entity:
+    async def create_entity(self, blueprint_identifier: str, entity_data: dict[str, Any], query: dict[str, Any]) -> Entity:
         return await self.wrap_request(lambda: self.entities.create_entity(blueprint_identifier, entity_data, query))
 
-    async def update_entity(self, blueprint_identifier: str, entity_identifier: str, entity_data: Dict[str, Any]) -> Entity:
+    async def update_entity(self, blueprint_identifier: str, entity_identifier: str, entity_data: dict[str, Any]) -> Entity:
         return await self.wrap_request(lambda: self.entities.update_entity(blueprint_identifier, entity_identifier, entity_data))
 
     async def delete_entity(self, blueprint_identifier: str, entity_identifier: str, delete_dependents: bool = False) -> bool:
@@ -99,13 +99,13 @@ class PortClient:
     async def get_scorecard(self, blueprint_id: str, scorecard_id: str) -> Scorecard:
         return await self.wrap_request(lambda: self.scorecards.get_scorecard(blueprint_id, scorecard_id))
 
-    async def get_scorecards(self, blueprint_identifier: str) -> List[Scorecard]:
+    async def get_scorecards(self, blueprint_identifier: str) -> list[Scorecard]:
         return await self.wrap_request(lambda: self.scorecards.get_scorecards(blueprint_identifier))
 
-    async def create_scorecard(self, blueprint_id: str, scorecard_data: Dict[str, Any]) -> Scorecard:
+    async def create_scorecard(self, blueprint_id: str, scorecard_data: dict[str, Any]) -> Scorecard:
         return await self.wrap_request(lambda: self.scorecards.create_scorecard(blueprint_id, scorecard_data))
 
-    async def update_scorecard(self, blueprint_id: str, scorecard_id: str, scorecard_data: Dict[str, Any]) -> Scorecard:
+    async def update_scorecard(self, blueprint_id: str, scorecard_id: str, scorecard_data: dict[str, Any]) -> Scorecard:
         return await self.wrap_request(lambda: self.scorecards.update_scorecard(blueprint_id, scorecard_id, scorecard_data))
 
     async def delete_scorecard(self, scorecard_id: str, blueprint_id: str) -> bool:

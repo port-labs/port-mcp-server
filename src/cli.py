@@ -4,8 +4,8 @@ Command-line interface for the Port.io MCP Server.
 
 import argparse
 
-from src.config.server_config import McpServerConfig, init_server_config
 from src import main
+from src.config.server_config import McpServerConfig, init_server_config
 
 
 def parse_args():

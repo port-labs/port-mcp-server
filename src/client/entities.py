@@ -1,11 +1,10 @@
-from typing import Any, List, Dict
+from typing import Any
 
+from loguru import logger
 from pyport import PortClient
 
 from src.models.entities import Entity
 from src.utils import PortError
-
-from loguru import logger
 
 
 class PortEntityClient:
@@ -16,7 +15,7 @@ class PortEntityClient:
     def __init__(self, client: PortClient):
         self._client = client
 
-    async def get_entities(self, blueprint_identifier: str) -> List[Entity]:
+    async def get_entities(self, blueprint_identifier: str) -> list[Entity]:
         logger.info(f"Getting entities for blueprint '{blueprint_identifier}' from Port")
 
         entities_data = self._client.entities.get_entities(blueprint_identifier)
@@ -38,7 +37,7 @@ class PortEntityClient:
 
         return Entity(**entity_data)
 
-    async def create_entity(self, blueprint_identifier: str, entity_data: Dict[str, Any], query: Dict[str, Any]) -> Entity:
+    async def create_entity(self, blueprint_identifier: str, entity_data: dict[str, Any], query: dict[str, Any]) -> Entity:
         logger.info(f"Creating entity for blueprint '{blueprint_identifier}' in Port")
         logger.debug(f"Input from tool to create entity: {entity_data}")
 
@@ -66,7 +65,7 @@ class PortEntityClient:
 
         return Entity(**entity)
 
-    async def update_entity(self, blueprint_identifier: str, entity_identifier: str, entity_data: Dict[str, Any]) -> Entity:
+    async def update_entity(self, blueprint_identifier: str, entity_identifier: str, entity_data: dict[str, Any]) -> Entity:
         logger.info(f"Updating entity '{entity_identifier}' in blueprint '{blueprint_identifier}' in Port")
         logger.debug(f"Input from tool to update entity: {entity_data}")
 

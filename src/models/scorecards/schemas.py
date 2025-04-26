@@ -1,23 +1,24 @@
-import datetime
-from typing import Annotated, Any, Literal
+from typing import Literal
 
-from pydantic import Field, ValidatorFunctionWrapHandler, WrapValidator
+from pydantic import Field
+
 from src.models.common.base_pydantic import BaseModel
-from .condition_property_tool import (
-    ScorecardConditionPropertyBetweenConditionSchemaExplicitForTool,
-    ScorecardConditionPropertyContainsAnyConditionSchemaExplicitForTool,
-    ScorecardConditionRelationComparisonConditionSchemaExplicitForTool,
-    ScorecardConditionPropertyComparisonConditionSchemaExplicitForTool,
-    ScorecardConditionPropertyEmptyConditionSchemaExplicitForTool,
-    ScorecardConditionRelationEmptyConditionSchemaExplicitForTool,
-)
+
 from .condition_property import (
     ScorecardConditionPropertyBetweenConditionSchema,
-    ScorecardConditionPropertyContainsAnyConditionSchema,
-    ScorecardConditionRelationComparisonConditionSchema,
     ScorecardConditionPropertyComparisonConditionSchema,
+    ScorecardConditionPropertyContainsAnyConditionSchema,
     ScorecardConditionPropertyEmptyConditionSchema,
+    ScorecardConditionRelationComparisonConditionSchema,
     ScorecardConditionRelationEmptyConditionSchema,
+)
+from .condition_property_tool import (
+    ScorecardConditionPropertyBetweenConditionSchemaExplicitForTool,
+    ScorecardConditionPropertyComparisonConditionSchemaExplicitForTool,
+    ScorecardConditionPropertyContainsAnyConditionSchemaExplicitForTool,
+    ScorecardConditionPropertyEmptyConditionSchemaExplicitForTool,
+    ScorecardConditionRelationComparisonConditionSchemaExplicitForTool,
+    ScorecardConditionRelationEmptyConditionSchemaExplicitForTool,
 )
 
 

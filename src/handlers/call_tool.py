@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict
+from typing import Any
 
 from loguru import logger
 from mcp.types import TextContent
@@ -8,13 +8,13 @@ from pydantic import ValidationError
 from src.models.tools import Tool
 
 
-async def execute_tool(tool: Tool, arguments: Dict[str, Any]):
+async def execute_tool(tool: Tool, arguments: dict[str, Any]):
     tool_name = tool.name
     logger.info(f"Executing tool {tool_name}")
     logger.debug(f"Executing tool {tool_name} with arguments: {arguments}")
     try:
         validated_args = tool.validate_input(arguments)
-        logger.debug(f"Validation was successful")
+        logger.debug("Validation was successful")
         result = await tool.function(validated_args)
         logger.debug(f"Tool {tool_name} returned: {result}")
         return [TextContent(type="text", text=json.dumps(result))]

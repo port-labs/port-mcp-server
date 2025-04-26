@@ -1,5 +1,5 @@
 import re
-from typing import Any, Dict
+from typing import Any
 
 from loguru import logger
 from pyport import PortClient
@@ -14,7 +14,7 @@ class PortAgentClient:
     def __init__(self, client: PortClient):
         self._client = client
 
-    async def trigger_agent(self, prompt: str) -> Dict[str, Any]:
+    async def trigger_agent(self, prompt: str) -> dict[str, Any]:
         endpoint = "agent/invoke"
         data = {"prompt": prompt}
 
