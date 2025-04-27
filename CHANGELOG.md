@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.8] - 2025-04-27
+
+### Changed
+- Upgraded Python from 3.10 to 3.13 in all GitHub workflows and project configuration
+- Refactored codebase to use module-based architecture for better organization
+- Replaced Dict/List with Python 3.9+ built-in types (dict/list)
+- Updated Pydantic models to be compatible with Pydantic v2
+- Enhanced configuration management with Pydantic-based validation
+- Improved test structure with a more comprehensive approach
+- Simplified CI/CD workflows with Makefile targets
+
+### Added
+- Added robust error handling and improved logging
+- Implemented GitHub Actions workflows for CI
+- Added linters (ruff, mypy) and formatters (black) via pyproject.toml
+- Added CODEOWNERS file for better repository management
+- Created dedicated model classes for Port tools
+
+### Fixed
+- Fixed line endings and whitespace issues
+- Improved region configuration to properly handle US/EU values
+- Fixed parameter validation in AI agent tool tests
+- Enhanced error reporting with proper exception handling
+
 ## [0.1.7] - 2025-04-01
 
 ### Added

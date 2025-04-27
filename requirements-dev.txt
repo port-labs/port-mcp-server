@@ -1,4 +1,0 @@
-# Development dependencies
-pytest>=8.0.0
-ruff>=0.7.3
-pyright>=1.1.389

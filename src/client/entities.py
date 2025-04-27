@@ -1,0 +1,98 @@
+from typing import Any
+
+from loguru import logger
+from pyport import PortClient
+
+from src.models.entities import EntityResult
+from src.utils import PortError
+
+
+class PortEntityClient:
+    """Client for interacting with Port Entity APIs."""
+
+    _client: PortClient
+
+    def __init__(self, client: PortClient):
+        self._client = client
+
+    async def get_entities(self, blueprint_identifier: str) -> list[EntityResult]:
+        logger.info(f"Getting entities for blueprint '{blueprint_identifier}' from Port")
+
+        entities_data = self._client.entities.get_entities(blueprint_identifier)
+
+        logger.info(f"Got {len(entities_data)} entities for blueprint '{blueprint_identifier}' from Port")
+        logger.debug(f"Response for get entities: {entities_data}")
+
+        entity_list = [EntityResult(**entity_data) for entity_data in entities_data]
+
+        return entity_list
+
+    async def get_entity(self, blueprint_identifier: str, entity_identifier: str) -> EntityResult:
+        logger.info(f"Getting entity '{entity_identifier}' from blueprint '{blueprint_identifier}' from Port")
+
+        entity_data = self._client.entities.get_entity(blueprint_identifier, entity_identifier)
+
+        logger.info(f"Got entity '{entity_identifier}' from blueprint '{blueprint_identifier}' from Port")
+        logger.debug(f"Response for get entity: {entity_data}")
+
+        return EntityResult(**entity_data)
+
+    async def create_entity(self, blueprint_identifier: str, entity_data: dict[str, Any], query: dict[str, Any]) -> EntityResult:
+        logger.info(f"Creating entity for blueprint '{blueprint_identifier}' in Port")
+        logger.debug(f"Input from tool to create entity: {entity_data}")
+
+        url = f"blueprints/{blueprint_identifier}/entities"
+        query_str = (
+            f"upsert={query.get('upsert', False)}&"
+            f"validation_only={query.get('validation_only', False)}&"
+            f"create_missing_related_entities={query.get('create_missing_related_entities', False)}&"
+            f"merge={query.get('merge', False)}"
+        ).lower()
+
+        response = self._client.make_request("POST", f"{url}?{query_str}", json=entity_data)
+        created_data = response.json()
+
+        if not created_data.get("ok"):
+            message = f"Failed to create entity: {created_data}"
+            logger.warning(message)
+            raise PortError(message)
+
+        logger.info(f"Created entity for blueprint '{blueprint_identifier}' in Port")
+
+        entity = created_data.get("entity", {})
+
+        logger.debug(f"Response for create entity: {entity}")
+
+        return EntityResult(**entity)
+
+    async def update_entity(self, blueprint_identifier: str, entity_identifier: str, entity_data: dict[str, Any]) -> EntityResult:
+        logger.info(f"Updating entity '{entity_identifier}' in blueprint '{blueprint_identifier}' in Port")
+        logger.debug(f"Input from tool to update entity: {entity_data}")
+
+        updated_data = self._client.entities.update_entity(blueprint_identifier, entity_identifier, entity_data)
+        if not updated_data.get("ok"):
+            message = f"Failed to update entity: {updated_data}"
+            logger.warning(message)
+            raise PortError(message)
+
+        logger.info(f"Updated entity '{entity_identifier}' in blueprint '{blueprint_identifier}' in Port")
+
+        entity = updated_data.get("entity", {})
+        logger.debug(f"Response for update entity: {entity}")
+
+        return EntityResult(**entity)
+
+    async def delete_entity(self, blueprint_identifier: str, entity_identifier: str, delete_dependents: bool = False) -> bool:
+        logger.info(f"Deleting entity '{entity_identifier}' from blueprint '{blueprint_identifier}' in Port")
+        logger.debug(f"Input from tool to delete entity: {delete_dependents}")
+
+        url = f"blueprints/{blueprint_identifier}/entities/{entity_identifier}"
+        query_str = f"delete_dependents={delete_dependents}".lower()
+        response = self._client.make_request("DELETE", f"{url}?{query_str}")
+        response_json = response.json()
+        if not response_json.get("ok"):
+            message = f"Failed to delete entity: {response_json}"
+            logger.warning(message)
+            raise PortError(message)
+        logger.info(f"Deleted entity '{entity_identifier}' from blueprint '{blueprint_identifier}' in Port")
+        return response_json.get("ok")
