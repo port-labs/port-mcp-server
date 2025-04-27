@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.13'
           cache: 'pip'
           
       - name: Install dependencies
@@ -26,19 +26,4 @@ jobs:
       
       - name: Run unit tests
         run: |
-          poetry run pytest src/tests/unit/ -v
-          
-      - name: Run integration tests
-        run: |
-          poetry run pytest src/tests/integration/ -v
-      
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: |
-            .coverage
-            coverage.xml
-            pytest-report.xml
-          if-no-files-found: ignore 
+          make test
