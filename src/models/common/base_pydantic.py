@@ -3,6 +3,7 @@ from typing import Any
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic import ConfigDict as PydanticConfigDict
 
+
 def json_schema_extra(schema: dict[str, Any], model: Any) -> None:
     schema.pop("title", None)
     for prop in schema.get("properties", {}).values():
