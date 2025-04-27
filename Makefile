@@ -4,8 +4,8 @@
 all: help
 
 POETRY_CHECK := $(shell command -v poetry 2> /dev/null)
-POETRY := poetry
-RUN_CMD := poetry run
+POETRY := python -m poetry
+RUN_CMD := python -m poetry run
 PYTHON := python
 
 help:
@@ -67,10 +67,19 @@ clean:
 	find . -type d -name __pycache__ -exec rm -rf {} +
 
 install:
-	@echo "Installing dependencies..."
+	@echo Checking if .venv exists
+	if [ -z $(ls -ls . | grep .venv) ]; then \
+		$(PYTHON) -m venv .venv; \
+		echo "Created .venv"; \
+	fi
+	@echo "Activating .venv"
+	. .venv/bin/activate; 
+	@echo "Checking if poetry is installed"
 	if [ -z "$(POETRY_CHECK)" ]; then \
 		$(PYTHON) -m pip install poetry 2> /dev/null 1> /dev/null; \
+		echo "Installed poetry"; \
 	fi
+	@echo "Installing dependencies..."
 	$(POETRY) install
 	
 bump-version:
