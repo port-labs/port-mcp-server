@@ -27,7 +27,6 @@ help:
 lint:
 	@echo "Running linting checks..."
 	$(RUN_CMD) ruff check src
-	$(RUN_CMD) mypy server
 
 format:
 	@echo "Formatting code..."

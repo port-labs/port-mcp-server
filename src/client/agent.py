@@ -20,7 +20,7 @@ class PortAgentClient:
 
         response = self._client.make_request(method="POST", endpoint=endpoint, json=data)
 
-        response_data = response.json()
+        response_data:dict[str, Any] = response.json()
 
         # Check for nested identifier in invocation object
         if response_data.get("ok") and response_data.get("invocation", {}).get("identifier"):

@@ -55,6 +55,8 @@ def init_server_config(override: dict[str, str] | None = None):
         client_secret = os.environ.get("PORT_CLIENT_SECRET", "")
         region = os.environ.get("PORT_REGION", "EU")
         log_level = os.environ.get("PORT_LOG_LEVEL", "ERROR")
+        region = "US" if region.upper() == "US" else "EU"
+        log_level = log_level.upper() or "ERROR"
         config = McpServerConfig(
             port_client_id=client_id,
             port_client_secret=client_secret,

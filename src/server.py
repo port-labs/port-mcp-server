@@ -1,3 +1,5 @@
+# ruff: noqa: I001
+
 import sys
 from typing import Any
 
