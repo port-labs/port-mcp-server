@@ -4,11 +4,11 @@ from pydantic import Field
 
 from src.client.client import PortClient
 from src.models.common.annotations import Annotations
-from src.models.scorecards import Scorecard, ScorecardCreate
+from src.models.scorecards import Scorecard, ScorecardUpdate
 from src.models.tools.tool import Tool
 
 
-class UpdateScorecardToolSchema(ScorecardCreate):
+class UpdateScorecardToolSchema(ScorecardUpdate):
     blueprint_identifier: str = Field(..., description="The identifier of the blueprint to create the scorecard for")
     scorecard_identifier: str = Field(..., description="The identifier of the scorecard to update")
 

@@ -3,12 +3,12 @@ from typing import Any
 from loguru import logger
 
 from src.client.client import PortClient
-from src.models.blueprints import Blueprint, CreateBlueprint
+from src.models.blueprints import Blueprint, UpdateBlueprint
 from src.models.common.annotations import Annotations
 from src.models.tools.tool import Tool
 
 
-class UpdateBlueprintToolSchema(CreateBlueprint):
+class UpdateBlueprintToolSchema(UpdateBlueprint):
     pass
 
 

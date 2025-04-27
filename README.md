@@ -39,13 +39,15 @@ We're continuously expanding Port MCP's capabilities. Have a suggestion? We'd lo
 
 Add the following to your `claude_desktop_config.json`:
 
+#### UVX
+
 ```json
 {
   "mcpServers": {
     "port": {
       "command": "uvx",
       "args": [
-        "mcp-server-port@0.1.4",
+        "mcp-server-port@0.1.8",
         "--client-id", "YOUR_CLIENT_ID",
         "--client-secret", "YOUR_CLIENT_SECRET",
         "--region", "REGION" # US or EU
@@ -55,7 +57,27 @@ Add the following to your `claude_desktop_config.json`:
 } 
 ```
 
+#### Docker
+```json
+{
+  "mcpServers": {
+    "port": {
+      "command": "docker",
+      "args": [
+        "mcp-server-port@0.1.8",
+        "--client-id", "YOUR_CLIENT_ID",
+        "--client-secret", "YOUR_CLIENT_SECRET",
+        "--region", "REGION" # US or EU
+      ]
+    }
+  }
+}
+```
+
+
 ### Cursor
+
+####UVX
 
 1. Make sure `uvx` is installed:
 ```bash
@@ -75,7 +97,7 @@ which uvx
 cd /Users/janedoe/.local/bin/uvx
 
 # Run the server with the specified credentials
-./.venv/bin/uvx mcp-server-port@0.1.4 --client-id YOUR_CLIENT_ID --client-secret YOUR_CLIENT_SECRET --region YOUR_REGION
+./.venv/bin/uvx mcp-server-port@0.1.8 --client-id YOUR_CLIENT_ID --client-secret YOUR_CLIENT_SECRET --region YOUR_REGION
 ```
 
 4. Make it executable:
@@ -90,7 +112,39 @@ chmod +x /path/to/your/file/run-port-mcp.sh
      * Type - `Command`
      * Command - `/path/to/your/file/run-port-mcp.sh`
 
+####Docker
+
+```json
+{
+    "mcpServers": {
+        "port": {
+            "command": "docker",
+            "args": [
+                "run",
+                "-i",
+                "--rm",
+                "-e",
+                "PORT_CLIENT_ID",
+                "-e",
+                "PORT_CLIENT_SECRET",
+                "-e",
+                "PORT_REGION",
+                "-e",
+                "PORT_LOG_LEVEL",
+                "ivan/test-port-mcp-no-prompt"
+            ],
+            "env": {
+                "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
+                "PORT_CLIENT_SECRET": "<PORT_CLIENT_SECRET>",
+                "PORT_REGION": "<PORT_REGION>",
+                "PORT_LOG_LEVEL": "<PORT_LOG_LEVEL>"
+            }
+        }
+    }
+}
+```
 ![Cursor MCP Screenshot](/assets/cursor_mcp_screenshot.png)
+
 
 ## Available Tools
 
@@ -108,6 +162,63 @@ chmod +x /path/to/your/file/run-port-mcp.sh
      - `blueprint_identifier` (string): The unique identifier of the blueprint to retrieve
    - Optional inputs:
      - `detailed` (boolean, default: true): Return complete schema details
+
+3. `create_blueprint`
+   - Create a new blueprint in Port
+   - Required inputs:
+     - Various fields including identifier, title, properties, etc.
+   - Returns: The created blueprint object
+
+4. `update_blueprint`
+   - Update an existing blueprint
+   - Required inputs:
+     - `identifier` (string): The unique identifier of the blueprint to update
+     - Various fields to update
+   - Returns: The updated blueprint object
+
+5. `delete_blueprint`
+   - Delete a blueprint from Port
+   - Required inputs:
+     - `blueprint_identifier` (string): The unique identifier of the blueprint to delete
+   - Returns: Success status
+
+### Entity Tools
+
+1. `get_entities`
+   - Retrieve all entities for a given blueprint
+   - Required inputs:
+     - `blueprint_identifier` (string): The identifier of the blueprint to get entities for
+   - Optional inputs:
+     - `detailed` (boolean, default: false): Return complete entity details including properties
+
+2. `get_entity`
+   - Retrieve information about a specific entity
+   - Required inputs:
+     - `blueprint_identifier` (string): The identifier of the blueprint the entity belongs to
+     - `entity_identifier` (string): The unique identifier of the entity to retrieve
+   - Optional inputs:
+     - `detailed` (boolean, default: true): Return complete entity details
+
+3. `create_entity`
+   - Create a new entity for a specific blueprint
+   - Required inputs:
+     - `blueprint_identifier` (string): The identifier of the blueprint to create the entity for
+     - `entity` (object): The entity data following the blueprint schema
+
+4. `update_entity`
+   - Update an existing entity
+   - Required inputs:
+     - `blueprint_identifier` (string): The identifier of the blueprint the entity belongs to
+     - `entity_identifier` (string): The unique identifier of the entity to update
+     - `entity` (object): The updated entity data
+
+5. `delete_entity`
+   - Delete an entity
+   - Required inputs:
+     - `blueprint_identifier` (string): The identifier of the blueprint the entity belongs to
+     - `entity_identifier` (string): The unique identifier of the entity to delete
+   - Optional inputs:
+     - `delete_dependents` (boolean, default: false): If true, also deletes all dependencies
 
 ### Scorecard Tools
 
@@ -132,6 +243,29 @@ chmod +x /path/to/your/file/run-port-mcp.sh
    - Optional inputs:
      - `rules` (list): List of rules for the scorecard
      - `description` (string): Description for the scorecard
+
+4. `update_scorecard`
+   - Update an existing scorecard
+   - Required inputs:
+     - `blueprint_identifier` (string): The identifier of the blueprint the scorecard belongs to
+     - `scorecard_identifier` (string): The unique identifier of the scorecard to update
+     - Various fields to update (title, levels, rules, etc.)
+   - Returns: The updated scorecard object
+
+5. `delete_scorecard`
+   - Delete a scorecard from Port
+   - Required inputs:
+     - `blueprint_identifier` (string): The identifier of the blueprint the scorecard belongs to
+     - `scorecard_identifier` (string): The unique identifier of the scorecard to delete
+   - Returns: Success status
+
+### AI Agent Tool
+
+1. `invoke_ai_agent`
+   - Invoke a Port AI agent with a specific prompt
+   - Required inputs:
+     - `prompt` (string): The prompt to send to the AI agent
+   - Returns: Invocation status and message from the AI agent
 
 ## Feedback and Roadmap
 

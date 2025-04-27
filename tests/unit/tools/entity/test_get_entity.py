@@ -1,13 +1,13 @@
 import pytest
 
-from src.models import Entity
+from src.models import EntityResult
 from src.tools.entity import GetEntityTool
 
 
 @pytest.fixture
 def mock_client_with_entity(mock_client):
     """Add specific return values for this test"""
-    mock_client.get_entity.return_value = Entity(identifier="test-entity", title="Test Entity", blueprint="test-blueprint")
+    mock_client.get_entity.return_value = EntityResult(identifier="test-entity", title="Test Entity", blueprint="test-blueprint")
     return mock_client
 
 

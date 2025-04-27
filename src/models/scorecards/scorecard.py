@@ -55,3 +55,6 @@ class ScorecardCreate(ScorecardCommonExplicitForTool):
                         "condition_name is required within rules[index].query.conditions[index].condition_name"
                     ) from e
             raise e
+
+class ScorecardUpdate(ScorecardCommonExplicitForTool):
+    pass

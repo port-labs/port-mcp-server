@@ -6,17 +6,17 @@ from pydantic.json_schema import SkipJsonSchema
 from src.client.client import PortClient
 from src.models.common.annotations import Annotations
 from src.models.common.base_pydantic import BaseModel
-from src.models.entities import CreateEntity, Entity
+from src.models.entities import CreateEntity, EntityResult
 from src.models.tools.tool import Tool
 
 
 class CreateEntitiyQuery(BaseModel):
     upsert: bool | SkipJsonSchema[None] = Field(
-        default=False,
+        default=True,
         description="If true, this call will override the entire entity if it already exists.",
     )
     merge: bool | SkipJsonSchema[None] = Field(
-        default=False,
+        default=True,
         description="If true and upsert is also true, this call will update the entity if it already exists.",
     )
     validation_only: bool | SkipJsonSchema[None] = Field(
@@ -47,7 +47,7 @@ class CreateEntityTool(Tool):
             name="create_entity",
             description="Create an entity which is an instance of a blueprint, it represents the data defined by a blueprint's properties.",
             input_schema=CreateEntityToolSchema,
-            output_schema=Entity,
+            output_schema=EntityResult,
             annotations=Annotations(
                 title="Create Entity",
                 readOnlyHint=False,

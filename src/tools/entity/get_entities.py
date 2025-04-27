@@ -5,7 +5,7 @@ from pydantic import Field
 from src.client.client import PortClient
 from src.models.common.annotations import Annotations
 from src.models.common.base_pydantic import BaseModel
-from src.models.entities import Entity
+from src.models.entities import EntityResult
 from src.models.tools.tool import Tool
 
 
@@ -18,7 +18,7 @@ class GetEntitiesToolSchema(BaseModel):
 
 
 class GetEntitiesToolResponse(BaseModel):
-    entities: list[Entity] = Field(..., description="The list of entities")
+    entities: list[EntityResult] = Field(..., description="The list of entities")
 
 
 class GetEntitiesTool(Tool):

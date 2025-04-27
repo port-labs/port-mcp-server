@@ -14,11 +14,11 @@ organized into specialized modules:
 # Common models
 # Agent models
 from .agent import PortAgentResponse
-from .blueprints import Blueprint, CreateBlueprint
+from .blueprints import Blueprint, CreateBlueprint, UpdateBlueprint
 from .common import Annotations, BaseModel
-from .entities import CreateEntity, Entity
+from .entities import CreateEntity, EntityResult, UpdateEntity
 from .resources import Resource, ResourceMap
-from .scorecards import Scorecard, ScorecardCreate
+from .scorecards import Scorecard, ScorecardCreate, ScorecardUpdate
 from .tools import Tool, ToolMap
 
 __all__ = [
@@ -30,12 +30,15 @@ __all__ = [
     # Blueprints
     "Blueprint",
     "CreateBlueprint",
+    "UpdateBlueprint",
     # Entities
-    "Entity",
+    "EntityResult",
     "CreateEntity",
+    "UpdateEntity",
     # Scorecards
     "Scorecard",
     "ScorecardCreate",
+    "ScorecardUpdate",
     # Tools
     "Tool",
     "ToolMap",

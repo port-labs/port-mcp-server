@@ -5,7 +5,7 @@ from pydantic import Field
 from src.client.client import PortClient
 from src.models.common.annotations import Annotations
 from src.models.common.base_pydantic import BaseModel
-from src.models.entities import CreateEntity, Entity
+from src.models.entities import CreateEntity, EntityResult
 from src.models.tools.tool import Tool
 
 
@@ -23,7 +23,7 @@ class UpdateEntityTool(Tool):
             name="update_entity",
             description="Update an entity for a specific blueprint using its identifier. Preforms PUT-like replacement of the entity based on the provided payload and requires all required fields.",
             input_schema=UpdateEntityToolSchema,
-            output_schema=Entity,
+            output_schema=EntityResult,
             annotations=Annotations(
                 title="Update Entity",
                 readOnlyHint=False,

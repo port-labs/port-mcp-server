@@ -190,3 +190,6 @@ class CreateBlueprint(BlueprintCommon):
         alias="changelogDestination",
         serialization_alias="changelogDestination",
     )
+
+class UpdateBlueprint(BlueprintCommon):
+    pass

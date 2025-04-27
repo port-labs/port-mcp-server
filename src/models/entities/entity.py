@@ -54,8 +54,10 @@ class CommonEntity(BaseModel):
 class CreateEntity(CommonEntity):
     pass
 
+class UpdateEntity(CommonEntity):
+    pass
 
-class Entity(CommonEntity):
+class EntityResult(CommonEntity):
     blueprint: str = Field(..., description="The blueprint of the entity")
     created_at: str | SkipJsonSchema[None] = Field(None, description="The created at date of the entity")
     created_by: str | SkipJsonSchema[None] = Field(None, description="The created by user of the entity")

@@ -12,7 +12,7 @@ from src.client.scorecards import PortScorecardClient
 from src.config import config
 from src.models.agent import PortAgentResponse
 from src.models.blueprints import Blueprint
-from src.models.entities import Entity
+from src.models.entities import EntityResult
 from src.models.scorecards import Scorecard
 from src.utils import PortError
 
@@ -79,16 +79,16 @@ class PortClient:
     async def delete_blueprint(self, blueprint_identifier: str) -> bool:
         return await self.wrap_request(lambda: self.blueprints.delete_blueprint(blueprint_identifier))
 
-    async def get_entity(self, blueprint_identifier: str, entity_identifier: str) -> Entity:
+    async def get_entity(self, blueprint_identifier: str, entity_identifier: str) -> EntityResult:
         return await self.wrap_request(lambda: self.entities.get_entity(blueprint_identifier, entity_identifier))
 
-    async def get_entities(self, blueprint_identifier: str) -> list[Entity]:
+    async def get_entities(self, blueprint_identifier: str) -> list[EntityResult]:
         return await self.wrap_request(lambda: self.entities.get_entities(blueprint_identifier))
 
-    async def create_entity(self, blueprint_identifier: str, entity_data: dict[str, Any], query: dict[str, Any]) -> Entity:
+    async def create_entity(self, blueprint_identifier: str, entity_data: dict[str, Any], query: dict[str, Any]) -> EntityResult:
         return await self.wrap_request(lambda: self.entities.create_entity(blueprint_identifier, entity_data, query))
 
-    async def update_entity(self, blueprint_identifier: str, entity_identifier: str, entity_data: dict[str, Any]) -> Entity:
+    async def update_entity(self, blueprint_identifier: str, entity_identifier: str, entity_data: dict[str, Any]) -> EntityResult:
         return await self.wrap_request(lambda: self.entities.update_entity(blueprint_identifier, entity_identifier, entity_data))
 
     async def delete_entity(self, blueprint_identifier: str, entity_identifier: str, delete_dependents: bool = False) -> bool:

@@ -5,7 +5,7 @@ from pydantic import Field
 from src.client.client import PortClient
 from src.models.common.annotations import Annotations
 from src.models.common.base_pydantic import BaseModel
-from src.models.entities import Entity
+from src.models.entities import EntityResult
 from src.models.tools.tool import Tool
 
 
@@ -26,7 +26,7 @@ class GetEntityTool(Tool):
             name="get_entity",
             description="Get an entity from a given blueprint using it's identifier",
             input_schema=GetEntityToolSchema,
-            output_schema=Entity,
+            output_schema=EntityResult,
             annotations=Annotations(
                 title="Get Entity",
                 readOnlyHint=True,
