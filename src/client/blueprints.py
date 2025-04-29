@@ -1,10 +1,11 @@
 import json
 from typing import Any
 
-from loguru import logger
 from pyport import PortClient
 
+from src.config import config
 from src.models.blueprints import Blueprint
+from src.utils import logger
 from src.utils.errors import PortError
 
 
@@ -22,8 +23,12 @@ class PortBlueprintClient:
         logger.info("Got blueprints from Port")
 
         logger.debug(f"Response for get blueprints: {blueprints}")
-
-        return [Blueprint(**bp) for bp in blueprints]
+        if config.api_validation_enabled:
+            logger.debug("Validating blueprints")
+            return [Blueprint(**bp) for bp in blueprints]
+        else:
+            logger.debug("Skipping API validation for blueprints")
+            return [Blueprint.construct(**bp) for bp in blueprints]
 
     async def get_blueprint(self, blueprint_identifier: str) -> Blueprint:
         logger.info(f"Getting blueprint '{blueprint_identifier}' from Port")
@@ -34,8 +39,13 @@ class PortBlueprintClient:
 
         logger.info(f"Got blueprint '{blueprint_identifier}' from Port")
 
-        return Blueprint(**bp_data)
-
+        if config.api_validation_enabled:
+            logger.debug("Validating blueprint")
+            return Blueprint(**bp_data)
+        else:
+            logger.debug("Skipping API validation for blueprint")
+            return Blueprint.construct(**bp_data)
+        
     async def create_blueprint(self, blueprint_data: dict[str, Any]) -> Blueprint:
         data_json = json.dumps(blueprint_data)
 
@@ -51,7 +61,13 @@ class PortBlueprintClient:
         logger.info("Blueprint created in Port")
 
         result = result.get("blueprint", {})
-        blueprint = Blueprint(**result)
+
+        if config.api_validation_enabled:
+            logger.debug("Validating blueprint")
+            blueprint = Blueprint(**result)
+        else:
+            logger.debug("Skipping API validation for blueprint")
+            blueprint = Blueprint.construct(**result)
         logger.debug(f"Response for create blueprint: {blueprint}")
         return blueprint
 
@@ -70,7 +86,12 @@ class PortBlueprintClient:
         logger.info("Blueprint updated in Port")
 
         result = result.get("blueprint", {})
-        blueprint = Blueprint(**result)
+        if config.api_validation_enabled:
+            logger.debug("Validating blueprint")
+            blueprint = Blueprint(**result)
+        else:
+            logger.debug("Skipping API validation for blueprint")
+            blueprint = Blueprint.construct(**result)
         logger.debug(f"Response for update blueprint: {blueprint}")
         return blueprint
 

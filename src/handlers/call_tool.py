@@ -16,8 +16,9 @@ async def execute_tool(tool: Tool, arguments: dict[str, Any]):
         validated_args = tool.validate_input(arguments)
         logger.debug("Validation was successful")
         result = await tool.function(validated_args)
-        logger.debug(f"Tool {tool_name} returned: {result}")
-        return [TextContent(type="text", text=json.dumps(result))]
+        result_str = json.dumps(result)
+        logger.debug(f"Tool {tool_name} returned: {result_str}")
+        return [TextContent(type="text", text=result_str)]
     except ValidationError as e:
         errors = e.errors()
         logger.error(f"Error calling tool {tool_name}: {errors}, {e}")

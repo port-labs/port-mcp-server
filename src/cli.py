@@ -15,6 +15,7 @@ def parse_args():
     parser.add_argument("--client-secret", help="Port.io Client Secret", required=True)
     parser.add_argument("--region", default="EU", help="Port.io API region (EU or US)")
     parser.add_argument("--log-level", default="ERROR", help="Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)")
+    parser.add_argument("--api-validation-enabled", default="False", help="Enable API validation")
 
     return parser.parse_args()
 
@@ -32,6 +33,7 @@ def cli_main():
             port_client_secret=args.client_secret,
             region=args.region,
             log_level=args.log_level,
+            api_validation_enabled=args.api_validation_enabled.lower() == "true",
         ).model_dump()
     )
     # Call the main function with command-line arguments

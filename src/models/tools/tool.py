@@ -2,11 +2,11 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from loguru import logger
 from pydantic import ValidationError
 
 from src.models.common.annotations import Annotations
 from src.models.common.base_pydantic import BaseModel
+from src.utils import logger
 from src.utils.schema import inline_schema
 
 

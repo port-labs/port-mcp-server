@@ -9,12 +9,11 @@ from mcp.server.lowlevel import Server
 
 from src.handlers import execute_tool
 from src.maps.tool_map import tool_map
-from src.utils import setup_logging
+from src.utils import logger
 from src.config import config
 
 
 def main():
-    logger = setup_logging()
     try:
         # Set logging level based on debug flag
 
@@ -48,5 +47,4 @@ def main():
         logger.info("Server shutting down...")
     except Exception as e:
         logger.exception(f"Server error: {e}")
-        print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
