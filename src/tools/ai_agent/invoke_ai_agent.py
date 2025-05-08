@@ -67,9 +67,9 @@ class InvokeAIAGentTool(Tool):
 
             if status.status.lower() in ["completed", "failed", "error"]:
                 logger.info(f"Invocation {identifier} finished with status: {status.status}")
-                return InvokeAIAGentToolResponse(
+                return InvokeAIAGentToolResponse.construct(
                     invocation_id=identifier, invocation_status=status.status, message=""
-                ).model_dump()
+                ).model_dump(exclude_unset=True, exclude_none=True)
 
             logger.warning(f"Invocation {identifier} still in progress after {attempt * 5} seconds. Status: {status.status}")
             logger.warning(f"Status details: {status.__dict__ if hasattr(status, '__dict__') else status}")
@@ -81,8 +81,8 @@ class InvokeAIAGentTool(Tool):
         logger.warning(f"Last status: {status.status}")
         logger.warning(f"Last status details: {status.__dict__ if hasattr(status, '__dict__') else status}")
 
-        return InvokeAIAGentToolResponse(
+        return InvokeAIAGentToolResponse.construct(
             invocation_id=identifier,
             invocation_status="timed_out",
             message="⏳ Operation timed out. You can check the status later with identifier: {identifier}",
-        ).model_dump()
+        ).model_dump(exclude_unset=True, exclude_none=True)

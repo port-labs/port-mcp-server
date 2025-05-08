@@ -49,5 +49,5 @@ class GetEntitiesTool(Tool):
         raw_entities = await self.port_client.get_entities(blueprint_identifier)
         processed_entities = [entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities]
 
-        response = GetEntitiesToolResponse(entities=processed_entities)
-        return response.model_dump()
+        response = GetEntitiesToolResponse.construct(entities=processed_entities)
+        return response.model_dump(exclude_unset=True, exclude_none=True)

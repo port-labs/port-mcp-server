@@ -1,6 +1,6 @@
 [project]
 name = "mcp-server-port"
-version = "0.2.0"
+version = "0.2.2"
 authors = [
   { name = "Matan Grady", email = "matan.grady@getport.io" }
 ]
@@ -32,7 +32,7 @@ include = [
 ]
 [tool.poetry]
 name = "mcp-server-port"
-version = "0.2.0"
+version = "0.2.2"
 description = "Port's MCP server"
 packages = [
     { include = "src" }

@@ -39,23 +39,6 @@ We're continuously expanding Port MCP's capabilities. Have a suggestion? We'd lo
 
 Add the following to your `claude_desktop_config.json`:
 
-#### UVX
-
-```json
-{
-  "mcpServers": {
-    "port": {
-      "command": "uvx",
-      "args": [
-        "mcp-server-port@0.1.8",
-        "--client-id", "YOUR_CLIENT_ID",
-        "--client-secret", "YOUR_CLIENT_SECRET",
-        "--region", "REGION" # US or EU
-      ]
-    }
-  }
-} 
-```
 
 #### Docker
 ```json
@@ -64,11 +47,25 @@ Add the following to your `claude_desktop_config.json`:
     "port": {
       "command": "docker",
       "args": [
-        "mcp-server-port@0.1.8",
-        "--client-id", "YOUR_CLIENT_ID",
-        "--client-secret", "YOUR_CLIENT_SECRET",
-        "--region", "REGION" # US or EU
-      ]
+               "run",
+                "-i",
+                "--rm",
+                "-e",
+                "PORT_CLIENT_ID",
+                "-e",
+                "PORT_CLIENT_SECRET",
+                "-e",
+                "PORT_REGION",
+                "-e",
+                "PORT_LOG_LEVEL",
+                "ghcr.io/port-labs/port-mcp-server:0.2.1"
+              ],
+              "env": {
+                "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
+                "PORT_CLIENT_SECRET": "<PORT_CLIENT_SECRET>",
+                "PORT_REGION": "<PORT_REGION>",
+                "PORT_LOG_LEVEL": "<PORT_LOG_LEVEL>"
+              }
     }
   }
 }
@@ -77,35 +74,7 @@ Add the following to your `claude_desktop_config.json`:
 
 ### Cursor
 
-####UVX
-
-1. Make sure `uvx` is installed:
-```bash
-pip install uvx
-```
-
-2. Get its location:
-```bash
-which uvx
-# Example output: /Users/janedoe/.local/bin/uvx
-```
-
-3. Create a script to run the server:
-```bash
-# run-port-mcp.sh
-
-cd /Users/janedoe/.local/bin/uvx
-
-# Run the server with the specified credentials
-./.venv/bin/uvx mcp-server-port@0.1.8 --client-id YOUR_CLIENT_ID --client-secret YOUR_CLIENT_SECRET --region YOUR_REGION
-```
-
-4. Make it executable:
-```bash
-chmod +x /path/to/your/file/run-port-mcp.sh
-```
-
-5. Configure in Cursor settings:
+Configure in Cursor settings:
    - Go to Cursor settings > MCP Servers
    - Configure with:
      * Name - `Port`
@@ -131,7 +100,7 @@ chmod +x /path/to/your/file/run-port-mcp.sh
                 "PORT_REGION",
                 "-e",
                 "PORT_LOG_LEVEL",
-                "ivan/test-port-mcp-no-prompt"
+                "ghcr.io/port-labs/port-mcp-server:0.2.1"
             ],
             "env": {
                 "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
