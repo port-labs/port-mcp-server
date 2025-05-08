@@ -1,10 +1,11 @@
 import json
 from typing import Any
 
-from loguru import logger
 from pyport import PortClient
 
+from src.config import config
 from src.models.scorecards import Scorecard
+from src.utils import logger
 from src.utils.errors import PortError
 
 
@@ -22,7 +23,12 @@ class PortScorecardClient:
         logger.info(f"Got {len(scorecards_data)} scorecards for blueprint '{blueprint_identifier}' from Port")
         logger.debug(f"Response for get scorecards: {scorecards_data}")
 
-        return [Scorecard(**scorecard_data) for scorecard_data in scorecards_data]
+        if config.api_validation_enabled:
+            logger.debug("Validating scorecards")
+            return [Scorecard(**scorecard_data) for scorecard_data in scorecards_data]
+        else:
+            logger.debug("Skipping API validation for scorecards")
+            return [Scorecard.construct(**scorecard_data) for scorecard_data in scorecards_data]
 
     async def get_scorecard(self, blueprint_id: str, scorecard_id: str) -> Scorecard:
         logger.info(f"Getting scorecard '{scorecard_id}' from blueprint '{blueprint_id}' from Port")
@@ -59,7 +65,12 @@ class PortScorecardClient:
 
         logger.debug(f"Response for create scorecard: {data}")
 
-        return Scorecard(**data)
+        if config.api_validation_enabled:
+            logger.debug("Validating scorecard")
+            return Scorecard(**data)
+        else:
+            logger.debug("Skipping API validation for scorecard")
+            return Scorecard.construct(**data)
 
     async def delete_scorecard(self, scorecard_id: str, blueprint_id: str) -> bool:
         logger.info(f"Deleting scorecard '{scorecard_id}' from blueprint '{blueprint_id}'")
@@ -106,4 +117,9 @@ class PortScorecardClient:
 
         logger.debug(f"Response for update scorecard: {data}")
 
-        return Scorecard(**data)
+        if config.api_validation_enabled:
+            logger.debug("Validating scorecard")
+            return Scorecard(**data)
+        else:
+            logger.debug("Skipping API validation for scorecard")
+            return Scorecard.construct(**data)

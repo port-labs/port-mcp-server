@@ -1,9 +1,8 @@
 
-from loguru import logger
-
 from src.client import PortClient
 from src.config import config
 from src.models.tools import ToolMap
+from src.utils import logger
 
 
 def init_tool_map() -> ToolMap:

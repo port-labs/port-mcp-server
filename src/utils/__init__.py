@@ -2,7 +2,7 @@
 
 # Import and re-export setup_logging function
 from .errors import PortAuthError, PortError
-from .logger import setup_logging
+from .logger import logger
 from .schema import inline_schema
 
-__all__ = ["setup_logging", "PortError", "PortAuthError", "inline_schema"]
+__all__ = ["logger", "PortError", "PortAuthError", "inline_schema"]

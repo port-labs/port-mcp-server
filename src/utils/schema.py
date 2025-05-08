@@ -1,6 +1,6 @@
 from typing import Any
 
-from loguru import logger
+from src.utils import logger
 
 
 def inline_schema(schema: dict[str, Any]) -> dict[str, Any] | list[Any] | Any:

@@ -1,7 +1,7 @@
 from typing import Any
 
 import pytest
-from loguru import logger
+from src.utils import logger
 
 from src.utils.logger import setup_logging
 from src.utils.schema import inline_schema

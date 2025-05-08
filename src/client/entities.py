@@ -1,10 +1,10 @@
 from typing import Any
 
-from loguru import logger
 from pyport import PortClient
 
+from src.config import config
 from src.models.entities import EntityResult
-from src.utils import PortError
+from src.utils import PortError, logger
 
 
 class PortEntityClient:
@@ -22,10 +22,12 @@ class PortEntityClient:
 
         logger.info(f"Got {len(entities_data)} entities for blueprint '{blueprint_identifier}' from Port")
         logger.debug(f"Response for get entities: {entities_data}")
-
-        entity_list = [EntityResult(**entity_data) for entity_data in entities_data]
-
-        return entity_list
+        if config.api_validation_enabled:
+            logger.debug("Validating entities")
+            return [EntityResult(**entity_data) for entity_data in entities_data]
+        else:
+            logger.debug("Skipping API validation for entities")
+            return [EntityResult.construct(**entity_data) for entity_data in entities_data]
 
     async def get_entity(self, blueprint_identifier: str, entity_identifier: str) -> EntityResult:
         logger.info(f"Getting entity '{entity_identifier}' from blueprint '{blueprint_identifier}' from Port")
@@ -34,8 +36,12 @@ class PortEntityClient:
 
         logger.info(f"Got entity '{entity_identifier}' from blueprint '{blueprint_identifier}' from Port")
         logger.debug(f"Response for get entity: {entity_data}")
-
-        return EntityResult(**entity_data)
+        if config.api_validation_enabled:
+            logger.debug("Validating entity")
+            return EntityResult(**entity_data)
+        else:
+            logger.debug("Skipping API validation for entity")
+            return EntityResult.construct(**entity_data)
 
     async def create_entity(self, blueprint_identifier: str, entity_data: dict[str, Any], query: dict[str, Any]) -> EntityResult:
         logger.info(f"Creating entity for blueprint '{blueprint_identifier}' in Port")
@@ -62,8 +68,12 @@ class PortEntityClient:
         entity = created_data.get("entity", {})
 
         logger.debug(f"Response for create entity: {entity}")
-
-        return EntityResult(**entity)
+        if config.api_validation_enabled:
+            logger.debug("Validating entity")
+            return EntityResult(**entity)
+        else:
+            logger.debug("Skipping API validation for entity")
+            return EntityResult.construct(**entity)
 
     async def update_entity(self, blueprint_identifier: str, entity_identifier: str, entity_data: dict[str, Any]) -> EntityResult:
         logger.info(f"Updating entity '{entity_identifier}' in blueprint '{blueprint_identifier}' in Port")
@@ -80,7 +90,12 @@ class PortEntityClient:
         entity = updated_data.get("entity", {})
         logger.debug(f"Response for update entity: {entity}")
 
-        return EntityResult(**entity)
+        if config.api_validation_enabled:
+            logger.debug("Validating entity")
+            return EntityResult(**entity)
+        else:
+            logger.debug("Skipping API validation for entity")
+            return EntityResult.construct(**entity)
 
     async def delete_entity(self, blueprint_identifier: str, entity_identifier: str, delete_dependents: bool = False) -> bool:
         logger.info(f"Deleting entity '{entity_identifier}' from blueprint '{blueprint_identifier}' in Port")

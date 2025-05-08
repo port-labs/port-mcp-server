@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 
 import mcp.types as types
-from loguru import logger
 
 from src.models.resources.resource import Resource
+from src.utils import logger
 
 
 @dataclass

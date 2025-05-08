@@ -3,10 +3,9 @@ import os
 from typing import Literal
 
 from dotenv import load_dotenv
-from loguru import logger
 from pydantic import BaseModel, Field, ValidationError
 
-from src.utils import PortError
+from src.utils import PortError, logger
 
 # Load environment variables from .env file if it exists, but don't override existing env vars
 load_dotenv(override=False)
@@ -21,6 +20,8 @@ class McpServerConfig(BaseModel):
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = Field(
         default="INFO", description="The log level for the server"
     )
+    api_validation_enabled: bool | None = Field(default=False, description="Whether to enable API validation")
+    log_path: Literal["/tmp/port-mcp.log"] = Field('/tmp/port-mcp.log', description="The path to the log file")
 
     def __str__(self) -> str:
         port_client_id = self.port_client_id
@@ -55,6 +56,7 @@ def init_server_config(override: dict[str, str] | None = None):
         client_secret = os.environ.get("PORT_CLIENT_SECRET", "")
         region = os.environ.get("PORT_REGION", "EU")
         log_level = os.environ.get("PORT_LOG_LEVEL", "ERROR")
+        api_validation_enabled = os.environ.get("PORT_API_VALIDATION_ENABLED", "False").lower() == "true"
         region = "US" if region.upper() == "US" else "EU"
         log_level = log_level.upper() or "ERROR"
         config = McpServerConfig(
@@ -62,6 +64,7 @@ def init_server_config(override: dict[str, str] | None = None):
             port_client_secret=client_secret,
             region=region,
             log_level=log_level,
+            api_validation_enabled=api_validation_enabled,
         )
         return config
     except ValidationError as e:

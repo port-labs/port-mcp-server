@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 
 import mcp.types as types
-from loguru import logger
 
 import src.tools as mcp_tools
 from src.client.client import PortClient
 from src.models.tools.tool import Tool
+from src.utils import logger
 
 
 @dataclass

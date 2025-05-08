@@ -1,13 +1,13 @@
 import asyncio
 from typing import Any
 
-from loguru import logger
 from pydantic import Field
 
 from src.client import PortClient
 from src.models.common.annotations import Annotations
 from src.models.common.base_pydantic import BaseModel
 from src.models.tools.tool import Tool
+from src.utils import logger
 
 
 class InvokeAIAGentToolSchema(BaseModel):

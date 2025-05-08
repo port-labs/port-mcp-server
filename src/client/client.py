@@ -3,7 +3,6 @@ from typing import Any
 
 import pyport
 import requests
-from loguru import logger
 
 from src.client.agent import PortAgentClient
 from src.client.blueprints import PortBlueprintClient
@@ -14,7 +13,7 @@ from src.models.agent import PortAgentResponse
 from src.models.blueprints import Blueprint
 from src.models.entities import EntityResult
 from src.models.scorecards import Scorecard
-from src.utils import PortError
+from src.utils import PortError, logger
 
 
 class PortClient:

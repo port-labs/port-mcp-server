@@ -1,10 +1,11 @@
 import re
 from typing import Any
 
-from loguru import logger
 from pyport import PortClient
 
+from src.config import config
 from src.models.agent.port_agent_response import PortAgentResponse
+from src.utils import logger
 from src.utils.errors import PortError
 
 
@@ -56,13 +57,22 @@ class PortAgentClient:
                 if urls:
                     action_url = urls[0]
 
-            return PortAgentResponse(
-                identifier=identifier,
-                status=status,
-                output=message,
-                error=None if status.lower() != "error" else message,
-                action_url=action_url,
-            )
+            if config.api_validation_enabled:
+                return PortAgentResponse(
+                    identifier=identifier,
+                    status=status,
+                    output=message,
+                    error=None if status.lower() != "error" else message,
+                    action_url=action_url,
+                )
+            else:
+                return PortAgentResponse.construct(
+                    identifier=identifier,
+                    status=status,
+                    output=message,
+                    error=None if status.lower() != "error" else message,
+                    action_url=action_url,
+                )
 
         # If we don't have a result field, raise an error
         logger.error(f"Invalid response format: {response_data}")

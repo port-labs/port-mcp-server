@@ -1,9 +1,4 @@
-ARG VERSION="dev"
-
 FROM python:3.13-alpine AS build
-
-# Set build arguments
-ARG VERSION
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -24,6 +19,7 @@ RUN make install
 # Create a runtime stage with minimal dependencies
 FROM python:3.13-alpine
 
+LABEL org.opencontainers.image.source=https://github.com/port-labs/port-mcp-server
 # Set working directory
 WORKDIR /app
 
@@ -40,9 +36,6 @@ RUN chmod +x /app/entrypoint.sh
 
 # Expose any necessary ports
 # (No ports needed as this uses stdio for communication)
-
-# Set environment variable for version
-ENV APP_VERSION=${VERSION}
 
 # Command to run the server
 ENTRYPOINT ["/app/entrypoint.sh"]
