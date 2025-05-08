@@ -41,5 +41,5 @@ class GetBlueprintsTool(Tool):
 
     async def get_blueprints(self, props: GetBlueprintsToolSchema) -> dict[str, Any]:
         blueprints = await self.port_client.get_blueprints()
-        blueprints = GetBlueprintsToolResponse(blueprints=blueprints)
-        return blueprints.model_dump()
+        response = GetBlueprintsToolResponse.construct(blueprints=blueprints)
+        return response.model_dump(exclude_unset=True, exclude_none=True)

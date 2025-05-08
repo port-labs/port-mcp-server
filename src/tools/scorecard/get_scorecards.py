@@ -49,6 +49,6 @@ class GetScorecardsTool(Tool):
         raw_scorecards = await self.port_client.get_scorecards(blueprint_identifier)
         processed_scorecards = [scorecard.model_dump(exclude_unset=True, exclude_none=True) for scorecard in raw_scorecards]
 
-        response = GetScorecardsToolResponse(scorecards=processed_scorecards)
+        response = GetScorecardsToolResponse.construct(scorecards=processed_scorecards)
 
         return response.model_dump(exclude_unset=True, exclude_none=True)
