@@ -1,6 +1,6 @@
 [project]
 name = "mcp-server-port"
-version = "0.2.2"
+version = "0.2.6"
 authors = [
   { name = "Matan Grady", email = "matan.grady@getport.io" }
 ]
@@ -28,11 +28,11 @@ packages = ["src"]
 
 [tool.hatch.build]
 include = [
-    "src/mcp_server_port/**/*.py",
+    "src/**/*.py",
 ]
 [tool.poetry]
 name = "mcp-server-port"
-version = "0.2.2"
+version = "0.2.6"
 description = "Port's MCP server"
 packages = [
     { include = "src" }
