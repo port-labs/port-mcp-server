@@ -114,6 +114,12 @@ Configure in Cursor settings:
 ```
 ![Cursor MCP Screenshot](/assets/cursor_mcp_screenshot.png)
 
+## Usage
+
+### Recommendations
+
+1. We find that Claude Sonnet 3.7 works very well, but Claude Sonnet 3.5 has some issues with rerunning tools in a loop. We'd recommend using recent models.
+2. We recommend that in a new chat, you prompt your LLM to fetch existing Port blueprints. The LLM can have a create bias, at times not checking what exists before. This applies too to other resources - encouraging a fetch of existing resources in any cases where you want to update a blueprint, or create resources for one.
 
 ## Available Tools
 
