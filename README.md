@@ -1,10 +1,8 @@
 # Port MCP Server
 
-A Model Context Protocol (MCP) server for the [Port.io API](https://www.getport.io/), enabling Claude to interact with Port.io's developer platform capabilities using natural language.
+The [Port IO](https://www.getport.io/) MCP server is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) server, enabling advanced automations and natual language interactions for developers and AI applications.
 
 ## What You Can Do With Port MCP
-
-Transform how you work with Port.io using natural language:
 
 ### Find Information Quickly
 - **Get entity details** - "Who is the owner of service X?"
@@ -23,24 +21,61 @@ Transform how you work with Port.io using natural language:
 
 We're continuously expanding Port MCP's capabilities. Have a suggestion? We'd love to hear your feedback on our [roadmap](https://roadmap.getport.io/ideas)!
 
-## Installation
 
-### Obtain your Port credentials
-1. Create a Port.io Account:
-   - Visit [Port.io](https://www.port.io/)
-   - Sign up for an account if you don't have one
+# Installation
 
-2. Create an API Key:
-   - Navigate to your Port.io dashboard
+## Prerequisites
+Before you begin, you'll need:
+
+1. Create a Port Account (if you don't have one):
+   - Visit [Port.io](https://app.port.io/)
+   - Sign up for an account
+
+2. Obtain Port Credentials:
+   - Navigate to your Port dashboard
    - Go to Settings > Credentials
    - Save both the Client ID and Client Secret
 
-### Claude Desktop
+3. Installation Requirements:
+   - Either [Docker](https://www.docker.com/get-started/) installed on your system
+   - OR [uvx](https://pypi.org/project/uvx/) package manager installed
 
-Add the following to your `claude_desktop_config.json`:
+>[!NOTE]
+>You will also need to provide your Port region, which is either EU or US. If not provided, the default is EU.
 
+## Installation methods
+Port MCP Server can be installed using two methods:
 
-#### Docker
+### Package Installation (uvx)
+Use our official [Port MCP server](https://pypi.org/project/mcp-server-port/) package.
+
+### Docker Installation
+Use our official Docker image:
+```bash
+docker pull ghcr.io/port-labs/port-mcp-server:0.2.8
+```
+
+### Additional configurations
+You can pass these additional arguments for more advanced configuration:
+
+| Configuration Parameter | UVX Flag | Docker Environment Variable | Description | Default Value |
+|------------------------|----------|---------------------------|-------------|---------------|
+| Log Level | `log-level` | `PORT_LOG_LEVEL` | Controls the level of log output | `ERROR` |
+| API Validation | `api-validation-enabled` | `PORT_API_VALIDATION_ENABLED` | Controls if API schema should be validated and fail if it's not valid | `False` |
+
+## Usage with Claude Desktop
+1. Go to Settings > Developer and click on "Edit config".
+2. Edit the `claude_desktop_config.json` file and add the below configuration based on the installation method.
+3. Save the file and restart Claude.
+4. In a new chat, check the Tools section and you'll see Port available tools.
+
+![Claude MCP Tools](/assets/claude_mcp_tools.png)
+
+### Docker
+
+>[!TIP]
+>Consider using the full path to Docker (e.g., `/usr/local/bin/docker`) instead of just `docker`. You can find this path by running `which docker` in your terminal. Using the full path helps avoid PATH resolution issues and ensures consistent behavior across different shell environments.
+
 ```json
 {
   "mcpServers": {
@@ -58,7 +93,82 @@ Add the following to your `claude_desktop_config.json`:
                 "PORT_REGION",
                 "-e",
                 "PORT_LOG_LEVEL",
-                "ghcr.io/port-labs/port-mcp-server:0.2.1"
+                "ghcr.io/port-labs/port-mcp-server:0.2.2"
+              ],
+              "env": {
+                "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
+                "PORT_CLIENT_SECRET": "<PORT_CLIENT_SECRET>",
+                "PORT_REGION": "<PORT_REGION>",
+                "PORT_LOG_LEVEL": "<PORT_LOG_LEVEL>"
+              }
+    }
+  }
+}
+```
+
+### uvx
+
+>[!NOTE]
+>If you want to run the command from a virtual Python environment, add a `PYTHONPATH` variable to the `env` object with its path, e.g., `/path/to/your/venv/bin/python`.
+
+```json
+{
+  "mcpServers": {
+    "Port": {
+          "command": "uvx",
+          "args": [
+              "mcp-server-port@0.2.8",
+              "--client-id",
+              "<PORT_CLIENT_ID>",
+              "--client-secret",
+              "<PORT_CLIENT_SECRET>",
+              "--region",
+              "<PORT_REGION>"
+          ],
+          "env": {
+              "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
+              "PORT_CLIENT_SECRET": "<PORT_CLIENT_SECRET>",
+              "PORT_REGION": "<PORT_REGION>",
+              "PYTHONPATH": "/Users/matangrady/.venv-port-mcp/bin/python"
+          }
+      }
+  }
+}
+```
+
+## Usage with Cursor
+
+1. Go to Cursor > Settings > Cursor Settings.
+2. Click on the MCP tab, and "Add new global MCP server".
+2. Edit the `mcp.json` file and add the below configuration based on the installation method.
+3. Save the file and return to Cursor Settings.
+4. You will see the new Port server and its available tools.
+
+![Cursor MCP Screenshot](/assets/cursor_mcp_screenshot.png)
+
+### Docker
+
+>[!TIP]
+>Consider using the full path to Docker (e.g., `/usr/local/bin/docker`) instead of just `docker`. You can find this path by running `which docker` in your terminal. Using the full path helps avoid PATH resolution issues and ensures consistent behavior across different shell environments.
+
+```json
+{
+  "mcpServers": {
+    "port": {
+      "command": "docker",
+      "args": [
+               "run",
+                "-i",
+                "--rm",
+                "-e",
+                "PORT_CLIENT_ID",
+                "-e",
+                "PORT_CLIENT_SECRET",
+                "-e",
+                "PORT_REGION",
+                "-e",
+                "PORT_LOG_LEVEL",
+                "ghcr.io/port-labs/port-mcp-server:0.2.2"
               ],
               "env": {
                 "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
@@ -72,52 +182,112 @@ Add the following to your `claude_desktop_config.json`:
 ```
 
 
-### Cursor
 
-Configure in Cursor settings:
-   - Go to Cursor settings > MCP Servers
-   - Configure with:
-     * Name - `Port`
-     * Type - `Command`
-     * Command - `/path/to/your/file/run-port-mcp.sh`
-
-####Docker
+### uvx
+>[!NOTE]
+>If you want to run the command from a virtual Python environment, add a `PYTHONPATH` variable to the `env` object with its path, e.g., `/path/to/your/venv/bin/python`.
 
 ```json
 {
-    "mcpServers": {
-        "port": {
-            "command": "docker",
-            "args": [
-                "run",
-                "-i",
-                "--rm",
-                "-e",
-                "PORT_CLIENT_ID",
-                "-e",
-                "PORT_CLIENT_SECRET",
-                "-e",
-                "PORT_REGION",
-                "-e",
-                "PORT_LOG_LEVEL",
-                "ghcr.io/port-labs/port-mcp-server:0.2.1"
-            ],
-            "env": {
-                "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
-                "PORT_CLIENT_SECRET": "<PORT_CLIENT_SECRET>",
-                "PORT_REGION": "<PORT_REGION>",
-                "PORT_LOG_LEVEL": "<PORT_LOG_LEVEL>"
-            }
-        }
-    }
+  "mcpServers": {
+    "Port": {
+          "command": "uvx",
+          "args": [
+              "mcp-server-port@0.2.8",
+              "--client-id",
+              "<PORT_CLIENT_ID>",
+              "--client-secret",
+              "<PORT_CLIENT_SECRET>",
+              "--region",
+              "<PORT_REGION>"
+          ],
+          "env": {
+              "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
+              "PORT_CLIENT_SECRET": "<PORT_CLIENT_SECRET>",
+              "PORT_REGION": "<PORT_REGION>",
+              "PYTHONPATH": "/Users/matangrady/.venv-port-mcp/bin/python"
+          }
+      }
+  }
 }
 ```
-![Cursor MCP Screenshot](/assets/cursor_mcp_screenshot.png)
 
+### Usage with VS Code
 
-## Available Tools
+>[!TIP]
+>VS Code can automatically discover MCP servers already installed in Cursor and Claude.
 
-### Blueprint Tools
+>[!NOTE]
+>For quick installation, use the one-click install buttons and select where to add the MCP configuration. Make sure to replace the placeholders with your Port credentials.
+
+[Docker quick installation](https://insiders.vscode.dev/redirect/mcp/install?name=port&config=%7B%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22-e%22%2C%22PORT_CLIENT_ID%22%2C%22-e%22%2C%22PORT_CLIENT_SECRET%22%2C%22-e%22%2C%22PORT_REGION%22%2C%22ghcr.io%2Fport-labs%2Fport-mcp-server%3A0.2.2%22%5D%2C%22env%22%3A%7B%22PORT_CLIENT_ID%22%3A%22%3CPORT_CLIENT_ID%3E%22%2C%22PORT_CLIENT_SECRET%22%3A%22%3CPORT_CLIENT_SECRET%3E%22%2C%22PORT_REGION%22%3A%22%3CPORT_REGION%3E%22%7D%7D)
+[uvx quick installation](https://insiders.vscode.dev/redirect/mcp/install?name=port&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22mcp-server-port%400.2.8%22%2C%22--client-id%22%2C%22%3CPORT_CLIENT_ID%3E%22%2C%22--client-secret%22%2C%22%3CPORT_CLIENT_SECRET%3E%22%2C%22--region%22%2C%22%3CPORT_REGION%3E%22%5D%2C%22env%22%3A%7B%22PORT_CLIENT_ID%22%3A%22%3CPORT_CLIENT_ID%3E%22%2C%22PORT_CLIENT_SECRET%22%3A%22%3CPORT_CLIENT_SECRET%3E%22%2C%22PORT_REGION%22%3A%22%3CPORT_REGION%3E%22%7D%7D)
+
+For manual installation follow these steps:
+1. Go to the Command Palette by pressing `Cmd + Shift + P` / `Ctrl + Shift + P`.
+2. Type `Preferences: Open User Settings (JSON)` and press enter.
+2. Edit the `settings.json` file and add the below configuration under the `mcp`>`servers`.
+3. Use Copilot in Agent mode, make sure the server is running and see its available Port tools.
+
+![VS Code MCP Tools](/assets/vs_code_mcp_tools.png)
+
+### Docker
+>[!TIP]
+>Consider using the full path to Docker (e.g., `/usr/local/bin/docker`) instead of just `docker`. You can find this path by running `which docker` in your terminal. Using the full path helps avoid PATH resolution issues and ensures consistent behavior across different shell environments.
+
+```json
+  "Port": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+          "run",
+          "-i",
+          "--rm",
+          "-e",
+          "PORT_CLIENT_ID",
+          "-e",
+          "PORT_CLIENT_SECRET",
+          "-e",
+          "PORT_REGION",
+          "ghcr.io/port-labs/port-mcp-server:0.2.2"
+      ],
+      "env": {
+          "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
+          "PORT_CLIENT_SECRET": "<PORT_CLIENT_SECRET>",
+          "PORT_REGION": "<PORT_REGION>"
+      }
+  }
+```
+
+### uvx
+
+>[!NOTE]
+>If you want to run the command from a virtual Python environment, add a `PYTHONPATH` variable to the `env` object with its path, e.g., `/path/to/your/venv/bin/python`.
+
+```json
+  "Port": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+          "mcp-server-port@0.2.8",
+          "--client-id",
+          "<PORT_CLIENT_ID>",
+          "--client-secret",
+          "<PORT_CLIENT_SECRET>",
+          "--region",
+          "<PORT_REGION>"
+      ],
+      "env": {
+          "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
+          "PORT_CLIENT_SECRET": "<PORT_CLIENT_SECRET>",
+          "PORT_REGION": "<PORT_REGION>"
+      }
+  }
+```
+
+# Available Tools
+
+## Blueprint Tools
 
 1. `get_blueprints`
    - Retrieve a list of all blueprints from Port
@@ -151,7 +321,7 @@ Configure in Cursor settings:
      - `blueprint_identifier` (string): The unique identifier of the blueprint to delete
    - Returns: Success status
 
-### Entity Tools
+## Entity Tools
 
 1. `get_entities`
    - Retrieve all entities for a given blueprint
@@ -189,7 +359,7 @@ Configure in Cursor settings:
    - Optional inputs:
      - `delete_dependents` (boolean, default: false): If true, also deletes all dependencies
 
-### Scorecard Tools
+## Scorecard Tools
 
 1. `get_scorecards`
    - Retrieve all scorecards from Port
@@ -228,7 +398,7 @@ Configure in Cursor settings:
      - `scorecard_identifier` (string): The unique identifier of the scorecard to delete
    - Returns: Success status
 
-### AI Agent Tool
+## AI Agents Tool
 
 1. `invoke_ai_agent`
    - Invoke a Port AI agent with a specific prompt
@@ -236,17 +406,17 @@ Configure in Cursor settings:
      - `prompt` (string): The prompt to send to the AI agent
    - Returns: Invocation status and message from the AI agent
 
-## Feedback and Roadmap
+# Feedback and Roadmap
 
 We're continuously improving Port MCP and would love to hear from you! Please share your feedback and feature requests on our [roadmap page](https://roadmap.getport.io/ideas).
 
-## Troubleshooting
+# Troubleshooting
 
 If you encounter authentication errors, verify that:
-1. Your Port credentials are correctly set in the arguments
-2. You have the necessary permissions
-3. The credentials are properly copied to your configuration
+1. Your Port credentials are correctly set in the arguments.
+2. You have the necessary permissions.
+3. The credentials are properly copied to your configuration.
 
-## License
+# License
 
-This MCP server is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
+This MCP server is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the [MIT License](https://github.com/port-labs/port-mcp-server/blob/main/LICENSE).
