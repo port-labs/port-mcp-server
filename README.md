@@ -40,8 +40,8 @@ Before you begin, you'll need:
    - Either [Docker](https://www.docker.com/get-started/) installed on your system
    - OR [uvx](https://pypi.org/project/uvx/) package manager installed
 
-[!NOTE]
-You will also need to provide your Port region, which is either EU or US. If not provided, the default is EU.
+>[!NOTE]
+>You will also need to provide your Port region, which is either EU or US. If not provided, the default is EU.
 
 ## Installation methods
 Port MCP Server can be installed using two methods:
@@ -96,8 +96,8 @@ docker pull ghcr.io/port-labs/port-mcp-server:0.2.8
 
 ### uvx
 
-[!NOTE]
-If you want to run the command from a virtual Python environment, add a `PYTHONPATH` variable to the `env` object with its path, e.g., `/path/to/your/venv/bin/python`.
+>[!NOTE]
+>If you want to run the command from a virtual Python environment, add a `PYTHONPATH` variable to the `env` object with its path, e.g., `/path/to/your/venv/bin/python`.
 
 ```json
 {
@@ -168,8 +168,8 @@ If you want to run the command from a virtual Python environment, add a `PYTHONP
 
 
 ### uvx
-[!NOTE]
-If you want to run the command from a virtual Python environment, add a `PYTHONPATH` variable to the `env` object with its path, e.g., `/path/to/your/venv/bin/python`.
+>[!NOTE]
+>If you want to run the command from a virtual Python environment, add a `PYTHONPATH` variable to the `env` object with its path, e.g., `/path/to/your/venv/bin/python`.
 
 ```json
 {
@@ -198,8 +198,8 @@ If you want to run the command from a virtual Python environment, add a `PYTHONP
 
 ### Usage with VS Code
 
-[!TIP]
-VS Code can automatically discover MCP servers already installed in Cursor and Claude.
+>[!TIP]
+>VS Code can automatically discover MCP servers already installed in Cursor and Claude.
 
 >[!NOTE]
 >For quick installation, use the one-click install buttons and select where to add the MCP configuration. Make sure to replace the placeholders with your Port credentials.
@@ -242,8 +242,8 @@ For manual installation follow these steps:
 
 ### uvx
 
-[!NOTE]
-If you want to run the command from a virtual Python environment, add a `PYTHONPATH` variable to the `env` object with its path, e.g., `/path/to/your/venv/bin/python`.
+>[!NOTE]
+>If you want to run the command from a virtual Python environment, add a `PYTHONPATH` variable to the `env` object with its path, e.g., `/path/to/your/venv/bin/python`.
 
 ```json
   "Port": {
