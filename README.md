@@ -201,8 +201,8 @@ If you want to run the command from a virtual Python environment, add a `PYTHONP
 [!TIP]
 VS Code can automatically discover MCP servers already installed in Cursor and Claude.
 
-[!NOTE]
-For quick installation, use the one-click install buttons and select where to add the MCP configuration. Make sure to replace the placeholders with your Port credentials.
+>[!NOTE]
+>For quick installation, use the one-click install buttons and select where to add the MCP configuration. Make sure to replace the placeholders with your Port credentials.
 
 [Docker quick installation](https://insiders.vscode.dev/redirect/mcp/install?name=port&config=%7B%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22-e%22%2C%22PORT_CLIENT_ID%22%2C%22-e%22%2C%22PORT_CLIENT_SECRET%22%2C%22-e%22%2C%22PORT_REGION%22%2C%22ghcr.io%2Fport-labs%2Fport-mcp-server%3A0.2.2%22%5D%2C%22env%22%3A%7B%22PORT_CLIENT_ID%22%3A%22%3CPORT_CLIENT_ID%3E%22%2C%22PORT_CLIENT_SECRET%22%3A%22%3CPORT_CLIENT_SECRET%3E%22%2C%22PORT_REGION%22%3A%22%3CPORT_REGION%3E%22%7D%7D)
 [uvx quick installation](https://insiders.vscode.dev/redirect/mcp/install?name=port&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22mcp-server-port%400.2.8%22%2C%22--client-id%22%2C%22%3CPORT_CLIENT_ID%3E%22%2C%22--client-secret%22%2C%22%3CPORT_CLIENT_SECRET%3E%22%2C%22--region%22%2C%22%3CPORT_REGION%3E%22%5D%2C%22env%22%3A%7B%22PORT_CLIENT_ID%22%3A%22%3CPORT_CLIENT_ID%3E%22%2C%22PORT_CLIENT_SECRET%22%3A%22%3CPORT_CLIENT_SECRET%3E%22%2C%22PORT_REGION%22%3A%22%3CPORT_REGION%3E%22%7D%7D)
