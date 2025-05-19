@@ -64,6 +64,10 @@ docker pull ghcr.io/port-labs/port-mcp-server:0.2.8
 ![Claude MCP Tools](/assets/claude_mcp_tools.png)
 
 ### Docker
+
+>[!TIP]
+>Consider using the full path to Docker (e.g., `/usr/local/bin/docker`) instead of just `docker`. You can find this path by running `which docker` in your terminal. Using the full path helps avoid PATH resolution issues and ensures consistent behavior across different shell environments.
+
 ```json
 {
   "mcpServers": {
@@ -135,6 +139,10 @@ docker pull ghcr.io/port-labs/port-mcp-server:0.2.8
 ![Cursor MCP Screenshot](/assets/cursor_mcp_screenshot.png)
 
 ### Docker
+
+>[!TIP]
+>Consider using the full path to Docker (e.g., `/usr/local/bin/docker`) instead of just `docker`. You can find this path by running `which docker` in your terminal. Using the full path helps avoid PATH resolution issues and ensures consistent behavior across different shell environments.
+
 ```json
 {
   "mcpServers": {
@@ -216,6 +224,9 @@ For manual installation follow these steps:
 ![VS Code MCP Tools](/assets/vs_code_mcp_tools.png)
 
 ### Docker
+>[!TIP]
+>Consider using the full path to Docker (e.g., `/usr/local/bin/docker`) instead of just `docker`. You can find this path by running `which docker` in your terminal. Using the full path helps avoid PATH resolution issues and ensures consistent behavior across different shell environments.
+
 ```json
   "Port": {
       "type": "stdio",
