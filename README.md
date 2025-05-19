@@ -55,6 +55,14 @@ Use our official Docker image:
 docker pull ghcr.io/port-labs/port-mcp-server:0.2.8
 ```
 
+### Additional configurations
+You can pass these additional arguments for more advanced configuration:
+
+| Configuration Parameter | UVX Flag | Docker Environment Variable | Description | Default Value |
+|------------------------|----------|---------------------------|-------------|---------------|
+| Log Level | `log-level` | `PORT_LOG_LEVEL` | Controls the level of log output | `ERROR` |
+| API Validation | `api-validation-enabled` | `PORT_API_VALIDATION_ENABLED` | Controls if API schema should be validated and fail if it's not valid | `False` |
+
 ## Usage with Claude Desktop
 1. Go to Settings > Developer and click on "Edit config".
 2. Edit the `claude_desktop_config.json` file and add the below configuration based on the installation method.
