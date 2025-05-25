@@ -52,7 +52,7 @@ Use our official [Port MCP server](https://pypi.org/project/mcp-server-port/) pa
 ### Docker Installation
 Use our official Docker image:
 ```bash
-docker pull ghcr.io/port-labs/port-mcp-server:0.2.8
+docker pull ghcr.io/port-labs/port-mcp-server:0.2.2
 ```
 
 ### Additional configurations
@@ -285,6 +285,7 @@ For manual installation follow these steps:
   }
 ```
 
+
 # Available Tools
 
 ## Blueprint Tools
@@ -405,6 +406,60 @@ For manual installation follow these steps:
    - Required inputs:
      - `prompt` (string): The prompt to send to the AI agent
    - Returns: Invocation status and message from the AI agent
+
+
+# Local Development
+
+For developing and testing new functionalities locally before publishing a new version, you can configure your MCP client (e.g., Cursor) to use your local cloned repository.
+
+## Prerequisites
+
+1.  **Clone the repository**: If you haven't already, clone the `port-mcp-server` repository to your local machine.
+2.  **Set up the environment**:
+    *   Navigate to the cloned repository's root directory.
+    *   Run `make install`. This command should set up a virtual environment (venv) and install all necessary dependencies.
+    *   Ensure the virtual environment is created (usually in a `.venv` directory within the repository).
+
+## Configuration Example
+
+Below is an example of how you might configure your local development server. You'll need to replace the placeholder paths with the actual paths on your system.
+
+**Important:**
+*   The `command` should point to the Python executable within your local repository's virtual environment.
+*   The `PYTHONPATH` in the `env` object should point to the root directory of your cloned repository.
+
+```json
+{
+  "mcpServers": {
+    "port_local": {
+      "command": "/path/to/your/port-mcp-server/.venv/bin/python", // Replace with the actual path to the venv Python
+      "args": [
+        "-m",
+        "src",
+        "--client-id",
+        "<YOUR_PORT_CLIENT_ID>",
+        "--client-secret",
+        "<YOUR_PORT_CLIENT_SECRET>",
+        "--region",
+        "<YOUR_PORT_REGION>", // e.g., EU or US
+        "--log-level",
+        "DEBUG" // Or your preferred log level
+      ],
+      "env": {
+        "PORT_CLIENT_ID": "<YOUR_PORT_CLIENT_ID>",
+        "PORT_CLIENT_SECRET": "<YOUR_PORT_CLIENT_SECRET>",
+        "PORT_REGION": "<YOUR_PORT_REGION>",
+        "PORT_LOG_LEVEL": "DEBUG",
+        "PYTHONPATH": "/path/to/your/port-mcp-server" // Replace with the actual path to your repository
+      }
+    }
+  }
+}
+```
+
+After setting this up, your MCP client will use your local version of the server, allowing you to test changes from your current branch.
+
+
 
 # Feedback and Roadmap
 
