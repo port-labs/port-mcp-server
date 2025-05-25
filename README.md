@@ -52,7 +52,7 @@ Use our official [Port MCP server](https://pypi.org/project/mcp-server-port/) pa
 ### Docker Installation
 Use our official Docker image:
 ```bash
-docker pull ghcr.io/port-labs/port-mcp-server:0.2.8
+docker pull ghcr.io/port-labs/port-mcp-server:0.2.2
 ```
 
 ### Additional configurations
