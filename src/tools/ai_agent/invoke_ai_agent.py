@@ -62,24 +62,27 @@ class InvokeAIAGentTool(Tool):
         attempt = 1
         while attempt < max_attempts:
             logger.info(f"Polling attempt {attempt}/{max_attempts} for invocation {identifier}")
-            status = await self.port_client.get_invocation_status(identifier)
-            logger.info(f"Status received: {status.status}")
+            agent_result = await self.port_client.get_invocation_status(identifier)
+            logger.info(f"Status received: {agent_result.status}")
 
-            if status.status.lower() in ["completed", "failed", "error"]:
-                logger.info(f"Invocation {identifier} finished with status: {status.status}")
+            if agent_result.status.lower() in ["completed", "failed", "error"]:
+                logger.info(f"Invocation {identifier} finished with status: {agent_result.status}")
                 return InvokeAIAGentToolResponse.construct(
-                    invocation_id=identifier, invocation_status=status.status, message=""
+                    invocation_id=identifier,
+                    invocation_status=agent_result.status,
+                    message=agent_result.output,
+                    selected_agent=agent_result.selected_agent,
                 ).model_dump(exclude_unset=True, exclude_none=True)
 
-            logger.warning(f"Invocation {identifier} still in progress after {attempt * 5} seconds. Status: {status.status}")
-            logger.warning(f"Status details: {status.__dict__ if hasattr(status, '__dict__') else status}")
+            logger.warning(f"Invocation {identifier} still in progress after {attempt * 5} seconds. Status: {agent_result.status}")
+            logger.warning(f"Status details: {agent_result.__dict__ if hasattr(agent_result, '__dict__') else agent_result}")
 
             await asyncio.sleep(5)
             attempt += 1
 
         logger.warning(f"Invocation {identifier} timed out after {max_attempts * 5} seconds")
-        logger.warning(f"Last status: {status.status}")
-        logger.warning(f"Last status details: {status.__dict__ if hasattr(status, '__dict__') else status}")
+        logger.warning(f"Last status: {agent_result.status}")
+        logger.warning(f"Last status details: {agent_result.__dict__ if hasattr(agent_result, '__dict__') else agent_result}")
 
         return InvokeAIAGentToolResponse.construct(
             invocation_id=identifier,

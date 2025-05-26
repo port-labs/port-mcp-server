@@ -13,3 +13,4 @@ class PortAgentResponse(BaseModel):
     output: str | SkipJsonSchema[None] = Field(None, description="The output of the agent response")
     error: str | SkipJsonSchema[None] = Field(None, description="The error of the agent response")
     action_url: str | SkipJsonSchema[None] = Field(None, description="The action URL of requied to visit to complete the action")
+    selected_agent: str | SkipJsonSchema[None] = Field(None, description="The selected agent that generated the response")

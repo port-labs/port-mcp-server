@@ -47,6 +47,7 @@ class PortAgentClient:
             result = response_data["result"]
             status = result.get("status", "Unknown")
             message = result.get("message", "")
+            selected_agent = result.get("selectedAgent", "")
 
             # Generate action URL from port URLs in message if present
             # Necesarry to continue the interaction with the agent
@@ -64,6 +65,7 @@ class PortAgentClient:
                     output=message,
                     error=None if status.lower() != "error" else message,
                     action_url=action_url,
+                    selected_agent=selected_agent,
                 )
             else:
                 return PortAgentResponse.construct(
@@ -72,6 +74,7 @@ class PortAgentClient:
                     output=message,
                     error=None if status.lower() != "error" else message,
                     action_url=action_url,
+                    selected_agent=selected_agent,
                 )
 
         # If we don't have a result field, raise an error
