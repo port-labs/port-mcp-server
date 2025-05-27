@@ -18,6 +18,7 @@ class InvokeAIAGentToolResponse(BaseModel):
     invocation_id: str = Field(description="The identifier of the invocation")
     invocation_status: str = Field(description="The status of the invocation")
     message: str = Field(description="The message from the AI agent")
+    selected_agent: str | None = Field(default=None, description="The selected agent that generated the response")
 
 
 class InvokeAIAGentTool(Tool):
@@ -67,7 +68,7 @@ class InvokeAIAGentTool(Tool):
 
             if agent_result.status.lower() in ["completed", "failed", "error"]:
                 logger.info(f"Invocation {identifier} finished with status: {agent_result.status}")
-                return InvokeAIAGentToolResponse.construct(
+                return InvokeAIAGentToolResponse(
                     invocation_id=identifier,
                     invocation_status=agent_result.status,
                     message=agent_result.output,
