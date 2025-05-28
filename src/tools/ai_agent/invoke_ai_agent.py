@@ -70,7 +70,9 @@ class InvokeAIAGentTool(Tool):
                     selected_agent=agent_result.selected_agent,
                 ).model_dump(exclude_unset=True, exclude_none=True)
 
-            logger.warning(f"Invocation {identifier} still in progress after {attempt * 5} seconds. Status: {agent_result.status}")
+            logger.warning(
+                f"Invocation {identifier} still in progress after {attempt * 5} seconds. Status: {agent_result.status}"
+            )
             logger.warning(f"Status details: {agent_result.__dict__ if hasattr(agent_result, '__dict__') else agent_result}")
 
             await asyncio.sleep(5)

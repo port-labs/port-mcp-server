@@ -45,7 +45,7 @@ class PortBlueprintClient:
         else:
             logger.debug("Skipping API validation for blueprint")
             return Blueprint.construct(**bp_data)
-        
+
     async def create_blueprint(self, blueprint_data: dict[str, Any]) -> Blueprint:
         data_json = json.dumps(blueprint_data)
 

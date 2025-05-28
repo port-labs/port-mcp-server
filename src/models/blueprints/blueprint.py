@@ -191,5 +191,6 @@ class CreateBlueprint(BlueprintCommon):
         serialization_alias="changelogDestination",
     )
 
+
 class UpdateBlueprint(BlueprintCommon):
     pass

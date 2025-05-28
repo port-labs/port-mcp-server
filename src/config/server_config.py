@@ -21,7 +21,7 @@ class McpServerConfig(BaseModel):
         default="INFO", description="The log level for the server"
     )
     api_validation_enabled: bool | None = Field(default=False, description="Whether to enable API validation")
-    log_path: Literal["/tmp/port-mcp.log"] = Field('/tmp/port-mcp.log', description="The path to the log file")
+    log_path: Literal["/tmp/port-mcp.log"] = Field("/tmp/port-mcp.log", description="The path to the log file")
 
     def __str__(self) -> str:
         port_client_id = self.port_client_id

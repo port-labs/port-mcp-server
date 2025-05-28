@@ -1,4 +1,5 @@
 """Logging configuration for the Port MCP server."""
+
 from __future__ import annotations
 
 import loguru
@@ -21,5 +22,6 @@ def setup_logging():
     loguru.logger.info("Logging configured with loguru")
     loguru.logger.debug(f"Config: {config}")
     return loguru.logger
+
 
 logger: loguru.Logger = setup_logging()

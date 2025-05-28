@@ -56,5 +56,6 @@ class ScorecardCreate(ScorecardCommonExplicitForTool):
                     ) from e
             raise e
 
+
 class ScorecardUpdate(ScorecardCommonExplicitForTool):
     pass
