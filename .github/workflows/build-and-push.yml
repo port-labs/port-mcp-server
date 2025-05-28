@@ -34,5 +34,7 @@ jobs:
           file: Dockerfile
           platforms: linux/amd64,linux/arm64/v8
           push: true
-          tags: ghcr.io/port-labs/port-mcp-server:${{ inputs.VERSION }}
+          tags: |
+            ghcr.io/port-labs/port-mcp-server:${{ inputs.VERSION }}
+            ghcr.io/port-labs/port-mcp-server:latest
 
