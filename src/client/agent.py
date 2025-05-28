@@ -4,7 +4,7 @@ from typing import Any
 from pyport import PortClient
 
 from src.config import config
-from src.models.agent.port_agent_response import PortAgentResponse
+from src.models.agent.port_agent_response import PortAgentResponse, PortAgentTriggerResponse
 from src.utils import logger
 from src.utils.errors import PortError
 
@@ -15,24 +15,28 @@ class PortAgentClient:
     def __init__(self, client: PortClient):
         self._client = client
 
-    async def trigger_agent(self, prompt: str) -> dict[str, Any]:
+    async def trigger_agent(self, prompt: str) -> PortAgentTriggerResponse:
         endpoint = "agent/invoke"
         data = {"prompt": prompt}
 
         response = self._client.make_request(method="POST", endpoint=endpoint, json=data)
 
-        response_data:dict[str, Any] = response.json()
+        response_data: dict[str, Any] = response.json()
 
-        # Check for nested identifier in invocation object
-        if response_data.get("ok") and response_data.get("invocation", {}).get("identifier"):
-            return response_data
+        if not response_data.get("ok") or not response_data.get("invocation", {}).get("identifier"):
+            logger.error("Response missing required invocation identifier")
+            logger.error(f"Response data: {response_data}")
+            raise PortError("Response missing required invocation identifier")
 
-        # Fallback to direct identifier fields
-        identifier = response_data.get("identifier") or response_data.get("id") or response_data.get("invocationId")
-        if not identifier:
-            logger.error("Response missing identifier")
-            raise PortError("Response missing identifier")
-        return response_data
+        try:
+            if config.api_validation_enabled:
+                return PortAgentTriggerResponse(**response_data)
+            else:
+                return PortAgentTriggerResponse.construct(**response_data)
+        except Exception as e:
+            logger.error(f"Failed to parse trigger agent response: {e}")
+            logger.error(f"Response data: {response_data}")
+            raise PortError(f"Invalid response format: {response_data}")
 
     async def get_invocation_status(self, identifier: str) -> PortAgentResponse:
         endpoint = f"agent/invoke/{identifier}"

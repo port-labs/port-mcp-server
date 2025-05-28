@@ -48,13 +48,8 @@ class InvokeAIAGentTool(Tool):
         logger.info(f"Invoking Port's AI agent with prompt: {prompt[:50]}{'...' if len(prompt) > 50 else ''}")
         response = await self.port_client.trigger_agent(prompt)
 
-        # Get identifier from response
-        identifier = response.get("invocation", {}).get("identifier")
-
-        if not identifier:
-            logger.warning("Could not get invocation identifier from response")
-            logger.warning(f"Response data: {response}")
-            raise Exception("❌ Error: Could not get invocation identifier from response")
+        # Get identifier from the Pydantic response object
+        identifier = response.invocation.identifier
 
         logger.info(f"Got invocation identifier: {identifier}")
 
@@ -85,7 +80,7 @@ class InvokeAIAGentTool(Tool):
         logger.warning(f"Last status: {agent_result.status}")
         logger.warning(f"Last status details: {agent_result.__dict__ if hasattr(agent_result, '__dict__') else agent_result}")
 
-        return InvokeAIAGentToolResponse.construct(
+        return InvokeAIAGentToolResponse.model_construct(
             invocation_id=identifier,
             invocation_status="timed_out",
             message="⏳ Operation timed out. You can check the status later with identifier: {identifier}",

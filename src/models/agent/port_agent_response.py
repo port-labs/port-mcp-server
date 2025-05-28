@@ -6,6 +6,15 @@ from pydantic.json_schema import SkipJsonSchema
 from src.models.common.base_pydantic import BaseModel
 
 
+class PortAgentInvocation(BaseModel):
+    identifier: str = Field(..., description="The identifier of the invocation")
+
+
+class PortAgentTriggerResponse(BaseModel):
+    ok: bool = Field(..., description="Whether the request was successful")
+    invocation: PortAgentInvocation = Field(..., description="The invocation data")
+
+
 class PortAgentResponse(BaseModel):
     identifier: str = Field(..., description="The identifier of the agent response")
     status: str = Field(..., description="The status of the agent response")
