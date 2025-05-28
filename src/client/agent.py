@@ -36,7 +36,7 @@ class PortAgentClient:
         except Exception as e:
             logger.error(f"Failed to parse trigger agent response: {e}")
             logger.error(f"Response data: {response_data}")
-            raise PortError(f"Invalid response format: {response_data}")
+            raise PortError(f"Invalid response format: {response_data}") from e
 
     async def get_invocation_status(self, identifier: str) -> PortAgentResponse:
         endpoint = f"agent/invoke/{identifier}"
