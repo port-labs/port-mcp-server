@@ -2,17 +2,24 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
+from src.models.agent.port_agent_response import PortAgentInvocation, PortAgentTriggerResponse
 from src.tools.ai_agent import InvokeAIAGentTool
+from src.utils.errors import PortError
 
 
 @pytest.fixture
 def mock_client_for_ai_agent(mock_client):
     """Add specific return values for this test"""
-    mock_client.trigger_agent.return_value = {"invocation": {"identifier": "test-invocation-id"}}
+    mock_client.trigger_agent.return_value = PortAgentTriggerResponse(
+        ok=True,
+        invocation=PortAgentInvocation(identifier="test-invocation-id")
+    )
 
-    # Create a status object with a status attribute
+    # Create a status object with proper string attributes
     status_obj = MagicMock()
     status_obj.status = "completed"
+    status_obj.output = "Test agent response message"
+    status_obj.selected_agent = "test-agent"
     mock_client.get_invocation_status.return_value = status_obj
 
     return mock_client
@@ -40,16 +47,23 @@ async def test_invoke_ai_agent_tool(mock_client_for_ai_agent):
     # Verify the result
     assert result["invocation_id"] == "test-invocation-id"
     assert result["invocation_status"] == "completed"
+    assert result["message"] == "Test agent response message"
+    assert result["selected_agent"] == "test-agent"
 
 
 @pytest.fixture
 def mock_client_for_timeout(mock_client):
     """Add specific return values for timeout test"""
-    mock_client.trigger_agent.return_value = {"invocation": {"identifier": "test-invocation-id"}}
+    mock_client.trigger_agent.return_value = PortAgentTriggerResponse(
+        ok=True,
+        invocation=PortAgentInvocation(identifier="test-invocation-id")
+    )
 
-    # Create a status object with a status attribute
+    # Create a status object with proper string attributes
     status_obj = MagicMock()
     status_obj.status = "in_progress"
+    status_obj.output = "Still processing..."
+    status_obj.selected_agent = "test-agent"
     mock_client.get_invocation_status.return_value = status_obj
 
     return mock_client
@@ -76,7 +90,7 @@ async def test_invoke_ai_agent_tool_timeout(mock_client_for_timeout):
 @pytest.fixture
 def mock_client_for_error(mock_client):
     """Add specific return values for error test"""
-    mock_client.trigger_agent.return_value = {"error": "Something went wrong"}
+    mock_client.trigger_agent.side_effect = PortError("Response missing required invocation identifier")
     return mock_client
 
 
@@ -89,6 +103,7 @@ async def test_invoke_ai_agent_tool_error_handling(mock_client_for_error):
     # Test function execution with a prompt expecting an error
     schema = {"prompt": "Test prompt that will cause an error"}
 
-    # The function should raise an exception when it can't get an identifier
-    with pytest.raises(Exception) as excinfo:
-        await tool.invoke_ai_agent(schema)
+    with pytest.raises(PortError) as excinfo:
+        await tool.invoke_ai_agent(tool.validate_input(schema))
+    
+    assert "invocation identifier" in str(excinfo.value)

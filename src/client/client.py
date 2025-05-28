@@ -10,6 +10,7 @@ from src.client.entities import PortEntityClient
 from src.client.scorecards import PortScorecardClient
 from src.config import config
 from src.models.agent import PortAgentResponse
+from src.models.agent.port_agent_response import PortAgentTriggerResponse
 from src.models.blueprints import Blueprint
 from src.models.entities import EntityResult
 from src.models.scorecards import Scorecard
@@ -57,7 +58,7 @@ class PortClient:
         except requests.exceptions.HTTPError as e:
             self.handle_http_error(e)
 
-    async def trigger_agent(self, prompt: str) -> dict[str, Any]:
+    async def trigger_agent(self, prompt: str) -> PortAgentTriggerResponse:
         return await self.wrap_request(lambda: self.agent.trigger_agent(prompt))
 
     async def get_invocation_status(self, identifier: str) -> PortAgentResponse:

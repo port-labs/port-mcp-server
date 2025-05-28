@@ -54,8 +54,10 @@ class CommonEntity(BaseModel):
 class CreateEntity(CommonEntity):
     pass
 
+
 class UpdateEntity(CommonEntity):
     pass
+
 
 class EntityResult(CommonEntity):
     blueprint: str = Field(..., description="The blueprint of the entity")
