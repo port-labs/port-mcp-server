@@ -8,7 +8,6 @@ from src.models.common.annotations import Annotations
 from src.models.common.base_pydantic import BaseModel
 from src.models.tools.tool import Tool
 from src.utils import logger
-from src.utils.errors import PortError
 
 
 class InvokeAIAGentToolSchema(BaseModel):
@@ -47,20 +46,7 @@ class InvokeAIAGentTool(Tool):
         logger.info(f"Invoking Port's AI agent with prompt: {prompt[:50]}{'...' if len(prompt) > 50 else ''}")
         response = await self.port_client.trigger_agent(prompt)
 
-        # Get identifier from the Pydantic response object
-        if hasattr(response, "invocation"):
-            if isinstance(response.invocation, dict):
-                identifier = response.invocation.get("identifier")
-            else:
-                identifier = response.invocation.identifier
-        else:
-            logger.error(f"Response does not have invocation attribute. Response: {response}")
-            if isinstance(response, dict):
-                identifier = response.get("invocation", {}).get("identifier")
-                if not identifier:
-                    raise PortError("Could not extract identifier from response")
-            else:
-                raise PortError("Invalid response format - no invocation attribute")
+        identifier = response.invocation.identifier
 
         logger.info(f"Got invocation identifier: {identifier}")
 

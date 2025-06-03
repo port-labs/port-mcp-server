@@ -22,8 +22,6 @@ class PortAgentClient:
         response = self._client.make_request(method="POST", endpoint=endpoint, json=data)
 
         response_data: dict[str, Any] = response.json()
-        logger.debug(f"Raw response_data from trigger_agent: {response_data}")
-        logger.debug(f"Response_data type: {type(response_data)}")
 
         if not response_data.get("ok") or not response_data.get("invocation", {}).get("identifier"):
             logger.error("Response missing required invocation identifier")
@@ -31,17 +29,7 @@ class PortAgentClient:
             raise PortError("Response missing required invocation identifier")
 
         try:
-            logger.debug(f"api_validation_enabled: {config.api_validation_enabled}")
-            if config.api_validation_enabled:
-                logger.debug("Creating PortAgentTriggerResponse with validation")
-                result = PortAgentTriggerResponse(**response_data)
-            else:
-                logger.debug("Creating PortAgentTriggerResponse without validation")
-                result = PortAgentTriggerResponse.construct(**response_data)
-
-            logger.debug(f"Successfully created PortAgentTriggerResponse: {result}")
-            logger.debug(f"Result type: {type(result)}")
-            return result
+            return PortAgentTriggerResponse(**response_data)
         except Exception as e:
             logger.error(f"Failed to parse trigger agent response: {e}")
             logger.error(f"Response data: {response_data}")
