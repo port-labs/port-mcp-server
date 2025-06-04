@@ -3,6 +3,11 @@
 This module aggregates all tools for the Port MCP server.
 """
 
+from src.tools.action import (
+    ListActionsTool,
+    RunActionTool,
+    TrackActionRunTool,
+)
 from src.tools.ai_agent import InvokeAIAGentTool
 from src.tools.blueprint import (
     CreateBlueprintTool,
@@ -43,4 +48,7 @@ __all__ = [
     "GetEntitiesTool",
     "UpdateEntityTool",
     "DeleteEntityTool",
+    "ListActionsTool",
+    "RunActionTool",
+    "TrackActionRunTool",
 ]

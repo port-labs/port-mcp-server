@@ -4,6 +4,8 @@ from typing import Any
 import pyport
 import requests
 
+from src.client.action_runs import PortActionRunClient
+from src.client.actions import PortActionClient
 from src.client.agent import PortAgentClient
 from src.client.blueprints import PortBlueprintClient
 from src.client.entities import PortEntityClient
@@ -39,12 +41,16 @@ class PortClient:
             self.blueprints = None
             self.entities = None
             self.scorecards = None
+            self.actions = None
+            self.action_runs = None
         else:
             self._client = pyport.PortClient(client_id=client_id, client_secret=client_secret, us_region=(region == "US"))
             self.agent = PortAgentClient(self._client)
             self.blueprints = PortBlueprintClient(self._client)
             self.entities = PortEntityClient(self._client)
             self.scorecards = PortScorecardClient(self._client)
+            self.actions = PortActionClient(self._client)
+            self.action_runs = PortActionRunClient(self._client)
 
     def handle_http_error(self, e: requests.exceptions.HTTPError) -> PortError:
         result = e.response.json()
