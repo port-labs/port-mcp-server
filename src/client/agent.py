@@ -29,10 +29,7 @@ class PortAgentClient:
             raise PortError("Response missing required invocation identifier")
 
         try:
-            if config.api_validation_enabled:
-                return PortAgentTriggerResponse(**response_data)
-            else:
-                return PortAgentTriggerResponse.construct(**response_data)
+            return PortAgentTriggerResponse(**response_data)
         except Exception as e:
             logger.error(f"Failed to parse trigger agent response: {e}")
             logger.error(f"Response data: {response_data}")

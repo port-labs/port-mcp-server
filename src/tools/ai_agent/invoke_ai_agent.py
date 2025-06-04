@@ -42,13 +42,10 @@ class InvokeAIAGentTool(Tool):
         self.port_client = port_client
 
     async def invoke_ai_agent(self, props: InvokeAIAGentToolSchema) -> dict[str, Any]:
-        # Handle both dict input and schema object
         prompt = props.prompt
-        # Trigger agent
         logger.info(f"Invoking Port's AI agent with prompt: {prompt[:50]}{'...' if len(prompt) > 50 else ''}")
         response = await self.port_client.trigger_agent(prompt)
 
-        # Get identifier from the Pydantic response object
         identifier = response.invocation.identifier
 
         logger.info(f"Got invocation identifier: {identifier}")
