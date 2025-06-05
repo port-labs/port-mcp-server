@@ -52,7 +52,7 @@ Use our official [Port MCP server](https://pypi.org/project/mcp-server-port/) pa
 ### Docker Installation
 Use our official Docker image:
 ```bash
-docker pull ghcr.io/port-labs/port-mcp-server:0.2.2
+docker pull ghcr.io/port-labs/port-mcp-server:latest
 ```
 
 ### Additional configurations
@@ -93,7 +93,7 @@ You can pass these additional arguments for more advanced configuration:
                 "PORT_REGION",
                 "-e",
                 "PORT_LOG_LEVEL",
-                "ghcr.io/port-labs/port-mcp-server:0.2.2"
+                "ghcr.io/port-labs/port-mcp-server:latest"
               ],
               "env": {
                 "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
@@ -168,7 +168,7 @@ You can pass these additional arguments for more advanced configuration:
                 "PORT_REGION",
                 "-e",
                 "PORT_LOG_LEVEL",
-                "ghcr.io/port-labs/port-mcp-server:0.2.2"
+                "ghcr.io/port-labs/port-mcp-server:latest"
               ],
               "env": {
                 "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
@@ -220,7 +220,7 @@ You can pass these additional arguments for more advanced configuration:
 >[!NOTE]
 >For quick installation, use the one-click install buttons and select where to add the MCP configuration. Make sure to replace the placeholders with your Port credentials.
 
-[Docker quick installation](https://insiders.vscode.dev/redirect/mcp/install?name=port&config=%7B%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22-e%22%2C%22PORT_CLIENT_ID%22%2C%22-e%22%2C%22PORT_CLIENT_SECRET%22%2C%22-e%22%2C%22PORT_REGION%22%2C%22ghcr.io%2Fport-labs%2Fport-mcp-server%3A0.2.2%22%5D%2C%22env%22%3A%7B%22PORT_CLIENT_ID%22%3A%22%3CPORT_CLIENT_ID%3E%22%2C%22PORT_CLIENT_SECRET%22%3A%22%3CPORT_CLIENT_SECRET%3E%22%2C%22PORT_REGION%22%3A%22%3CPORT_REGION%3E%22%7D%7D)
+[Docker quick installation](https://insiders.vscode.dev/redirect/mcp/install?name=port&config=%7B%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22-e%22%2C%22PORT_CLIENT_ID%22%2C%22-e%22%2C%22PORT_CLIENT_SECRET%22%2C%22-e%22%2C%22PORT_REGION%22%2C%22ghcr.io%2Fport-labs%2Fport-mcp-server%3Alatest%22%5D%2C%22env%22%3A%7B%22PORT_CLIENT_ID%22%3A%22%3CPORT_CLIENT_ID%3E%22%2C%22PORT_CLIENT_SECRET%22%3A%22%3CPORT_CLIENT_SECRET%3E%22%2C%22PORT_REGION%22%3A%22%3CPORT_REGION%3E%22%7D%7D)
 [uvx quick installation](https://insiders.vscode.dev/redirect/mcp/install?name=port&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22mcp-server-port%400.2.8%22%2C%22--client-id%22%2C%22%3CPORT_CLIENT_ID%3E%22%2C%22--client-secret%22%2C%22%3CPORT_CLIENT_SECRET%3E%22%2C%22--region%22%2C%22%3CPORT_REGION%3E%22%5D%2C%22env%22%3A%7B%22PORT_CLIENT_ID%22%3A%22%3CPORT_CLIENT_ID%3E%22%2C%22PORT_CLIENT_SECRET%22%3A%22%3CPORT_CLIENT_SECRET%3E%22%2C%22PORT_REGION%22%3A%22%3CPORT_REGION%3E%22%7D%7D)
 
 For manual installation follow these steps:
@@ -249,7 +249,7 @@ For manual installation follow these steps:
           "PORT_CLIENT_SECRET",
           "-e",
           "PORT_REGION",
-          "ghcr.io/port-labs/port-mcp-server:0.2.2"
+          "ghcr.io/port-labs/port-mcp-server:latest"
       ],
       "env": {
           "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
