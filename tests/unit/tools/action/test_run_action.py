@@ -51,7 +51,6 @@ async def test_run_action_tool_global(mock_client_for_run_action):
     )
     assert result is not None
     assert "action_run" in result
-    assert "ui_link" in result
     assert result["action_run"]["id"] == "run-123"
 
 

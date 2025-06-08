@@ -24,7 +24,6 @@ class RunActionToolSchema(BaseModel):
 
 class RunActionToolResponse(BaseModel):
     action_run: ActionRun = Field(description="Action run details including run_id for tracking")
-    ui_link: str = Field(description="Direct link to view the action run in Port UI")
 
 
 class RunActionTool(Tool[RunActionToolSchema]):
@@ -70,8 +69,5 @@ class RunActionTool(Tool[RunActionToolSchema]):
                 action_identifier=props.action_identifier, **run_payload
             )
 
-        # Generate the UI link for the action run
-        ui_link = f"https://app.getport.io/organization/run?runId={action_run.id}"
-
-        response = RunActionToolResponse.construct(action_run=action_run, ui_link=ui_link)
+        response = RunActionToolResponse.construct(action_run=action_run)
         return response.model_dump(exclude_unset=True, exclude_none=True)
