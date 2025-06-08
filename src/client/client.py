@@ -40,26 +40,30 @@ class PortClient:
         self.client_id = client_id
         self.client_secret = client_secret
         self.region = region
-
-        self._client = pyport.PortClient(
-            client_id=client_id,
-            client_secret=client_secret,
-            us_region=(region == "US"),
-        )
-        self.agent = PortAgentClient(self._client)
-        self.blueprints = PortBlueprintClient(self._client)
-        self.entities = PortEntityClient(self._client)
-        self.scorecards = PortScorecardClient(self._client)
-        self.actions = PortActionClient(self._client)
-        self.action_runs = PortActionRunClient(self._client)
+        if client_id and client_secret:
+            self._client = pyport.PortClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                us_region=(region == "US"),
+            )
+            self.agent = PortAgentClient(self._client)
+            self.blueprints = PortBlueprintClient(self._client)
+            self.entities = PortEntityClient(self._client)
+            self.scorecards = PortScorecardClient(self._client)
+            self.actions = PortActionClient(self._client)
+            self.action_runs = PortActionRunClient(self._client)
 
     def handle_http_error(self, e: requests.exceptions.HTTPError) -> PortError:
         result = e.response.json()
-        message = f"Error in {e.request.method} {e.request.url} - {e.response.status_code}: {result}"
+        message = (
+            f"Error in {e.request.method} {e.request.url} - {e.response.status_code}: {result}"
+        )
         logger.error(message)
         raise PortError(message)
 
     async def wrap_request(self, request: Callable[[], Awaitable[T]]) -> T:
+        if self._client is None:
+            raise PortError("PortClient is not properly initialized - missing credentials")
         try:
             return await request()
         except requests.exceptions.HTTPError as e:
@@ -84,39 +88,69 @@ class PortClient:
         return await self.wrap_request(lambda: self.blueprints.update_blueprint(blueprint_data))
 
     async def delete_blueprint(self, blueprint_identifier: str) -> bool:
-        return await self.wrap_request(lambda: self.blueprints.delete_blueprint(blueprint_identifier))
+        return await self.wrap_request(
+            lambda: self.blueprints.delete_blueprint(blueprint_identifier)
+        )
 
     async def get_entity(self, blueprint_identifier: str, entity_identifier: str) -> EntityResult:
-        return await self.wrap_request(lambda: self.entities.get_entity(blueprint_identifier, entity_identifier))
+        return await self.wrap_request(
+            lambda: self.entities.get_entity(blueprint_identifier, entity_identifier)
+        )
 
     async def get_entities(self, blueprint_identifier: str) -> list[EntityResult]:
         return await self.wrap_request(lambda: self.entities.get_entities(blueprint_identifier))
 
-    async def create_entity(self, blueprint_identifier: str, entity_data: dict[str, Any], query: dict[str, Any]) -> EntityResult:
-        return await self.wrap_request(lambda: self.entities.create_entity(blueprint_identifier, entity_data, query))
-
-    async def update_entity(self, blueprint_identifier: str, entity_identifier: str, entity_data: dict[str, Any]) -> EntityResult:
-        return await self.wrap_request(lambda: self.entities.update_entity(blueprint_identifier, entity_identifier, entity_data))
-
-    async def delete_entity(self, blueprint_identifier: str, entity_identifier: str, delete_dependents: bool = False) -> bool:
+    async def create_entity(
+        self, blueprint_identifier: str, entity_data: dict[str, Any], query: dict[str, Any]
+    ) -> EntityResult:
         return await self.wrap_request(
-            lambda: self.entities.delete_entity(blueprint_identifier, entity_identifier, delete_dependents)
+            lambda: self.entities.create_entity(blueprint_identifier, entity_data, query)
+        )
+
+    async def update_entity(
+        self, blueprint_identifier: str, entity_identifier: str, entity_data: dict[str, Any]
+    ) -> EntityResult:
+        return await self.wrap_request(
+            lambda: self.entities.update_entity(
+                blueprint_identifier, entity_identifier, entity_data
+            )
+        )
+
+    async def delete_entity(
+        self, blueprint_identifier: str, entity_identifier: str, delete_dependents: bool = False
+    ) -> bool:
+        return await self.wrap_request(
+            lambda: self.entities.delete_entity(
+                blueprint_identifier, entity_identifier, delete_dependents
+            )
         )
 
     async def get_scorecard(self, blueprint_id: str, scorecard_id: str) -> Scorecard:
-        return await self.wrap_request(lambda: self.scorecards.get_scorecard(blueprint_id, scorecard_id))
+        return await self.wrap_request(
+            lambda: self.scorecards.get_scorecard(blueprint_id, scorecard_id)
+        )
 
     async def get_scorecards(self, blueprint_identifier: str) -> list[Scorecard]:
         return await self.wrap_request(lambda: self.scorecards.get_scorecards(blueprint_identifier))
 
-    async def create_scorecard(self, blueprint_id: str, scorecard_data: dict[str, Any]) -> Scorecard:
-        return await self.wrap_request(lambda: self.scorecards.create_scorecard(blueprint_id, scorecard_data))
+    async def create_scorecard(
+        self, blueprint_id: str, scorecard_data: dict[str, Any]
+    ) -> Scorecard:
+        return await self.wrap_request(
+            lambda: self.scorecards.create_scorecard(blueprint_id, scorecard_data)
+        )
 
-    async def update_scorecard(self, blueprint_id: str, scorecard_id: str, scorecard_data: dict[str, Any]) -> Scorecard:
-        return await self.wrap_request(lambda: self.scorecards.update_scorecard(blueprint_id, scorecard_id, scorecard_data))
+    async def update_scorecard(
+        self, blueprint_id: str, scorecard_id: str, scorecard_data: dict[str, Any]
+    ) -> Scorecard:
+        return await self.wrap_request(
+            lambda: self.scorecards.update_scorecard(blueprint_id, scorecard_id, scorecard_data)
+        )
 
     async def delete_scorecard(self, scorecard_id: str, blueprint_id: str) -> bool:
-        return await self.wrap_request(lambda: self.scorecards.delete_scorecard(scorecard_id, blueprint_id))
+        return await self.wrap_request(
+            lambda: self.scorecards.delete_scorecard(scorecard_id, blueprint_id)
+        )
 
     async def get_all_actions(self, trigger_type: str = "self-service") -> list[Action]:
         return await self.wrap_request(lambda: self.actions.get_all_actions(trigger_type))
@@ -125,11 +159,17 @@ class PortClient:
         return await self.wrap_request(lambda: self.actions.get_action(action_identifier))
 
     async def create_global_action_run(self, action_identifier: str, **kwargs) -> ActionRun:
-        return await self.wrap_request(lambda: self.action_runs.create_global_action_run(action_identifier, **kwargs))
-
-    async def create_blueprint_action_run(self, blueprint_identifier: str, action_identifier: str, **kwargs) -> ActionRun:
         return await self.wrap_request(
-            lambda: self.action_runs.create_blueprint_action_run(blueprint_identifier, action_identifier, **kwargs)
+            lambda: self.action_runs.create_global_action_run(action_identifier, **kwargs)
+        )
+
+    async def create_blueprint_action_run(
+        self, blueprint_identifier: str, action_identifier: str, **kwargs
+    ) -> ActionRun:
+        return await self.wrap_request(
+            lambda: self.action_runs.create_blueprint_action_run(
+                blueprint_identifier, action_identifier, **kwargs
+            )
         )
 
     async def create_entity_action_run(
