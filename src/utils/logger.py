@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import sys
+
 import loguru
 
 from src.config import config
@@ -12,7 +14,7 @@ def setup_logging():
     loguru.logger.remove()
     # Add stdout handler
     loguru.logger.add(
-        config.log_path,
+        config.log_path if config.log_path else sys.stdout,
         format="""
 <green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> |
     <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>""",

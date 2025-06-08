@@ -1,31 +1,36 @@
-from typing import Any, Dict, List
+from pyport import PortClient
 
-import pyport
-
+from src.config import config
+from src.models.actions import Action
 from src.utils import logger
 
 
 class PortActionClient:
-    """Client for Port actions."""
+    def __init__(self, client: PortClient):
+        self._client = client
 
-    def __init__(self, client: pyport.PortClient):
-        self.client = client
-
-    async def get_all_actions(self) -> List[Dict[str, Any]]:
-        """Get all available actions."""
+    async def get_all_actions(self, trigger_type: str = "self-service") -> list[Action]:
         logger.info("Getting all actions")
-        # Use the PyPort actions API - this may need adjustment based on actual PyPort API
-        return await self.client.actions.get_all_actions()
 
-    async def get_blueprint_actions(self, blueprint_identifier: str) -> List[Dict[str, Any]]:
-        """Get actions for a specific blueprint."""
-        logger.info(f"Getting actions for blueprint: {blueprint_identifier}")
-        return await self.client.actions.get_blueprint_actions(blueprint_identifier)
+        response = self._client.make_request("GET", f"actions?trigger_type={trigger_type}")
+        result = response.json().get("actions", [])
 
-    async def get_action(self, action_identifier: str, blueprint_identifier: str = None) -> Dict[str, Any]:
-        """Get a specific action."""
-        logger.info(f"Getting action: {action_identifier}")
-        if blueprint_identifier:
-            return await self.client.actions.get_blueprint_action(blueprint_identifier, action_identifier)
+        if config.api_validation_enabled:
+            logger.debug("Validating actions")
+            return [Action(**action) for action in result]
         else:
-            return await self.client.actions.get_action(action_identifier) 
+            logger.debug("Skipping API validation for actions")
+            return [Action.construct(**action) for action in result]
+
+    async def get_action(self, action_identifier: str) -> Action:
+        logger.info(f"Getting action: {action_identifier}")
+
+        response = self._client.make_request("GET", f"actions/{action_identifier}")
+        result = response.json().get("action")
+
+        if config.api_validation_enabled:
+            logger.debug("Validating action")
+            return Action(**result)
+        else:
+            logger.debug("Skipping API validation for action")
+            return Action.construct(**result)

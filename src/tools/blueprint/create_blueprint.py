@@ -10,7 +10,7 @@ class CreateBlueprintToolSchema(CreateBlueprint):
     pass
 
 
-class CreateBlueprintTool(Tool):
+class CreateBlueprintTool(Tool[CreateBlueprintToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):

@@ -67,6 +67,7 @@ class PortAgentClient:
                     error=None if status.lower() != "error" else message,
                     action_url=action_url,
                     selected_agent=selected_agent,
+                    raw_output=response_data,
                 )
             else:
                 return PortAgentResponse.construct(

@@ -14,7 +14,7 @@ class GetBlueprintToolSchema(BaseModel):
     detailed: bool = Field(default=True, description="Whether to get the detailed blueprint")
 
 
-class GetBlueprintTool(Tool):
+class GetBlueprintTool(Tool[GetBlueprintToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):
@@ -37,6 +37,8 @@ class GetBlueprintTool(Tool):
     async def get_blueprint(self, props: GetBlueprintToolSchema) -> dict[str, Any]:
         args = props.model_dump()
         blueprint_id = args.get("blueprint_identifier")
+        if not blueprint_id:
+            raise ValueError("Blueprint identifier is required")
 
         blueprint = await self.port_client.get_blueprint(blueprint_id)
         blueprint_dict = blueprint.model_dump(exclude_unset=True, exclude_none=True)

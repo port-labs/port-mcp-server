@@ -7,6 +7,7 @@ from src.client.client import PortClient
 from src.models.common.annotations import Annotations
 from src.models.common.base_pydantic import BaseModel
 from src.models.tools.tool import Tool
+from src.models.action_run import ActionRun
 
 
 class TrackActionRunToolSchema(BaseModel):
@@ -15,11 +16,10 @@ class TrackActionRunToolSchema(BaseModel):
 
 
 class TrackActionRunToolResponse(BaseModel):
-    action_run: dict = Field(description="Final action run status and details")
-    logs: list = Field(description="Action run logs collected during tracking")
+    action_run: ActionRun = Field(description="Final action run status and details")
 
 
-class TrackActionRunTool(Tool):
+class TrackActionRunTool(Tool[TrackActionRunToolSchema]):
     """Track an action run's progress and show logs"""
 
     port_client: PortClient
@@ -42,28 +42,16 @@ class TrackActionRunTool(Tool):
         self.port_client = port_client
 
     async def track_action_run(self, props: TrackActionRunToolSchema) -> dict[str, Any]:
-        collected_logs = []
-        
+        action_run = await self.port_client.get_action_run(props.run_id)
+
         while True:
-            # Get current action run status
-            action_run = await self.port_client.action_runs.get_action_run(props.run_id)
-            
-            status = action_run.get("status", "unknown")
-            
-            # Collect logs if available
-            logs = action_run.get("logs", [])
-            if logs:
-                for log_entry in logs:
-                    if log_entry not in collected_logs:
-                        collected_logs.append(log_entry)
-            
-            # Check if action is complete
-            if status in ["SUCCESS", "FAILURE", "CANCELLED", "TIMEOUT"]:
-                response = TrackActionRunToolResponse.construct(
-                    action_run=action_run,
-                    logs=collected_logs
-                )
+            action_run = await self.port_client.get_action_run(props.run_id)
+
+            status = action_run.status
+
+            if status in ["SUCCESS", "FAILURE", "CANCELLED"]:
+                response = TrackActionRunToolResponse.construct(action_run=action_run)
                 return response.model_dump(exclude_unset=True, exclude_none=True)
-            
+
             # Wait before next poll
-            await asyncio.sleep(props.poll_interval) 
+            await asyncio.sleep(props.poll_interval)

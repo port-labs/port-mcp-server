@@ -36,10 +36,12 @@ class CreateEntitiyQuery(BaseModel):
 class CreateEntityToolSchema(BaseModel):
     query: CreateEntitiyQuery = Field(..., description="The query to create the entity")
     entity: CreateEntity = Field(..., description="The entity to create")
-    blueprint_identifier: str = Field(..., description="The identifier of the blueprint to create the entity for")
+    blueprint_identifier: str = Field(
+        ..., description="The identifier of the blueprint to create the entity for"
+    )
 
 
-class CreateEntityTool(Tool):
+class CreateEntityTool(Tool[CreateEntityToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):

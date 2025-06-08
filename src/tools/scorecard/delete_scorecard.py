@@ -9,7 +9,9 @@ from src.models.tools.tool import Tool
 
 
 class DeleteScorecardToolSchema(BaseModel):
-    blueprint_identifier: str = Field(..., description="The identifier of the blueprint to get scorecard for")
+    blueprint_identifier: str = Field(
+        ..., description="The identifier of the blueprint to get scorecard for"
+    )
     scorecard_identifier: str = Field(..., description="The identifier of the scorecard to get")
 
 
@@ -18,7 +20,7 @@ class DeleteScorecardToolResponse(BaseModel):
     message: str = Field(..., description="The message from the operation")
 
 
-class DeleteScorecardTool(Tool):
+class DeleteScorecardTool(Tool[DeleteScorecardToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):
@@ -42,6 +44,9 @@ class DeleteScorecardTool(Tool):
         args = props.model_dump()
         scorecard_id = args.get("scorecard_identifier")
         blueprint_id = args.get("blueprint_identifier")
+
+        if not scorecard_id or not blueprint_id:
+            raise ValueError("Scorecard identifier and blueprint identifier are required")
 
         result = await self.port_client.delete_scorecard(scorecard_id, blueprint_id)
         return {"success": result}

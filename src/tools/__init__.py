@@ -4,6 +4,7 @@ This module aggregates all tools for the Port MCP server.
 """
 
 from src.tools.action import (
+    GetActionTool,
     ListActionsTool,
     RunActionTool,
     TrackActionRunTool,
@@ -48,6 +49,7 @@ __all__ = [
     "GetEntitiesTool",
     "UpdateEntityTool",
     "DeleteEntityTool",
+    "GetActionTool",
     "ListActionsTool",
     "RunActionTool",
     "TrackActionRunTool",

@@ -1,6 +1,6 @@
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Generic, TypeVar
 
 from pydantic import ValidationError
 
@@ -9,14 +9,16 @@ from src.models.common.base_pydantic import BaseModel
 from src.utils import logger
 from src.utils.schema import inline_schema
 
+T = TypeVar("T", bound=BaseModel)
+
 
 @dataclass
-class Tool:
+class Tool(Generic[T]):
     name: str
     description: str
-    function: Callable[[BaseModel], dict[str, Any]]
-    input_schema: BaseModel
-    output_schema: BaseModel
+    function: Callable[[T], Awaitable[dict[str, Any]]]
+    input_schema: type[T]
+    output_schema: type[BaseModel]
     annotations: Annotations | None = None
 
     @property
@@ -36,7 +38,7 @@ class Tool:
             logger.error(message)
             raise ValueError(message) from None
 
-    def validate_input(self, input: dict[str, Any]) -> BaseModel:
+    def validate_input(self, input: dict[str, Any]) -> T:
         logger.info(f"Validating input: {input}")
         try:
             return self.input_schema(**input)

@@ -1,25 +1,30 @@
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import Field
 
-from src.client.client import PortClient
+from src.client import PortClient
+from src.models.actions.action import ActionSummary
 from src.models.common.annotations import Annotations
 from src.models.common.base_pydantic import BaseModel
 from src.models.tools.tool import Tool
+from src.utils import logger
 
 
 class ListActionsToolSchema(BaseModel):
-    blueprint_identifier: Optional[str] = Field(
-        default=None, 
-        description="Optional blueprint identifier to filter actions for a specific blueprint"
+    detailed: bool = Field(default=True, description="Whether to return detailed actions")
+    trigger_type: str = Field(
+        default="self-service",
+        description="The type of trigger to filter actions by self-service or automation",
     )
 
 
 class ListActionsToolResponse(BaseModel):
-    actions: list[dict] = Field(description="The list of available actions")
+    actions: list[ActionSummary] = Field(
+        description="The list of available actions with basic information"
+    )
 
 
-class ListActionsTool(Tool):
+class ListActionsTool(Tool[ListActionsToolSchema]):
     """List available actions in Port"""
 
     port_client: PortClient
@@ -42,11 +47,20 @@ class ListActionsTool(Tool):
         self.port_client = port_client
 
     async def list_actions(self, props: ListActionsToolSchema) -> dict[str, Any]:
-        # Use PyPort's actions API
-        if props.blueprint_identifier:
-            actions = await self.port_client.actions.get_blueprint_actions(props.blueprint_identifier)
-        else:
-            actions = await self.port_client.actions.get_all_actions()
-        
-        response = ListActionsToolResponse.construct(actions=actions)
-        return response.model_dump(exclude_unset=True, exclude_none=True) 
+        logger.info(f"ListActionsTool.list_actions called with props: {props}")
+
+        actions = await self.port_client.get_all_actions(props.trigger_type)
+
+        # Convert full Action objects to ActionSummary objects
+        action_summaries = [
+            ActionSummary(
+                identifier=action.identifier,
+                title=action.title,
+                description=action.description,
+                blueprint=action.blueprint,
+            )
+            for action in actions
+        ]
+
+        response = ListActionsToolResponse(actions=action_summaries)
+        return response.model_dump(exclude_unset=True, exclude_none=True)

@@ -12,10 +12,12 @@ from src.models.tools.tool import Tool
 class UpdateEntityToolSchema(BaseModel):
     entity_identifier: str = Field(..., description="The identifier of the entity to update")
     entity: CreateEntity = Field(..., description="The entity to update")
-    blueprint_identifier: str = Field(..., description="The identifier of the blueprint to update the entity for")
+    blueprint_identifier: str = Field(
+        ..., description="The identifier of the blueprint to update the entity for"
+    )
 
 
-class UpdateEntityTool(Tool):
+class UpdateEntityTool(Tool[UpdateEntityToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):

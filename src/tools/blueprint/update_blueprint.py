@@ -11,7 +11,7 @@ class UpdateBlueprintToolSchema(UpdateBlueprint):
     pass
 
 
-class UpdateBlueprintTool(Tool):
+class UpdateBlueprintTool(Tool[UpdateBlueprintToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):

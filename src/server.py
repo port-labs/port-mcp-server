@@ -22,7 +22,7 @@ def main():
         # Initialize Port.io client
 
         # Initialize FastMCP server
-        mcp = Server("Port MCP Server")
+        mcp: Server = Server("Port MCP Server")
 
         @mcp.call_tool()
         async def call_tool(tool_name: str, arguments: dict[str, Any]):

@@ -15,8 +15,8 @@ class ResourceMap:
             types.Resource(
                 name=resource.name,
                 description=resource.description,
-                uri=resource.uri,
-                mimeType=resource.mimeType,
+                uri=types.AnyUrl(resource.uri),
+                mimeType=resource.mime_type,
             )
             for resource in self.resources.values()
         ]

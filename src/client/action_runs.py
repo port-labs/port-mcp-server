@@ -1,41 +1,48 @@
-from typing import Any, Dict, List
-
-import pyport
-
+from pyport import PortClient
+from src.models.action_run import ActionRun
 from src.utils import logger
 
 
 class PortActionRunClient:
-    """Client for Port action runs."""
+    def __init__(self, client: PortClient):
+        self._client = client
 
-    def __init__(self, client: pyport.PortClient):
-        self.client = client
-
-    async def create_global_action_run(self, action_identifier: str, **kwargs) -> Dict[str, Any]:
-        """Create a global action run."""
+    async def create_global_action_run(self, action_identifier: str, **kwargs) -> ActionRun:
         logger.info(f"Creating global action run for: {action_identifier}")
-        return await self.client.action_runs.create_global_action_run(action_identifier, **kwargs)
+        response = self._client.make_request(
+            "POST", f"actions/{action_identifier}/runs", json=kwargs
+        )
+        action_run_data = response.json().get("run", response.json())
+        return ActionRun.construct(**action_run_data)
 
-    async def create_blueprint_action_run(self, blueprint_identifier: str, action_identifier: str, **kwargs) -> Dict[str, Any]:
-        """Create a blueprint action run."""
+    async def create_blueprint_action_run(
+        self, blueprint_identifier: str, action_identifier: str, **kwargs
+    ) -> ActionRun:
         logger.info(f"Creating blueprint action run for {blueprint_identifier}.{action_identifier}")
-        return await self.client.action_runs.create_blueprint_action_run(blueprint_identifier, action_identifier, **kwargs)
+        response = self._client.make_request(
+            "POST",
+            f"actions/{action_identifier}/blueprint/{blueprint_identifier}/runs/",
+            json=kwargs,
+        )
+        action_run_data = response.json().get("run", response.json())
+        return ActionRun.construct(**action_run_data)
 
     async def create_entity_action_run(
         self, blueprint_identifier: str, entity_identifier: str, action_identifier: str, **kwargs
-    ) -> Dict[str, Any]:
-        """Create an entity action run."""
-        logger.info(f"Creating entity action run for {blueprint_identifier}.{entity_identifier}.{action_identifier}")
-        return await self.client.action_runs.create_entity_action_run(
-            blueprint_identifier, entity_identifier, action_identifier, **kwargs
+    ) -> ActionRun:
+        logger.info(
+            f"Creating entity action run for {blueprint_identifier}.{entity_identifier}.{action_identifier}"
         )
+        response = self._client.make_request(
+            "POST",
+            f"actions/{action_identifier}/blueprint/{blueprint_identifier}/entity/{entity_identifier}/runs/",
+            json=kwargs,
+        )
+        action_run_data = response.json().get("run", response.json())
+        return ActionRun.construct(**action_run_data)
 
-    async def get_action_run(self, run_id: str) -> Dict[str, Any]:
-        """Get action run status and details."""
+    async def get_action_run(self, run_id: str) -> ActionRun:
         logger.debug(f"Getting action run status for: {run_id}")
-        return await self.client.action_runs.get_action_run(run_id)
-
-    async def get_action_run_logs(self, run_id: str) -> List[Dict[str, Any]]:
-        """Get action run logs."""
-        logger.debug(f"Getting action run logs for: {run_id}")
-        return await self.client.action_runs.get_action_run_logs(run_id) 
+        response = self._client.make_request("GET", f"actions/runs/{run_id}?version=v2")
+        action_run_data = response.json().get("run", response.json())
+        return ActionRun.construct(**action_run_data)

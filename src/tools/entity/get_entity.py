@@ -10,7 +10,9 @@ from src.models.tools.tool import Tool
 
 
 class GetEntityToolSchema(BaseModel):
-    blueprint_identifier: str = Field(..., description="The identifier of the blueprint to get entity for")
+    blueprint_identifier: str = Field(
+        ..., description="The identifier of the blueprint to get entity for"
+    )
     entity_identifier: str = Field(..., description="The identifier of the entity to get")
     detailed: bool = Field(
         default=True,
@@ -18,7 +20,7 @@ class GetEntityToolSchema(BaseModel):
     )
 
 
-class GetEntityTool(Tool):
+class GetEntityTool(Tool[GetEntityToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):
@@ -38,11 +40,14 @@ class GetEntityTool(Tool):
         )
         self.port_client = port_client
 
-    async def get_entity(self, props: GetEntityToolSchema) -> list[dict[str, Any]]:
+    async def get_entity(self, props: GetEntityToolSchema) -> dict[str, Any]:
         args = props.model_dump()
 
         blueprint_identifier = args.get("blueprint_identifier")
         entity_identifier = args.get("entity_identifier")
+
+        if not blueprint_identifier or not entity_identifier:
+            raise ValueError("Blueprint identifier and entity identifier are required")
 
         result = await self.port_client.get_entity(blueprint_identifier, entity_identifier)
         result_dict = result.model_dump(exclude_unset=True, exclude_none=True)
