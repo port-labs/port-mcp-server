@@ -163,22 +163,9 @@ class PortClient:
             lambda: self.action_runs.create_global_action_run(action_identifier, **kwargs)
         )
 
-    async def create_blueprint_action_run(
-        self, blueprint_identifier: str, action_identifier: str, **kwargs
-    ) -> ActionRun:
+    async def create_entity_action_run(self, action_identifier: str, **kwargs) -> ActionRun:
         return await self.wrap_request(
-            lambda: self.action_runs.create_blueprint_action_run(
-                blueprint_identifier, action_identifier, **kwargs
-            )
-        )
-
-    async def create_entity_action_run(
-        self, blueprint_identifier: str, entity_identifier: str, action_identifier: str, **kwargs
-    ) -> ActionRun:
-        return await self.wrap_request(
-            lambda: self.action_runs.create_entity_action_run(
-                blueprint_identifier, entity_identifier, action_identifier, **kwargs
-            )
+            lambda: self.action_runs.create_entity_action_run(action_identifier, **kwargs)
         )
 
     async def get_action_run(self, run_id: str) -> ActionRun:

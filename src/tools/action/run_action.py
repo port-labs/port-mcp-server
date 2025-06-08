@@ -16,10 +16,6 @@ class RunActionToolSchema(BaseModel):
         default=None,
         description="Optional entity identifier if action is entity-specific, if the action contains blueprint and the type is DAY-2 or DELETE, create does not require an entity identifier",
     )
-    blueprint_identifier: str | SkipJsonSchema[None] = Field(
-        default=None,
-        description="Optional blueprint identifier if action is blueprint-specific, if the action contains blueprint in the actions schema",
-    )
     properties: dict | SkipJsonSchema[None] = Field(
         default=None,
         description="Action properties based on the actions trigger.userInputs schema",
@@ -54,28 +50,25 @@ class RunActionTool(Tool[RunActionToolSchema]):
         self.port_client = port_client
 
     async def run_action(self, props: RunActionToolSchema) -> dict[str, Any]:
-        run_payload = {}
+        run_payload: dict[str, Any] = {}
         if props.properties:
             run_payload["properties"] = props.properties
+        else:
+            run_payload["properties"] = {}
 
         if not self.port_client.action_runs:
             raise ValueError("Action runs client not available")
 
-        if props.entity_identifier and props.blueprint_identifier:
+        if props.entity_identifier:
+            run_payload["entity"] = props.entity_identifier
             action_run = await self.port_client.create_entity_action_run(
-                blueprint_identifier=props.blueprint_identifier,
-                entity_identifier=props.entity_identifier,
-                action_identifier=props.action_identifier,
-                **run_payload,
-            )
-        elif props.blueprint_identifier:
-            action_run = await self.port_client.create_blueprint_action_run(
-                blueprint_identifier=props.blueprint_identifier,
                 action_identifier=props.action_identifier,
                 **run_payload,
             )
         else:
-            action_run = await self.port_client.create_global_action_run(action_identifier=props.action_identifier, **run_payload)
+            action_run = await self.port_client.create_global_action_run(
+                action_identifier=props.action_identifier, **run_payload
+            )
 
         # Generate the UI link for the action run
         ui_link = f"https://app.getport.io/organization/run?runId={action_run.id}"

@@ -10,27 +10,17 @@ class PortActionRunClient:
 
     async def create_global_action_run(self, action_identifier: str, **kwargs) -> ActionRun:
         logger.info(f"Creating global action run for: {action_identifier}")
-        response = self._client.make_request("POST", f"actions/{action_identifier}/runs", json=kwargs)
-        action_run_data = response.json().get("run", response.json())
-        return ActionRun.construct(**action_run_data)
-
-    async def create_blueprint_action_run(self, blueprint_identifier: str, action_identifier: str, **kwargs) -> ActionRun:
-        logger.info(f"Creating blueprint action run for {blueprint_identifier}.{action_identifier}")
         response = self._client.make_request(
-            "POST",
-            f"actions/{action_identifier}/blueprint/{blueprint_identifier}/runs/",
-            json=kwargs,
+            "POST", f"actions/{action_identifier}/runs", json=kwargs
         )
         action_run_data = response.json().get("run", response.json())
         return ActionRun.construct(**action_run_data)
 
-    async def create_entity_action_run(
-        self, blueprint_identifier: str, entity_identifier: str, action_identifier: str, **kwargs
-    ) -> ActionRun:
-        logger.info(f"Creating entity action run for {blueprint_identifier}.{entity_identifier}.{action_identifier}")
+    async def create_entity_action_run(self, action_identifier: str, **kwargs) -> ActionRun:
+        logger.info(f"Creating entity action run for {action_identifier} with kwargs: {kwargs}")
         response = self._client.make_request(
             "POST",
-            f"actions/{action_identifier}/blueprint/{blueprint_identifier}/entity/{entity_identifier}/runs/",
+            f"actions/{action_identifier}/runs",
             json=kwargs,
         )
         action_run_data = response.json().get("run", response.json())
