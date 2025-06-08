@@ -12,16 +12,12 @@ from src.models.tools.tool import Tool
 
 class DeleteEntityToolSchema(BaseModel):
     entity_identifier: str = Field(..., description="The identifier of the entity to delete")
-    blueprint_identifier: str = Field(
-        ..., description="The identifier of the blueprint to delete the entity for"
-    )
+    blueprint_identifier: str = Field(..., description="The identifier of the blueprint to delete the entity for")
     delete_dependents: bool = Field(
         default=False,
         description="If true, this call will also delete all of the entity's dependents",
     )
-    run_id: str | SkipJsonSchema[None] = Field(
-        default=None, description="The run_id of the action to delete the entity for"
-    )
+    run_id: str | SkipJsonSchema[None] = Field(default=None, description="The run_id of the action to delete the entity for")
 
 
 class DeleteEntityTool(Tool[DeleteEntityToolSchema]):
@@ -49,8 +45,6 @@ class DeleteEntityTool(Tool[DeleteEntityToolSchema]):
         entity_identifier = props.entity_identifier
         delete_dependents = props.delete_dependents
 
-        result = await self.port_client.delete_entity(
-            blueprint_identifier, entity_identifier, delete_dependents
-        )
+        result = await self.port_client.delete_entity(blueprint_identifier, entity_identifier, delete_dependents)
 
         return {"success": result}

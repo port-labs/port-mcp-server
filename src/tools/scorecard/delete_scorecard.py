@@ -9,9 +9,7 @@ from src.models.tools.tool import Tool
 
 
 class DeleteScorecardToolSchema(BaseModel):
-    blueprint_identifier: str = Field(
-        ..., description="The identifier of the blueprint to get scorecard for"
-    )
+    blueprint_identifier: str = Field(..., description="The identifier of the blueprint to get scorecard for")
     scorecard_identifier: str = Field(..., description="The identifier of the scorecard to get")
 
 

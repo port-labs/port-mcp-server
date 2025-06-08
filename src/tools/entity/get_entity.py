@@ -10,9 +10,7 @@ from src.models.tools.tool import Tool
 
 
 class GetEntityToolSchema(BaseModel):
-    blueprint_identifier: str = Field(
-        ..., description="The identifier of the blueprint to get entity for"
-    )
+    blueprint_identifier: str = Field(..., description="The identifier of the blueprint to get entity for")
     entity_identifier: str = Field(..., description="The identifier of the entity to get")
     detailed: bool = Field(
         default=True,

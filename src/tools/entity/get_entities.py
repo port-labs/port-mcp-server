@@ -10,9 +10,7 @@ from src.models.tools.tool import Tool
 
 
 class GetEntitiesToolSchema(BaseModel):
-    blueprint_identifier: str = Field(
-        ..., description="The identifier of the blueprint to get entities for"
-    )
+    blueprint_identifier: str = Field(..., description="The identifier of the blueprint to get entities for")
     detailed: bool = Field(
         default=False,
         description="If True, returns complete entity details including properties. If False (default), returns summary information only.",
@@ -51,9 +49,7 @@ class GetEntitiesTool(Tool[GetEntitiesToolSchema]):
             raise ValueError("Blueprint identifier is required")
 
         raw_entities = await self.port_client.get_entities(blueprint_identifier)
-        processed_entities = [
-            entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities
-        ]
+        processed_entities = [entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities]
 
         response = GetEntitiesToolResponse.construct(entities=processed_entities)
         return response.model_dump(exclude_unset=True, exclude_none=True)

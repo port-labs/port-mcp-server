@@ -19,9 +19,7 @@ class ListActionsToolSchema(BaseModel):
 
 
 class ListActionsToolResponse(BaseModel):
-    actions: list[ActionSummary] = Field(
-        description="The list of available actions with basic information"
-    )
+    actions: list[ActionSummary] = Field(description="The list of available actions with basic information")
 
 
 class ListActionsTool(Tool[ListActionsToolSchema]):

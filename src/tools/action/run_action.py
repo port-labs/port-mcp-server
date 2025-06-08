@@ -74,9 +74,7 @@ class RunActionTool(Tool[RunActionToolSchema]):
                 **run_payload,
             )
         else:
-            action_run = await self.port_client.create_global_action_run(
-                action_identifier=props.action_identifier, **run_payload
-            )
+            action_run = await self.port_client.create_global_action_run(action_identifier=props.action_identifier, **run_payload)
 
         # Generate the UI link for the action run
         ui_link = f"https://app.getport.io/organization/run?runId={action_run.id}"

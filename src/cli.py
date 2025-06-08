@@ -14,9 +14,7 @@ def parse_args():
     parser.add_argument("--client-id", help="Port.io Client ID", required=True)
     parser.add_argument("--client-secret", help="Port.io Client Secret", required=True)
     parser.add_argument("--region", default="EU", help="Port.io API region (EU or US)")
-    parser.add_argument(
-        "--log-level", default="ERROR", help="Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)"
-    )
+    parser.add_argument("--log-level", default="ERROR", help="Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)")
     parser.add_argument("--api-validation-enabled", default="False", help="Enable API validation")
 
     return parser.parse_args()

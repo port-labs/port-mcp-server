@@ -20,9 +20,7 @@ class PortEntityClient:
 
         entities_data = self._client.entities.get_entities(blueprint_identifier)
 
-        logger.info(
-            f"Got {len(entities_data)} entities for blueprint '{blueprint_identifier}' from Port"
-        )
+        logger.info(f"Got {len(entities_data)} entities for blueprint '{blueprint_identifier}' from Port")
         logger.debug(f"Response for get entities: {entities_data}")
         if config.api_validation_enabled:
             logger.debug("Validating entities")
@@ -32,15 +30,11 @@ class PortEntityClient:
             return [EntityResult.construct(**entity_data) for entity_data in entities_data]
 
     async def get_entity(self, blueprint_identifier: str, entity_identifier: str) -> EntityResult:
-        logger.info(
-            f"Getting entity '{entity_identifier}' from blueprint '{blueprint_identifier}' from Port"
-        )
+        logger.info(f"Getting entity '{entity_identifier}' from blueprint '{blueprint_identifier}' from Port")
 
         entity_data = self._client.entities.get_entity(blueprint_identifier, entity_identifier)
 
-        logger.info(
-            f"Got entity '{entity_identifier}' from blueprint '{blueprint_identifier}' from Port"
-        )
+        logger.info(f"Got entity '{entity_identifier}' from blueprint '{blueprint_identifier}' from Port")
         logger.debug(f"Response for get entity: {entity_data}")
         if config.api_validation_enabled:
             logger.debug("Validating entity")
@@ -49,9 +43,7 @@ class PortEntityClient:
             logger.debug("Skipping API validation for entity")
             return EntityResult.construct(**entity_data)
 
-    async def create_entity(
-        self, blueprint_identifier: str, entity_data: dict[str, Any], query: dict[str, Any]
-    ) -> EntityResult:
+    async def create_entity(self, blueprint_identifier: str, entity_data: dict[str, Any], query: dict[str, Any]) -> EntityResult:
         logger.info(f"Creating entity for blueprint '{blueprint_identifier}' in Port")
         logger.debug(f"Input from tool to create entity: {entity_data}")
 
@@ -83,25 +75,17 @@ class PortEntityClient:
             logger.debug("Skipping API validation for entity")
             return EntityResult.construct(**entity)
 
-    async def update_entity(
-        self, blueprint_identifier: str, entity_identifier: str, entity_data: dict[str, Any]
-    ) -> EntityResult:
-        logger.info(
-            f"Updating entity '{entity_identifier}' in blueprint '{blueprint_identifier}' in Port"
-        )
+    async def update_entity(self, blueprint_identifier: str, entity_identifier: str, entity_data: dict[str, Any]) -> EntityResult:
+        logger.info(f"Updating entity '{entity_identifier}' in blueprint '{blueprint_identifier}' in Port")
         logger.debug(f"Input from tool to update entity: {entity_data}")
 
-        updated_data = self._client.entities.update_entity(
-            blueprint_identifier, entity_identifier, entity_data
-        )
+        updated_data = self._client.entities.update_entity(blueprint_identifier, entity_identifier, entity_data)
         if not updated_data.get("ok"):
             message = f"Failed to update entity: {updated_data}"
             logger.warning(message)
             raise PortError(message)
 
-        logger.info(
-            f"Updated entity '{entity_identifier}' in blueprint '{blueprint_identifier}' in Port"
-        )
+        logger.info(f"Updated entity '{entity_identifier}' in blueprint '{blueprint_identifier}' in Port")
 
         entity = updated_data.get("entity", {})
         logger.debug(f"Response for update entity: {entity}")
@@ -113,12 +97,8 @@ class PortEntityClient:
             logger.debug("Skipping API validation for entity")
             return EntityResult.construct(**entity)
 
-    async def delete_entity(
-        self, blueprint_identifier: str, entity_identifier: str, delete_dependents: bool = False
-    ) -> bool:
-        logger.info(
-            f"Deleting entity '{entity_identifier}' from blueprint '{blueprint_identifier}' in Port"
-        )
+    async def delete_entity(self, blueprint_identifier: str, entity_identifier: str, delete_dependents: bool = False) -> bool:
+        logger.info(f"Deleting entity '{entity_identifier}' from blueprint '{blueprint_identifier}' in Port")
         logger.debug(f"Input from tool to delete entity: {delete_dependents}")
 
         url = f"blueprints/{blueprint_identifier}/entities/{entity_identifier}"
@@ -129,7 +109,5 @@ class PortEntityClient:
             message = f"Failed to delete entity: {response_json}"
             logger.warning(message)
             raise PortError(message)
-        logger.info(
-            f"Deleted entity '{entity_identifier}' from blueprint '{blueprint_identifier}' in Port"
-        )
+        logger.info(f"Deleted entity '{entity_identifier}' from blueprint '{blueprint_identifier}' in Port")
         return cast(bool, response_json.get("ok"))

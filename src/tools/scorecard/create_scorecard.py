@@ -10,9 +10,7 @@ from src.utils import logger
 
 
 class CreateScorecardToolSchema(ScorecardCreate):
-    blueprint_identifier: str = Field(
-        ..., description="The identifier of the blueprint to create the scorecard for"
-    )
+    blueprint_identifier: str = Field(..., description="The identifier of the blueprint to create the scorecard for")
 
 
 class CreateScorecardTool(Tool[CreateScorecardToolSchema]):
@@ -51,7 +49,9 @@ class CreateScorecardTool(Tool[CreateScorecardToolSchema]):
             for rule in rules:
                 rule_level = rule.get("level")
                 if rule_level == base_level_title:
-                    message = f"❌ Error creating scorecard: The base level '{base_level_title}' cannot have rules associated with it."
+                    message = (
+                        f"❌ Error creating scorecard: The base level '{base_level_title}' cannot have rules associated with it."
+                    )
                     logger.error(message)
                     raise Exception(message)
 
@@ -61,8 +61,6 @@ class CreateScorecardTool(Tool[CreateScorecardToolSchema]):
         if not blueprint_identifier:
             raise ValueError("Blueprint identifier is required")
 
-        created_scorecard = await self.port_client.create_scorecard(
-            blueprint_identifier, scorecard_data
-        )
+        created_scorecard = await self.port_client.create_scorecard(blueprint_identifier, scorecard_data)
         created_scorecard_dict = created_scorecard.model_dump(exclude_unset=True, exclude_none=True)
         return created_scorecard_dict

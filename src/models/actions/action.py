@@ -1,6 +1,5 @@
 """Port.io action model."""
 
-
 from typing import Any
 from pydantic import Field
 from pydantic.json_schema import SkipJsonSchema
@@ -12,24 +11,16 @@ from src.models.common.icon import Icon
 class ActionSchema(BaseModel):
     """Schema for action inputs."""
 
-    properties: dict[str, Any] = Field(
-        default_factory=dict, description="Properties schema for action inputs"
-    )
-    required: list[str] = Field(
-        default_factory=list, description="Required properties for the action"
-    )
+    properties: dict[str, Any] = Field(default_factory=dict, description="Properties schema for action inputs")
+    required: list[str] = Field(default_factory=list, description="Required properties for the action")
 
 
 class ActionTrigger(BaseModel):
     """Action trigger configuration."""
 
     type: str = Field(..., description="The type of trigger")
-    event: str | SkipJsonSchema[None] = Field(
-        None, description="The event that triggers the action"
-    )
-    condition: dict[str, Any] | SkipJsonSchema[None] = Field(
-        None, description="Conditions for the trigger"
-    )
+    event: str | SkipJsonSchema[None] = Field(None, description="The event that triggers the action")
+    condition: dict[str, Any] | SkipJsonSchema[None] = Field(None, description="Conditions for the trigger")
 
 
 class ActionInvocationMethod(BaseModel):
@@ -37,9 +28,7 @@ class ActionInvocationMethod(BaseModel):
 
     type: str = Field(..., description="The type of invocation method")
     url: str | SkipJsonSchema[None] = Field(None, description="URL for webhook invocation")
-    agent: bool | SkipJsonSchema[None] = Field(
-        None, description="Whether to use agent for invocation"
-    )
+    agent: bool | SkipJsonSchema[None] = Field(None, description="Whether to use agent for invocation")
     method: str | SkipJsonSchema[None] = Field(None, description="HTTP method for webhook")
     headers: dict[str, str] | SkipJsonSchema[None] = Field(None, description="Headers for webhook")
     body: str | SkipJsonSchema[None] = Field(None, description="Body template for webhook")
@@ -50,12 +39,8 @@ class ActionSummary(BaseModel):
 
     identifier: str = Field(..., description="The unique identifier of the action")
     title: str = Field(..., description="The title of the action")
-    description: str | SkipJsonSchema[None] = Field(
-        None, description="The description of the action"
-    )
-    blueprint: str | SkipJsonSchema[None] = Field(
-        None, description="The blueprint this action belongs to"
-    )
+    description: str | SkipJsonSchema[None] = Field(None, description="The description of the action")
+    blueprint: str | SkipJsonSchema[None] = Field(None, description="The blueprint this action belongs to")
 
 
 class Action(BaseModel):
@@ -63,13 +48,9 @@ class Action(BaseModel):
 
     identifier: str = Field(..., description="The unique identifier of the action")
     title: str = Field(..., description="The title of the action")
-    description: str | SkipJsonSchema[None] = Field(
-        None, description="The description of the action"
-    )
+    description: str | SkipJsonSchema[None] = Field(None, description="The description of the action")
     icon: Icon | SkipJsonSchema[None] = Field(None, description="The icon of the action")
-    blueprint: str | SkipJsonSchema[None] = Field(
-        None, description="The blueprint this action belongs to"
-    )
+    blueprint: str | SkipJsonSchema[None] = Field(None, description="The blueprint this action belongs to")
     trigger: ActionTrigger = Field(..., description="The trigger configuration")
     invocation_method: ActionInvocationMethod = Field(
         ...,
