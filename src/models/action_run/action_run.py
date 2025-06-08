@@ -1,11 +1,11 @@
 """Port.io action model."""
 
 from typing import Any
+
 from pydantic import Field
 from pydantic.json_schema import SkipJsonSchema
 
 from src.models.common.base_pydantic import BaseModel
-from src.models.common.icon import Icon
 
 
 class ActionRunReference(BaseModel):
