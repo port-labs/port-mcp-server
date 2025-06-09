@@ -21,7 +21,7 @@ class GetEntitiesToolResponse(BaseModel):
     entities: list[EntityResult] = Field(..., description="The list of entities")
 
 
-class GetEntitiesTool(Tool):
+class GetEntitiesTool(Tool[GetEntitiesToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):
@@ -45,6 +45,8 @@ class GetEntitiesTool(Tool):
         args = props.model_dump()
 
         blueprint_identifier = args.get("blueprint_identifier")
+        if not blueprint_identifier:
+            raise ValueError("Blueprint identifier is required")
 
         raw_entities = await self.port_client.get_entities(blueprint_identifier)
         processed_entities = [entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities]

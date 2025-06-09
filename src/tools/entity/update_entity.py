@@ -15,7 +15,7 @@ class UpdateEntityToolSchema(BaseModel):
     blueprint_identifier: str = Field(..., description="The identifier of the blueprint to update the entity for")
 
 
-class UpdateEntityTool(Tool):
+class UpdateEntityTool(Tool[UpdateEntityToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):

@@ -39,7 +39,7 @@ class CreateEntityToolSchema(BaseModel):
     blueprint_identifier: str = Field(..., description="The identifier of the blueprint to create the entity for")
 
 
-class CreateEntityTool(Tool):
+class CreateEntityTool(Tool[CreateEntityToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):

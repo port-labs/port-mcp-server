@@ -36,5 +36,8 @@ class DeleteBlueprintTool(Tool):
     async def delete_blueprint(self, props: DeleteBlueprintToolSchema) -> dict[str, Any]:
         args = props.model_dump()
         blueprint_identifier = args.get("blueprint_identifier")
+        if not blueprint_identifier:
+            raise ValueError("Blueprint identifier is required")
+
         result = await self.port_client.delete_blueprint(blueprint_identifier)
         return {"success": result}

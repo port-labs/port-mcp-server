@@ -63,7 +63,7 @@ class InvokeAIAGentTool(Tool):
                 return InvokeAIAGentToolResponse(
                     invocation_id=identifier,
                     invocation_status=agent_result.status,
-                    message=agent_result.output,
+                    message=agent_result.output or "",
                     selected_agent=agent_result.selected_agent,
                 ).model_dump(exclude_unset=True, exclude_none=True)
 

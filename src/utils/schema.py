@@ -1,11 +1,8 @@
 from typing import Any
 
-from src.utils import logger
-
 
 def inline_schema(schema: dict[str, Any]) -> dict[str, Any] | list[Any] | Any:
     defs = schema.pop("$defs", {})
-    logger.debug(f"defs: {defs}")
 
     def replace_refs(obj: Any) -> dict[str, Any] | list[Any] | Any:
         if isinstance(obj, dict):

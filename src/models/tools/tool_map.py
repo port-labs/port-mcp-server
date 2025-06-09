@@ -25,7 +25,7 @@ class ToolMap:
                 name=tool.name,
                 description=tool.description,
                 inputSchema=tool.input_schema_json,
-                annotations=tool.annotations.model_dump(),
+                annotations=tool.annotations.model_dump(),  # type: ignore
             )
             for tool in self.tools.values()
         ]
@@ -41,6 +41,8 @@ class ToolMap:
             raise ValueError(error_msg) from None
 
     def get_tools(self, tool_names: list[str] | None = None) -> list[Tool]:
+        if tool_names is None:
+            return list(self.tools.values())
         return [self.get_tool(tool_name) for tool_name in tool_names]
 
     def register_tool(self, tool: Tool) -> None:

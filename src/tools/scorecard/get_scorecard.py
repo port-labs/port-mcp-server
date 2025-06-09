@@ -18,7 +18,7 @@ class GetScorecardToolSchema(BaseModel):
     )
 
 
-class GetScorecardTool(Tool):
+class GetScorecardTool(Tool[GetScorecardToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):
@@ -43,6 +43,9 @@ class GetScorecardTool(Tool):
 
         scorecard_identifier = args.get("scorecard_identifier")
         blueprint_identifier = args.get("blueprint_identifier")
+
+        if not scorecard_identifier or not blueprint_identifier:
+            raise ValueError("Scorecard identifier and blueprint identifier are required")
 
         scorecard = await self.port_client.get_scorecard(blueprint_identifier, scorecard_identifier)
         scorecard_dict = scorecard.model_dump(exclude_unset=True, exclude_none=True)

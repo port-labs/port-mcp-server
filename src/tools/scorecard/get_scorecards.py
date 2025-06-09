@@ -21,7 +21,7 @@ class GetScorecardsToolResponse(BaseModel):
     scorecards: list[Scorecard] = Field(..., description="The list of scorecards")
 
 
-class GetScorecardsTool(Tool):
+class GetScorecardsTool(Tool[GetScorecardsToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):
@@ -45,6 +45,9 @@ class GetScorecardsTool(Tool):
         args = props.model_dump()
 
         blueprint_identifier = args.get("blueprint_identifier")
+
+        if not blueprint_identifier:
+            raise ValueError("Blueprint identifier is required")
 
         raw_scorecards = await self.port_client.get_scorecards(blueprint_identifier)
         processed_scorecards = [scorecard.model_dump(exclude_unset=True, exclude_none=True) for scorecard in raw_scorecards]

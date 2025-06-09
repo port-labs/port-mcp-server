@@ -17,7 +17,7 @@ class GetBlueprintsToolResponse(BaseModel):
     blueprints: list[Blueprint] = Field(description="The list of blueprints")
 
 
-class GetBlueprintsTool(Tool):
+class GetBlueprintsTool(Tool[GetBlueprintsToolSchema]):
     """Get blueprints from Port"""
 
     port_client: PortClient

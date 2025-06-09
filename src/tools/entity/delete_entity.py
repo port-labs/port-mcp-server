@@ -1,6 +1,7 @@
 from typing import Any
 
 from pydantic import Field
+from pydantic.json_schema import SkipJsonSchema
 
 from src.client.client import PortClient
 from src.models.common.annotations import Annotations
@@ -16,10 +17,10 @@ class DeleteEntityToolSchema(BaseModel):
         default=False,
         description="If true, this call will also delete all of the entity's dependents",
     )
-    run_id: str = Field(default=None, description="The run_id of the action to delete the entity for")
+    run_id: str | SkipJsonSchema[None] = Field(default=None, description="The run_id of the action to delete the entity for")
 
 
-class DeleteEntityTool(Tool):
+class DeleteEntityTool(Tool[DeleteEntityToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):

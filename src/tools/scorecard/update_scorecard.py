@@ -13,7 +13,7 @@ class UpdateScorecardToolSchema(ScorecardUpdate):
     scorecard_identifier: str = Field(..., description="The identifier of the scorecard to update")
 
 
-class UpdateScorecardTool(Tool):
+class UpdateScorecardTool(Tool[UpdateScorecardToolSchema]):
     port_client: PortClient
 
     def __init__(self, port_client: PortClient):
@@ -40,6 +40,9 @@ class UpdateScorecardTool(Tool):
         scorecard_data = props.model_dump(exclude_none=True, exclude_unset=True)
         scorecard_data.pop("blueprint_identifier")
         scorecard_data.pop("scorecard_identifier")
+
+        if not blueprint_identifier or not scorecard_identifier:
+            raise ValueError("Blueprint identifier and scorecard identifier are required")
 
         created_scorecard = await self.port_client.update_scorecard(blueprint_identifier, scorecard_identifier, scorecard_data)
         created_scorecard_dict = created_scorecard.model_dump(exclude_unset=True, exclude_none=True)

@@ -27,6 +27,14 @@ def mock_client():
     client.update_scorecard = AsyncMock()
     client.delete_scorecard = AsyncMock()
 
+    # Action-related methods
+    client.get_action = AsyncMock()
+    client.get_all_actions = AsyncMock()
+    client.create_global_action_run = AsyncMock()
+    client.create_blueprint_action_run = AsyncMock()
+    client.create_entity_action_run = AsyncMock()
+    client.get_action_run = AsyncMock()
+
     client.trigger_agent = AsyncMock()
     client.get_invocation_status = AsyncMock()
 
