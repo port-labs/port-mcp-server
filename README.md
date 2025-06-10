@@ -5,22 +5,24 @@ The [Port IO](https://www.getport.io/) MCP server is a [Model Context Protocol (
 ## What You Can Do With Port MCP
 
 ### Find Information Quickly
+
 - **Get entity details** - "Who is the owner of service X?"
 - **Check on-call status** - "Who is on call right now?"
 - **Get catalog insights** - "How many services do we have in production?"
 
 ### Analyze Scorecards 
+
 - **Identify weak points** - "Which services are failing for the gold level and why?"
 - **Get compliance status** - "Show me all services that don't meet our security requirements"
 - **Improve quality** - "What do I need to fix to reach the next scorecard level?"
 
 ### Create Resources
+
 - **Build scorecards** - "Create a new scorecard called 'Security Posture' with levels Basic, Silver, and Gold"
 - **Define rules** - "Add a rule that requires services to have a team owner to reach the Silver level"
 - **Setup quality gates** - "Create a rule that checks if services have proper documentation"
 
 We're continuously expanding Port MCP's capabilities. Have a suggestion? We'd love to hear your feedback on our [roadmap](https://roadmap.getport.io/ideas)!
-
 
 # Installation
 
@@ -44,26 +46,34 @@ Before you begin, you'll need:
 >You will also need to provide your Port region, which is either EU or US. If not provided, the default is EU.
 
 ## Installation methods
+
 Port MCP Server can be installed using two methods:
 
 ### Package Installation (uvx)
+
 Use our official [Port MCP server](https://pypi.org/project/mcp-server-port/) package.
 
 ### Docker Installation
+
 Use our official Docker image:
+
 ```bash
 docker pull ghcr.io/port-labs/port-mcp-server:latest
 ```
 
 ### Additional configurations
+
 You can pass these additional arguments for more advanced configuration:
+
 
 | Configuration Parameter | UVX Flag | Docker Environment Variable | Description | Default Value |
 |------------------------|----------|---------------------------|-------------|---------------|
 | Log Level | `log-level` | `PORT_LOG_LEVEL` | Controls the level of log output | `ERROR` |
 | API Validation | `api-validation-enabled` | `PORT_API_VALIDATION_ENABLED` | Controls if API schema should be validated and fail if it's not valid | `False` |
 
+
 ## Usage with Claude Desktop
+
 1. Go to Settings > Developer and click on "Edit config".
 2. Edit the `claude_desktop_config.json` file and add the below configuration based on the installation method.
 3. Save the file and restart Claude.
@@ -181,9 +191,8 @@ You can pass these additional arguments for more advanced configuration:
 }
 ```
 
-
-
 ### uvx
+
 >[!NOTE]
 >If you want to run the command from a virtual Python environment, add a `PYTHONPATH` variable to the `env` object with its path, e.g., `/path/to/your/venv/bin/python`.
 
@@ -212,7 +221,7 @@ You can pass these additional arguments for more advanced configuration:
 }
 ```
 
-### Usage with VS Code
+## Usage with VS Code
 
 >[!TIP]
 >VS Code can automatically discover MCP servers already installed in Cursor and Claude.
@@ -224,6 +233,7 @@ You can pass these additional arguments for more advanced configuration:
 [uvx quick installation](https://insiders.vscode.dev/redirect/mcp/install?name=port&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22mcp-server-port%400.2.8%22%2C%22--client-id%22%2C%22%3CPORT_CLIENT_ID%3E%22%2C%22--client-secret%22%2C%22%3CPORT_CLIENT_SECRET%3E%22%2C%22--region%22%2C%22%3CPORT_REGION%3E%22%5D%2C%22env%22%3A%7B%22PORT_CLIENT_ID%22%3A%22%3CPORT_CLIENT_ID%3E%22%2C%22PORT_CLIENT_SECRET%22%3A%22%3CPORT_CLIENT_SECRET%3E%22%2C%22PORT_REGION%22%3A%22%3CPORT_REGION%3E%22%7D%7D)
 
 For manual installation follow these steps:
+
 1. Go to the Command Palette by pressing `Cmd + Shift + P` / `Ctrl + Shift + P`.
 2. Type `Preferences: Open User Settings (JSON)` and press enter.
 2. Edit the `settings.json` file and add the below configuration under the `mcp`>`servers`.
@@ -232,6 +242,7 @@ For manual installation follow these steps:
 ![VS Code MCP Tools](/assets/vs_code_mcp_tools.png)
 
 ### Docker
+
 >[!TIP]
 >Consider using the full path to Docker (e.g., `/usr/local/bin/docker`) instead of just `docker`. You can find this path by running `which docker` in your terminal. Using the full path helps avoid PATH resolution issues and ensures consistent behavior across different shell environments.
 
@@ -285,6 +296,81 @@ For manual installation follow these steps:
   }
 ```
 
+## Usage with Neovim (`mcphub.nvim`)
+
+To use Port MCP Server in Neovim, use the plugin [mcphub.nvim](https://ravitemer.github.io/mcphub.nvim/) with one of the supported LLM extensions, such as [Avante](https://github.com/yetone/avante.nvim) or [CodeCompanion](https://github.com/olimorris/codecompanion.nvim).
+
+Once installed, add Port's MCP server configuration:
+
+1. Access the servers config with the command `:MCPHub` and navigate to the Config tab, or open the servers config file directly, usually located at `~/.config/mcphub/servers.json`.
+2. Add the configuration for Port MCP Server under the `mcpServers` section (see below).
+3. Save the configuration file.
+4. Make sure you have the environment variables `PORT_CLIENT_ID` and `PORT_CLIENT_SECRET` set in your Neovim environment.
+5. Restart the servers by opening the MCPHub view with `:MCPHub` and triggering the restart command with `R`.
+6. You should see the server running and accessible from the MCPHub view. To verify, use the `@mcp` tool in your LLM extension. For example, prompt: `@mcp list my blueprints`.
+
+Check the [mcphub.nvim documentation](https://ravitemer.github.io/mcphub.nvim/) for more details on how to use it.
+
+### Docker Configuration Example for `mcphub.nvim`
+
+> [!NOTE]
+> Make sure that you have the environment variables `PORT_CLIENT_ID` and `PORT_CLIENT_SECRET` set with your Port credentials.
+
+```json
+{
+    "mcpServers": {
+        "port": {
+            "command": "docker",
+            "args": [
+                "run",
+                "-i",
+                "--rm",
+                "-e",
+                "PORT_CLIENT_ID",
+                "-e",
+                "PORT_CLIENT_SECRET",
+                "-e",
+                "PORT_REGION",
+                "ghcr.io/port-labs/port-mcp-server:latest"
+            ],
+            "env": {
+                "PORT_REGION": "EU",
+                "PORT_CLIENT_ID": "",
+                "PORT_CLIENT_SECRET": ""
+            }
+        }
+    }
+}
+```
+
+### `uvx` Configuration Example for `mcphub.nvim`
+
+> [!NOTE]
+> Make sure that you have the environment variables `PORT_CLIENT_ID` and `PORT_CLIENT_SECRET` set with your Port credentials.
+
+```json
+{
+    "mcpServers": {
+        "port": {
+            "command": "uvx",
+            "args": [
+                "mcp-server-port@0.2.8",
+                "--client-id",
+                "PORT_CLIENT_ID",
+                "--client-secret",
+                "PORT_CLIENT_SECRET",
+                "--region",
+                "PORT_REGION"
+            ],
+            "env": {
+                "PORT_CLIENT_ID": "",
+                "PORT_CLIENT_SECRET": "",
+                "PORT_REGION": "EU"
+            }
+        }
+    }
+}
+```
 
 # Available Tools
 
@@ -407,7 +493,6 @@ For manual installation follow these steps:
      - `prompt` (string): The prompt to send to the AI agent
    - Returns: Invocation status and message from the AI agent
 
-
 # Local Development
 
 For developing and testing new functionalities locally before publishing a new version, you can configure your MCP client (e.g., Cursor) to use your local cloned repository.
@@ -425,6 +510,7 @@ For developing and testing new functionalities locally before publishing a new v
 Below is an example of how you might configure your local development server. You'll need to replace the placeholder paths with the actual paths on your system.
 
 **Important:**
+
 *   The `command` should point to the Python executable within your local repository's virtual environment.
 *   The `PYTHONPATH` in the `env` object should point to the root directory of your cloned repository.
 
@@ -459,8 +545,6 @@ Below is an example of how you might configure your local development server. Yo
 
 After setting this up, your MCP client will use your local version of the server, allowing you to test changes from your current branch.
 
-
-
 # Feedback and Roadmap
 
 We're continuously improving Port MCP and would love to hear from you! Please share your feedback and feature requests on our [roadmap page](https://roadmap.getport.io/ideas).
@@ -468,6 +552,7 @@ We're continuously improving Port MCP and would love to hear from you! Please sh
 # Troubleshooting
 
 If you encounter authentication errors, verify that:
+
 1. Your Port credentials are correctly set in the arguments.
 2. You have the necessary permissions.
 3. The credentials are properly copied to your configuration.
