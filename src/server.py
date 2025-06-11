@@ -27,8 +27,8 @@ def main():
         @mcp.call_tool()
         async def call_tool(tool_name: str, arguments: dict[str, Any]):
             tool = tool_map.get_tool(tool_name)
-            response = await execute_tool(tool, arguments)
-            return response
+            logger.debug(f"Calling tool: {tool_name} with arguments: {arguments}")
+            return await execute_tool(tool, arguments)
 
         @mcp.list_tools()
         async def list_tools() -> list[types.Tool]:
