@@ -55,10 +55,8 @@ class ToolMap:
             self.register_tool(module(self.port_client))
         logger.info(f"ToolMap initialized with {len(self.tools)} static tools")
         
-        # Register dynamic action tools if enabled
-        from src.config import config
-        if config.dynamic_actions_enabled:
-            self._register_dynamic_action_tools()
+        # Always register dynamic action tools
+        self._register_dynamic_action_tools()
 
     def _create_dynamic_action_tool(self, action: Action) -> Tool:
         """Create a dynamic tool for a specific Port action."""
