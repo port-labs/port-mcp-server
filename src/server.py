@@ -27,8 +27,8 @@ def main():
         @mcp.call_tool()
         async def call_tool(tool_name: str, arguments: dict[str, Any]):
             tool = tool_map.get_tool(tool_name)
-            logger.debug(f"Calling tool: {tool_name} with arguments: {arguments}")
-            return await execute_tool(tool, arguments)
+            response = await execute_tool(tool, arguments)
+            return response
 
         @mcp.list_tools()
         async def list_tools() -> list[types.Tool]:
@@ -48,3 +48,7 @@ def main():
     except Exception as e:
         logger.exception(f"Server error: {e}")
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

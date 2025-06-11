@@ -16,8 +16,21 @@ def parse_args():
     parser.add_argument("--region", default="EU", help="Port.io API region (EU or US)")
     parser.add_argument("--log-level", default="ERROR", help="Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)")
     parser.add_argument("--api-validation-enabled", default="False", help="Enable API validation")
+    parser.add_argument("--dynamic-actions-enabled", default="True", help="Enable dynamic action tools")
 
     return parser.parse_args()
+
+
+def _str_to_bool(value):
+    """Convert string to boolean."""
+    if isinstance(value, bool):
+        return value
+    if value.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif value.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
 def cli_main():
@@ -28,13 +41,14 @@ def cli_main():
     # Parse command-line arguments
     args = parse_args()
     init_server_config(
-        McpServerConfig(
-            port_client_id=args.client_id,
-            port_client_secret=args.client_secret,
-            region=args.region,
-            log_level=args.log_level,
-            api_validation_enabled=args.api_validation_enabled.lower() == "true",
-        ).model_dump()
+        {
+            "port_client_id": args.client_id,
+            "port_client_secret": args.client_secret,
+            "region": args.region,
+            "log_level": args.log_level,
+            "api_validation_enabled": args.api_validation_enabled,
+            "dynamic_actions_enabled": args.dynamic_actions_enabled,
+        }
     )
     # Call the main function with command-line arguments
     main()
