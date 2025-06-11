@@ -1,7 +1,3 @@
-"""
-Tool map for managing MCP tools.
-"""
-
 from dataclasses import dataclass, field
 
 import mcp.types as types
