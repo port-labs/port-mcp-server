@@ -1,5 +1,4 @@
-#!/bin/bash
-set -euo pipefail
+#!/bin/sh
 
 # If environment variables are provided, use them as command line arguments
 source .venv/bin/activate
