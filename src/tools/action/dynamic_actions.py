@@ -56,12 +56,10 @@ class DynamicActionToolsManager:
     def _create_dynamic_action_tool(self, action: Action) -> Tool:
         """Create a dynamic tool for a specific Port action."""
 
-        # Create the tool function
         async def dynamic_action_function(props: DynamicActionToolSchema) -> dict[str, Any]:
             if not self.port_client.action_runs:
                 raise ValueError("Action runs client not available")
 
-            # Execute the action
             if props.entity_identifier:
                 action_run = await self.port_client.create_entity_action_run(
                     action_identifier=action.identifier,
@@ -76,17 +74,14 @@ class DynamicActionToolsManager:
 
             return DynamicActionToolResponse(action_run=action_run).model_dump()
 
-        # Create tool name (limited to 40 chars for server prefix)
         base_tool_name = f"run_{_camel_to_snake(action.identifier)}"
         tool_name = base_tool_name[:40] if len(base_tool_name) > 40 else base_tool_name
 
-        # Create tool description
         description = f"Execute the '{action.title}' action"
         if action.description:
             description += f": {action.description}"
         description += f"\n\nTo see required properties, first call get_action with action_identifier='{action.identifier}' to view the userInputs schema."
 
-        # Create and return the tool
         return Tool(
             name=tool_name,
             description=description,
@@ -106,17 +101,14 @@ class DynamicActionToolsManager:
         """Get all dynamic action tools by fetching actions from Port."""
         tools = []
         try:
-            # Get all actions
             list_actions_tool = ListActionsTool(self.port_client)
             actions_response = await list_actions_tool.list_actions(ListActionsToolSchema())
             actions = actions_response.get("actions", [])
 
-            # Get detailed action info and create tools
             get_action_tool = GetActionTool(self.port_client)
 
             for action_data in actions:
                 try:
-                    # Handle both dict and ActionSummary objects
                     action_identifier = (
                         action_data.get("identifier")
                         if isinstance(action_data, dict)
@@ -127,16 +119,13 @@ class DynamicActionToolsManager:
                         logger.warning("Skipping action with no identifier")
                         continue
 
-                    # Get full action details
                     action_response = await get_action_tool.get_action(
                         GetActionToolSchema(action_identifier=str(action_identifier))
                     )
 
-                    # Create action model
                     action = Action.model_validate(action_response, strict=False)
 
                     if action:
-                        # Create dynamic tool
                         dynamic_tool = self._create_dynamic_action_tool(action)
                         tools.append(dynamic_tool)
 
