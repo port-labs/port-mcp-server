@@ -1259,14 +1259,14 @@ windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "pyport"
-version = "0.3.1"
+version = "0.3.2"
 description = "Port REST API Wrapper"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "pyport-0.3.1-py3-none-any.whl", hash = "sha256:9a8e1e377e9701f0ea3abeb8c0efd612fad41ab15818332badf79181eb89a147"},
-    {file = "pyport-0.3.1.tar.gz", hash = "sha256:125b1523779d2c709289a0041868565012a5129f50c213b9affb21aced39c387"},
+    {file = "pyport-0.3.2-py3-none-any.whl", hash = "sha256:21eb1a8823f7be2e13d2150c5b7c6747898b7ccb01f25190915dd8a6d27a78b3"},
+    {file = "pyport-0.3.2.tar.gz", hash = "sha256:601d9227339d5eccb51680b9732757cd65af762e80ceab28b3b5619b367185fa"},
 ]
 
 [package.dependencies]
@@ -1835,4 +1835,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "e9156f4adb4773707199af6d08f34650d7cc0802bc5d566769a6a630ff704ad0"
+content-hash = "2ae626fee312e655d33b7504a16dafc03bf095ab777211e419ab0a2b1c56480a"
