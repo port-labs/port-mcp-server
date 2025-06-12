@@ -17,6 +17,7 @@ class PortActionClient:
         result = response.json()
         if result.get("ok"):
             permissions = result.get("permissions", [])
+            logger.debug(f"listed permissions: {permissions}")
             if not isinstance(permissions, list):
                 logger.warning("Permissions response is not a list")
                 return []
