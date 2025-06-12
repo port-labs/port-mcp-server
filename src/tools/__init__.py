@@ -6,7 +6,6 @@ This module aggregates all tools for the Port MCP server.
 from src.tools.action import (
     GetActionTool,
     ListActionsTool,
-    RunActionTool,
     TrackActionRunTool,
 )
 from src.tools.ai_agent import InvokeAIAGentTool
@@ -51,6 +50,5 @@ __all__ = [
     "DeleteEntityTool",
     "GetActionTool",
     "ListActionsTool",
-    "RunActionTool",
     "TrackActionRunTool",
 ]
