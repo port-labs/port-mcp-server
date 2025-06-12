@@ -11,7 +11,7 @@ dependencies = [
     "httpx>=0.28.1",
     "mcp[cli]>=1.6.0",
     "python-dotenv>=1.0.1",
-    "pyport (>=0.3.0,<=0.3.0)",
+    "pyport (>=0.3.1,<=0.3.1)",
     "loguru>=0.7.2",
     "pydantic (>=2.11.3,<3.0.0)"
 ]
