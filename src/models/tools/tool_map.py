@@ -5,6 +5,7 @@ import mcp.types as types
 import src.tools as mcp_tools
 from src.client.client import PortClient
 from src.models.tools.tool import Tool
+from src.tools.action.dynamic_actions import DynamicActionToolsManager
 from src.utils import logger
 
 
@@ -14,10 +15,25 @@ class ToolMap:
     tools: dict[str, Tool] = field(default_factory=dict)
 
     def __post_init__(self):
+        # Register static tools
         for tool in mcp_tools.__all__:
             module = mcp_tools.__dict__[tool]
             self.register_tool(module(self.port_client))
-        logger.info(f"ToolMap initialized with {len(self.tools)} tools")
+        logger.info(f"ToolMap initialized with {len(self.tools)} static tools")
+        self._register_dynamic_action_tools()
+
+    def _register_dynamic_action_tools(self) -> None:
+        """Register dynamic tools for each Port action."""
+        try:
+            dynamic_manager = DynamicActionToolsManager(self.port_client)
+            dynamic_tools = dynamic_manager.get_dynamic_action_tools_sync()
+
+            for tool in dynamic_tools:
+                self.register_tool(tool)
+
+            logger.info(f"Registered {len(dynamic_tools)} dynamic action tools")
+        except Exception as e:
+            logger.error(f"Failed to register dynamic action tools: {e}")
 
     def list_tools(self) -> list[types.Tool]:
         return [
