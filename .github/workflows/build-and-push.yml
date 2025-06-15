@@ -1,6 +1,8 @@
-name: Build and Push MCP Server
+name: Build and Push Docker Image
 
 on:
+  release:
+    types: [created]
   workflow_dispatch:
     inputs:
       VERSION:
@@ -17,6 +19,19 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+      
+      - name: Set version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            # Strip 'v' prefix from release tag if present
+            VERSION="${{ github.event.release.tag_name }}"
+            VERSION="${VERSION#v}"
+            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${{ inputs.VERSION }}" >> $GITHUB_OUTPUT
+          fi
+      
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -35,6 +50,6 @@ jobs:
           platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: |
-            ghcr.io/port-labs/port-mcp-server:${{ inputs.VERSION }}
+            ghcr.io/port-labs/port-mcp-server:${{ steps.version.outputs.VERSION }}
             ghcr.io/port-labs/port-mcp-server:latest
 
