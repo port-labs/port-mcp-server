@@ -70,6 +70,7 @@ You can pass these additional arguments for more advanced configuration:
 |------------------------|----------|---------------------------|-------------|---------------|
 | Log Level | `log-level` | `PORT_LOG_LEVEL` | Controls the level of log output | `ERROR` |
 | API Validation | `api-validation-enabled` | `PORT_API_VALIDATION_ENABLED` | Controls if API schema should be validated and fail if it's not valid | `False` |
+| MCP Client | `mcp-client` | `PORT_MCP_CLIENT` | Identifies the MCP client for User-Agent header (e.g., vscode, cursor) | `unknown` |
 
 
 ## Usage with Claude Desktop

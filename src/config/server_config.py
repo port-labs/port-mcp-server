@@ -71,8 +71,8 @@ def init_server_config(override: dict[str, Any] | None = None):
         config = McpServerConfig(
             port_client_id=client_id,
             port_client_secret=client_secret,
-            region=cast(Literal["EU", "US"], region),
-            log_level=cast(Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], log_level),
+            region=cast("Literal['EU', 'US']", region),
+            log_level=cast("Literal['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']", log_level),
             api_validation_enabled=api_validation_enabled,
             mcp_client=mcp_client,
         )

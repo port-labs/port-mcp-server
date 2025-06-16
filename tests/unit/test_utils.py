@@ -1,7 +1,7 @@
 from typing import Any
 
 import pytest
-from src.utils import logger, get_user_agent
+from src.utils import logger
 
 from src.utils.logger import setup_logging
 from src.utils.schema import inline_schema
@@ -40,13 +40,17 @@ def test_inline_schema(schema: dict[str, Any]):
 
 def test_get_user_agent():
     """Test that get_user_agent returns the correct format."""
-    user_agent = get_user_agent()
+    # Import the function directly to avoid circular imports
+    from src.utils.user_agent import get_user_agent
+    
+    # Test with explicit parameters to avoid config dependencies
+    user_agent = get_user_agent('vscode', '0.2.7')
     
     # Should match format: "port-mcp-server/{mcp_client}/{version}"
-    assert user_agent.startswith("port-mcp-server/")
+    assert user_agent == "port-mcp-server/vscode/0.2.7"
     
     parts = user_agent.split("/")
     assert len(parts) == 3
     assert parts[0] == "port-mcp-server"
-    assert parts[1]  # mcp_client should not be empty
-    assert parts[2]  # version should not be empty
+    assert parts[1] == "vscode"
+    assert parts[2] == "0.2.7"

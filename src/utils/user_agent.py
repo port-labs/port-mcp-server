@@ -33,11 +33,11 @@ def get_user_agent(mcp_client: str = "unknown", version: str = "0.2.7") -> str:
         # Fallback to hardcoded version if package metadata is not available
         try:
             # Try to read from src.__init__.py if available
-            import re
             import os
+            import re
             init_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "__init__.py")
             if os.path.exists(init_path):
-                with open(init_path, 'r') as f:
+                with open(init_path) as f:
                     content = f.read()
                     match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', content)
                     if match:
