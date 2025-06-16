@@ -7,28 +7,29 @@ from src.tools.action import ListActionsTool
 @pytest.fixture
 def mock_client_with_actions(mock_client):
     """Add specific return values for this test"""
+    from src.models.actions.action import ActionTrigger, ActionInvocationMethodWebhook
     mock_client.get_all_actions.return_value = [
         Action(
             identifier="test-action-1",
             title="Test Action 1",
             description="First test action",
-            trigger={
-                "type": "self-service",
-                "operation": "CREATE",
-                "userInputs": {"properties": {}, "required": []},
-            },
-            invocationMethod={"type": "WEBHOOK", "url": "https://example.com/webhook1"},
+            trigger=ActionTrigger(
+                type="self-service",
+                operation="CREATE",
+                user_inputs={"properties": {}, "required": []},
+            ),
+            invocation_method=ActionInvocationMethodWebhook(type="WEBHOOK", url="https://example.com/webhook1"),
         ),
         Action(
             identifier="test-action-2",
             title="Test Action 2",
             description="Second test action",
-            trigger={
-                "type": "self-service",
-                "operation": "DAY-2",
-                "userInputs": {"properties": {}, "required": []},
-            },
-            invocationMethod={"type": "WEBHOOK", "url": "https://example.com/webhook2"},
+            trigger=ActionTrigger(
+                type="self-service",
+                operation="DAY-2",
+                user_inputs={"properties": {}, "required": []},
+            ),
+            invocation_method=ActionInvocationMethodWebhook(type="WEBHOOK", url="https://example.com/webhook2"),
         ),
     ]
     return mock_client

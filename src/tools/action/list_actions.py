@@ -55,7 +55,7 @@ class ListActionsTool(Tool[ListActionsToolSchema]):
                 identifier=action.identifier,
                 title=action.title,
                 description=action.description,
-                blueprint=action.blueprint,
+                blueprint=getattr(action.trigger, 'blueprint_identifier', None),
             )
             for action in actions
         ]

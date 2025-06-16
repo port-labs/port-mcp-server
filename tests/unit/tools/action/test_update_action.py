@@ -7,16 +7,17 @@ from src.tools.action import UpdateActionTool
 @pytest.fixture
 def mock_client_with_update_action(mock_client):
     """Add specific return values for update action test"""
+    from src.models.actions.action import ActionTrigger, ActionInvocationMethodWebhook
     mock_client.update_action.return_value = Action(
         identifier="test-action",
         title="Updated Test Action",
         description="Updated test action description",
-        trigger={
-            "type": "self-service",
-            "operation": "CREATE",
-            "userInputs": {"properties": {}, "required": []},
-        },
-        invocationMethod={"type": "WEBHOOK", "url": "https://example.com/updated-webhook"},
+        trigger=ActionTrigger(
+            type="self-service",
+            operation="CREATE",
+            user_inputs={"properties": {}, "required": []},
+        ),
+        invocation_method=ActionInvocationMethodWebhook(type="WEBHOOK", url="https://example.com/updated-webhook"),
         updated_at="2023-01-01T12:00:00Z",
         updated_by="test-user",
     )
@@ -120,6 +121,7 @@ async def test_update_action_tool_with_partial_update(mock_client_with_update_ac
 @pytest.mark.asyncio
 async def test_update_action_tool_with_gitlab_invocation(mock_client_with_update_action):
     """Test updating an action with GitLab invocation method."""
+    from src.models.actions.action import ActionTrigger, ActionInvocationMethodGitLab
     tool = UpdateActionTool(mock_client_with_update_action)
     
     # Mock return value with GitLab invocation
@@ -127,17 +129,17 @@ async def test_update_action_tool_with_gitlab_invocation(mock_client_with_update
         identifier="gitlab-action",
         title="GitLab Action",
         description="Action with GitLab invocation",
-        trigger={
-            "type": "self-service",
-            "operation": "CREATE",
-            "userInputs": {"properties": {}, "required": []},
-        },
-        invocationMethod={
-            "type": "GITLAB",
-            "projectName": "test-project",
-            "groupName": "test-group",
-            "agent": True,
-        },
+        trigger=ActionTrigger(
+            type="self-service",
+            operation="CREATE",
+            user_inputs={"properties": {}, "required": []},
+        ),
+        invocation_method=ActionInvocationMethodGitLab(
+            type="GITLAB",
+            project_name="test-project",
+            group_name="test-group",
+            agent=True,
+        ),
     )
     
     input_data = {

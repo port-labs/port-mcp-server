@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from src.models.action_run.action_run import ActionRun
-from src.models.actions.action import Action, ActionInvocationMethod, ActionTrigger
+from src.models.actions.action import Action, ActionInvocationMethod, ActionInvocationMethodWebhook, ActionTrigger
 from src.tools.action.dynamic_actions import (
     DynamicActionToolResponse,
     DynamicActionToolSchema,
@@ -108,7 +108,7 @@ def mock_action():
         title="Create Jira Issue",
         description="Create a new issue in Jira",
         trigger=ActionTrigger.model_construct(type="self-service", operation="CREATE"),
-        invocation_method=ActionInvocationMethod.model_construct(
+        invocation_method=ActionInvocationMethodWebhook.model_construct(
             type="WEBHOOK", url="https://example.com/webhook"
         ),
     )
@@ -166,7 +166,7 @@ class TestDynamicActionToolsManager:
             title="Long Action",
             description="A very long action identifier",
             trigger=ActionTrigger.model_construct(type="self-service"),
-            invocation_method=ActionInvocationMethod.model_construct(type="WEBHOOK"),
+            invocation_method=ActionInvocationMethodWebhook.model_construct(type="WEBHOOK", url="https://example.com/webhook"),
         )
 
         manager = DynamicActionToolsManager(mock_client_for_dynamic_actions)
@@ -183,7 +183,7 @@ class TestDynamicActionToolsManager:
             title="Simple Action",
             description=None,
             trigger=ActionTrigger.model_construct(type="self-service"),
-            invocation_method=ActionInvocationMethod.model_construct(type="WEBHOOK"),
+            invocation_method=ActionInvocationMethodWebhook.model_construct(type="WEBHOOK", url="https://example.com/webhook"),
         )
 
         manager = DynamicActionToolsManager(mock_client_for_dynamic_actions)
@@ -293,14 +293,14 @@ class TestDynamicActionToolsManager:
             identifier="action1",
             title="Action 1",
             trigger=ActionTrigger.model_construct(type="self-service"),
-            invocation_method=ActionInvocationMethod.model_construct(type="WEBHOOK"),
+            invocation_method=ActionInvocationMethodWebhook.model_construct(type="WEBHOOK", url="https://example.com/webhook"),
         )
 
         mock_action_2 = Action.model_construct(
             identifier="action2",
             title="Action 2",
             trigger=ActionTrigger.model_construct(type="self-service"),
-            invocation_method=ActionInvocationMethod.model_construct(type="WEBHOOK"),
+            invocation_method=ActionInvocationMethodWebhook.model_construct(type="WEBHOOK", url="https://example.com/webhook"),
         )
 
         with patch(
@@ -342,7 +342,7 @@ class TestDynamicActionToolsManager:
             identifier="objectAction",
             title="Object Action",
             trigger=ActionTrigger.model_construct(type="self-service"),
-            invocation_method=ActionInvocationMethod.model_construct(type="WEBHOOK"),
+            invocation_method=ActionInvocationMethodWebhook.model_construct(type="WEBHOOK", url="https://example.com/webhook"),
         )
 
         mock_actions_response = {"actions": [mock_action_obj]}  # Action object instead of dict
@@ -383,7 +383,7 @@ class TestDynamicActionToolsManager:
             identifier="validAction",
             title="Valid Action",
             trigger=ActionTrigger.model_construct(type="self-service"),
-            invocation_method=ActionInvocationMethod.model_construct(type="WEBHOOK"),
+            invocation_method=ActionInvocationMethodWebhook.model_construct(type="WEBHOOK", url="https://example.com/webhook"),
         )
 
         with patch(
@@ -422,7 +422,7 @@ class TestDynamicActionToolsManager:
             identifier="goodAction",
             title="Good Action",
             trigger=ActionTrigger.model_construct(type="self-service"),
-            invocation_method=ActionInvocationMethod.model_construct(type="WEBHOOK"),
+            invocation_method=ActionInvocationMethodWebhook.model_construct(type="WEBHOOK", url="https://example.com/webhook"),
         )
 
         with patch(

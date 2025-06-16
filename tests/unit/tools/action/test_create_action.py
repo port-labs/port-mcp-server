@@ -7,16 +7,17 @@ from src.tools.action import CreateActionTool
 @pytest.fixture
 def mock_client_with_create_action(mock_client):
     """Add specific return values for create action test"""
+    from src.models.actions.action import ActionTrigger, ActionInvocationMethodWebhook
     mock_client.create_action.return_value = Action(
         identifier="test-action",
         title="Test Action",
         description="Test action description",
-        trigger={
-            "type": "self-service",
-            "operation": "CREATE",
-            "userInputs": {"properties": {}, "required": []},
-        },
-        invocationMethod={"type": "WEBHOOK", "url": "https://example.com/webhook"},
+        trigger=ActionTrigger(
+            type="self-service",
+            operation="CREATE",
+            user_inputs={"properties": {}, "required": []},
+        ),
+        invocation_method=ActionInvocationMethodWebhook(type="WEBHOOK", url="https://example.com/webhook"),
         created_at="2023-01-01T00:00:00Z",
         created_by="test-user",
     )
@@ -78,6 +79,7 @@ async def test_create_action_tool_execution(mock_client_with_create_action):
 @pytest.mark.asyncio
 async def test_create_action_tool_with_github_invocation(mock_client_with_create_action):
     """Test creating an action with GitHub invocation method."""
+    from src.models.actions.action import ActionTrigger, ActionInvocationMethodGitHub
     tool = CreateActionTool(mock_client_with_create_action)
     
     # Mock return value with GitHub invocation
@@ -85,17 +87,17 @@ async def test_create_action_tool_with_github_invocation(mock_client_with_create
         identifier="github-action",
         title="GitHub Action",
         description="Action with GitHub invocation",
-        trigger={
-            "type": "self-service",
-            "operation": "CREATE",
-            "userInputs": {"properties": {}, "required": []},
-        },
-        invocationMethod={
-            "type": "GITHUB",
-            "org": "test-org",
-            "repo": "test-repo",
-            "workflow": "test-workflow.yml",
-        },
+        trigger=ActionTrigger(
+            type="self-service",
+            operation="CREATE",
+            user_inputs={"properties": {}, "required": []},
+        ),
+        invocation_method=ActionInvocationMethodGitHub(
+            type="GITHUB",
+            org="test-org",
+            repo="test-repo",
+            workflow="test-workflow.yml",
+        ),
     )
     
     input_data = {
@@ -128,14 +130,15 @@ async def test_create_action_tool_with_github_invocation(mock_client_with_create
 @pytest.mark.asyncio
 async def test_create_action_tool_with_minimal_data(mock_client_with_create_action):
     """Test creating an action with minimal required data."""
+    from src.models.actions.action import ActionTrigger, ActionInvocationMethodWebhook
     tool = CreateActionTool(mock_client_with_create_action)
     
     # Mock return value with minimal data
     mock_client_with_create_action.create_action.return_value = Action(
         identifier="minimal-action",
         title="Minimal Action",
-        trigger={"type": "self-service"},
-        invocationMethod={"type": "WEBHOOK", "url": "https://example.com/webhook"},
+        trigger=ActionTrigger(type="self-service"),
+        invocation_method=ActionInvocationMethodWebhook(type="WEBHOOK", url="https://example.com/webhook"),
     )
     
     input_data = {

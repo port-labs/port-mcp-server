@@ -40,4 +40,27 @@ def mock_client():
     client.trigger_agent = AsyncMock()
     client.get_invocation_status = AsyncMock()
 
+    # Add action_runs mock for dynamic actions
+    client.action_runs = MagicMock()
+
     return client
+
+
+@pytest.fixture
+def mock_client_for_dynamic_actions(mock_client):
+    """Mock client specifically for dynamic actions tests."""
+    from src.models.action_run.action_run import ActionRun
+    
+    # Mock action run return value
+    mock_action_run = ActionRun.model_construct(
+        id="run-123",
+        status="IN_PROGRESS",
+        action={"identifier": "createJiraIssue", "title": "Create Jira Issue"},
+        createdAt="2023-12-01T10:00:00Z",
+    )
+    
+    mock_client.create_global_action_run.return_value = mock_action_run
+    mock_client.create_blueprint_action_run.return_value = mock_action_run
+    mock_client.create_entity_action_run.return_value = mock_action_run
+    
+    return mock_client
