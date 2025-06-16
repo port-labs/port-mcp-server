@@ -13,5 +13,8 @@ __all__ = [
     "ListActionsTool",
     "TrackActionRunTool",
     "UpdateActionTool",
+    "GetActionTool",
+    "ListActionsTool",
+    "TrackActionRunTool",
     "DynamicActionToolsManager",
 ]
