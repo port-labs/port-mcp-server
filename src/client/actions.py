@@ -1,3 +1,5 @@
+import json
+from typing import Any
 from pyport import PortClient
 
 from src.config import config
@@ -68,3 +70,67 @@ class PortActionClient:
         else:
             logger.debug("Skipping API validation for action")
             return Action.construct(**result)
+        
+    async def create_action(self, action_data: dict[str, Any]) -> Action:
+        """Create a new action"""
+        data_json = json.dumps(action_data)
+
+        logger.info("Creating action in Port")
+        logger.debug(f"Input from tool to create action: {data_json}")
+
+        response = self._client.make_request("POST", "actions", json=action_data)
+        result = response.json()
+        if not result.get("ok"):
+            message = f"Failed to create action: {result}"
+            logger.warning(message)
+        logger.info("Action created in Port")
+
+        result = result.get("action", {})
+
+        if config.api_validation_enabled:
+            logger.debug("Validating action")
+            action = Action(**result)
+        else:
+            logger.debug("Skipping API validation for action")
+            action = Action.construct(**result)
+        logger.debug(f"Response for create action: {action}")
+        return action
+
+    async def update_action(self, action_identifier: str, action_data: dict[str, Any]) -> Action:
+        """Update an existing action"""
+        data_json = json.dumps(action_data)
+
+        logger.info(f"Updating action '{action_identifier}' in Port")
+        logger.debug(f"Input from tool to update action: {data_json}")
+
+        response = self._client.make_request(
+            "PUT", f"actions/{action_identifier}", json=action_data
+        )
+        result = response.json()
+        if not result.get("ok"):
+            message = f"Failed to update action: {result}"
+            logger.warning(message)
+        logger.info(f"Action '{action_identifier}' updated in Port")
+
+        result = result.get("action", {})
+        if config.api_validation_enabled:
+            logger.debug("Validating action")
+            action = Action(**result)
+        else:
+            logger.debug("Skipping API validation for action")
+            action = Action.construct(**result)
+        logger.debug(f"Response for update action: {action}")
+        return action
+
+    async def delete_action(self, action_identifier: str) -> bool:
+        """Delete an action"""
+        logger.info(f"Deleting action '{action_identifier}' from Port")
+
+        response = self._client.make_request("DELETE", f"actions/{action_identifier}")
+        result = response.json()
+        if not result.get("ok"):
+            message = f"Failed to delete action: {result}"
+            logger.warning(message)
+        logger.info(f"Action '{action_identifier}' deleted from Port")
+
+        return True

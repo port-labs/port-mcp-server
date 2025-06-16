@@ -157,7 +157,18 @@ class PortClient:
 
     async def get_action(self, action_identifier: str) -> Action:
         return await self.wrap_request(lambda: self.actions.get_action(action_identifier))
+    
+    async def create_action(self, action_data: dict[str, Any]) -> Action:
+        return await self.wrap_request(lambda: self.actions.create_action(action_data))
 
+    async def update_action(self, action_identifier: str, action_data: dict[str, Any]) -> Action:
+        return await self.wrap_request(
+            lambda: self.actions.update_action(action_identifier, action_data)
+        )
+
+    async def delete_action(self, action_identifier: str) -> bool:
+        return await self.wrap_request(lambda: self.actions.delete_action(action_identifier))
+    
     async def create_global_action_run(self, action_identifier: str, **kwargs) -> ActionRun:
         return await self.wrap_request(
             lambda: self.action_runs.create_global_action_run(action_identifier, **kwargs)
