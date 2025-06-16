@@ -7,16 +7,17 @@ from src.tools.action import GetActionTool
 @pytest.fixture
 def mock_client_with_action(mock_client):
     """Add specific return values for this test"""
+    from src.models.actions.action import ActionTrigger, ActionInvocationMethodWebhook
     mock_client.get_action.return_value = Action(
         identifier="test-action",
         title="Test Action",
         description="Test action description",
-        trigger={
-            "type": "self-service",
-            "operation": "CREATE",
-            "userInputs": {"properties": {}, "required": []},
-        },
-        invocationMethod={"type": "WEBHOOK", "url": "https://example.com/webhook"},
+        trigger=ActionTrigger(
+            type="self-service",
+            operation="CREATE",
+            user_inputs={"properties": {}, "required": []},
+        ),
+        invocation_method=ActionInvocationMethodWebhook(type="WEBHOOK", url="https://example.com/webhook"),
     )
     return mock_client
 
