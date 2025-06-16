@@ -1,5 +1,6 @@
 import json
 from typing import Any
+
 from pyport import PortClient
 
 from src.config import config
