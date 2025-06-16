@@ -22,6 +22,7 @@ class McpServerConfig(BaseModel):
     )
     api_validation_enabled: bool | None = Field(default=False, description="Whether to enable API validation")
     log_path: Literal["/tmp/port-mcp.log"] = Field(default="/tmp/port-mcp.log", description="The path to the log file")
+    mcp_client: str = Field(default="unknown", description="The MCP client name (e.g., vscode, cursor)")
 
     def __str__(self) -> str:
         port_client_id = self.port_client_id
@@ -55,6 +56,7 @@ def init_server_config(override: dict[str, Any] | None = None):
             region=override.get("region", "EU"),
             log_level=override.get("log_level", "ERROR"),
             api_validation_enabled=override.get("api_validation_enabled", "false") == "true",
+            mcp_client=override.get("mcp_client", "unknown"),
         )
         return config
     try:
@@ -63,6 +65,7 @@ def init_server_config(override: dict[str, Any] | None = None):
         region = os.environ.get("PORT_REGION", "EU")
         log_level = os.environ.get("PORT_LOG_LEVEL", "ERROR").upper()
         api_validation_enabled = os.environ.get("PORT_API_VALIDATION_ENABLED", "False").lower() == "true"
+        mcp_client = os.environ.get("PORT_MCP_CLIENT", "unknown")
         region = "US" if region.upper() == "US" else "EU"
         log_level = log_level.upper() or "ERROR"
         config = McpServerConfig(
@@ -71,6 +74,7 @@ def init_server_config(override: dict[str, Any] | None = None):
             region=cast(Literal["EU", "US"], region),
             log_level=cast(Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], log_level),
             api_validation_enabled=api_validation_enabled,
+            mcp_client=mcp_client,
         )
         return config
     except ValidationError as e:

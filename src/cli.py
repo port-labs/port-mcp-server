@@ -16,6 +16,7 @@ def parse_args():
     parser.add_argument("--region", default="EU", help="Port.io API region (EU or US)")
     parser.add_argument("--log-level", default="ERROR", help="Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)")
     parser.add_argument("--api-validation-enabled", default="False", help="Enable API validation")
+    parser.add_argument("--mcp-client", default="unknown", help="MCP client name (e.g., vscode, cursor)")
 
     return parser.parse_args()
 
@@ -34,6 +35,7 @@ def cli_main():
             region=args.region,
             log_level=args.log_level,
             api_validation_enabled=args.api_validation_enabled.lower() == "true",
+            mcp_client=args.mcp_client,
         ).model_dump()
     )
     # Call the main function with command-line arguments
