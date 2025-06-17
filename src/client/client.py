@@ -19,6 +19,7 @@ from src.models.blueprints import Blueprint
 from src.models.entities import EntityResult
 from src.models.scorecards import Scorecard
 from src.utils import PortError, logger
+from src.utils.user_agent import get_user_agent
 
 T = TypeVar("T")
 
@@ -46,12 +47,33 @@ class PortClient:
                 client_secret=client_secret,
                 us_region=(region == "US"),
             )
+            
+            self._setup_custom_headers()
+            
             self.agent = PortAgentClient(self._client)
             self.blueprints = PortBlueprintClient(self._client)
             self.entities = PortEntityClient(self._client)
             self.scorecards = PortScorecardClient(self._client)
             self.actions = PortActionClient(self._client)
             self.action_runs = PortActionRunClient(self._client)
+
+    def _setup_custom_headers(self):
+        """Setup custom headers for all HTTP requests."""
+        user_agent = get_user_agent()
+        logger.debug(f"Setting User-Agent header: {user_agent}")
+        
+        original_make_request = self._client.make_request
+        
+        def make_request_with_headers(*args, **kwargs):
+            """Wrapper to add custom headers to all requests."""
+            if 'headers' not in kwargs:
+                kwargs['headers'] = {}
+            
+            kwargs['headers']['User-Agent'] = user_agent
+            
+            return original_make_request(*args, **kwargs)
+        
+        self._client.make_request = make_request_with_headers
 
     def handle_http_error(self, e: requests.exceptions.HTTPError) -> PortError:
         result = e.response.json()
