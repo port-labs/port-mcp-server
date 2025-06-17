@@ -15,10 +15,21 @@ class PortEntityClient:
     def __init__(self, client: PortClient):
         self._client = client
 
-    async def get_entities(self, blueprint_identifier: str) -> list[EntityResult]:
-        logger.info(f"Getting entities for blueprint '{blueprint_identifier}' from Port")
+    async def get_entities(self, blueprint_identifier: str, detailed: bool = True) -> list[EntityResult]:
+        logger.info(f"Getting entities for blueprint '{blueprint_identifier}' from Port (detailed={detailed})")
 
-        entities_data = self._client.entities.get_entities(blueprint_identifier)
+        # Construct the search query based on the detailed parameter
+        search_query = {
+            "query": {
+                "$blueprint": {"=": blueprint_identifier}
+            }
+        }
+        
+        # If not detailed, only include identifier and title
+        if not detailed:
+            search_query["include"] = ["$identifier", "$title"]
+
+        entities_data = self._client.entities.search_blueprint_entities(blueprint_identifier, search_query)
 
         logger.info(f"Got {len(entities_data)} entities for blueprint '{blueprint_identifier}' from Port")
         logger.debug(f"Response for get entities: {entities_data}")

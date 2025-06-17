@@ -97,8 +97,8 @@ class PortClient:
             lambda: self.entities.get_entity(blueprint_identifier, entity_identifier)
         )
 
-    async def get_entities(self, blueprint_identifier: str) -> list[EntityResult]:
-        return await self.wrap_request(lambda: self.entities.get_entities(blueprint_identifier))
+    async def get_entities(self, blueprint_identifier: str, detailed: bool = True) -> list[EntityResult]:
+        return await self.wrap_request(lambda: self.entities.get_entities(blueprint_identifier, detailed))
 
     async def create_entity(
         self, blueprint_identifier: str, entity_data: dict[str, Any], query: dict[str, Any]

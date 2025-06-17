@@ -48,7 +48,8 @@ class GetEntitiesTool(Tool[GetEntitiesToolSchema]):
         if not blueprint_identifier:
             raise ValueError("Blueprint identifier is required")
 
-        raw_entities = await self.port_client.get_entities(blueprint_identifier)
+        detailed = args.get("detailed", False)
+        raw_entities = await self.port_client.get_entities(blueprint_identifier, detailed)
         processed_entities = [entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities]
 
         response = GetEntitiesToolResponse.construct(entities=processed_entities)
