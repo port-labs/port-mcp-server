@@ -2,25 +2,14 @@
 
 from typing import Any
 
-from pydantic import Field
-
 from src.client import PortClient
 from src.models.common.annotations import Annotations
-from src.models.common.base_pydantic import BaseModel
+from src.models.permissions.get_user_permissions import (
+    GetUserPermissionsToolResponse,
+    GetUserPermissionsToolSchema,
+)
 from src.models.tools.tool import Tool
 from src.utils import logger
-
-
-class GetUserPermissionsToolSchema(BaseModel):
-    """Schema for get user permissions tool - no input parameters needed."""
-    pass
-
-
-class GetUserPermissionsToolResponse(BaseModel):
-    """Response model for get user permissions tool."""
-    
-    permissions: list[str] = Field(description="List of user permissions")
-    total_count: int = Field(description="Total number of permissions")
 
 
 class GetUserPermissionsTool(Tool[GetUserPermissionsToolSchema]):

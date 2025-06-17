@@ -64,3 +64,40 @@ class PortPermissionsClient:
         except Exception as e:
             logger.error(f"Error getting action permissions: {e}")
             return {}
+
+    async def update_action_policies(self, action_identifier: str, policies: dict[str, Any]) -> dict[str, Any]:
+        """Update policies configuration for a specific action."""
+        logger.info(f"Updating policies for action: {action_identifier}")
+        
+        try:
+            # Prepare the payload for updating policies
+            payload = {"policies": policies}
+            
+            response = self._client.make_request("PATCH", f"actions/{action_identifier}", json=payload)
+            result = response.json()
+            
+            if result.get("ok"):
+                action_data = result.get("action", {})
+                updated_info = {
+                    "action_identifier": action_identifier,
+                    "updated_policies": action_data.get("policies", {}),
+                    "success": True,
+                }
+                logger.info(f"Successfully updated policies for action: {action_identifier}")
+                return updated_info
+            else:
+                logger.warning(f"Failed to update action policies: {result}")
+                return {
+                    "action_identifier": action_identifier,
+                    "updated_policies": {},
+                    "success": False,
+                    "error": result.get("message", "Unknown error"),
+                }
+        except Exception as e:
+            logger.error(f"Error updating action policies: {e}")
+            return {
+                "action_identifier": action_identifier,
+                "updated_policies": {},
+                "success": False,
+                "error": str(e),
+            }

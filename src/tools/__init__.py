@@ -30,6 +30,7 @@ from src.tools.permissions import (
     CheckActionPermissionTool,
     GetActionPermissionsTool,
     GetUserPermissionsTool,
+    UpdateActionPoliciesTool,
 )
 from src.tools.scorecard import (
     CreateScorecardTool,
@@ -65,4 +66,5 @@ __all__ = [
     "GetUserPermissionsTool",
     "CheckActionPermissionTool",
     "GetActionPermissionsTool",
+    "UpdateActionPoliciesTool",
 ]
