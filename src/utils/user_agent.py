@@ -1,49 +1,58 @@
 """User-Agent header utility for Port MCP server."""
 
+import re
+from pathlib import Path
 
-def get_user_agent(mcp_client: str = "unknown", version: str = "0.2.7") -> str:
+
+def get_user_agent(version: str | None = None) -> str:
     """
     Build User-Agent header for HTTP requests.
     
-    Format: "port-mcp-server/{mcp_client}/{version}"
+    Format: "port-mcp-server/{version}"
     Where:
-    - mcp_client: The client using the MCP server (e.g., vscode, cursor)
     - version: The current Port MCP version
     
     Args:
-        mcp_client: The MCP client name (defaults to "unknown")
-        version: The Port MCP server version (defaults to current version)
+        version: The Port MCP server version (optional, auto-detected if not provided)
     
     Returns:
         str: Formatted User-Agent header value
     """
-    # Import here to avoid circular imports during initialization
+    if version is None:
+        version = _get_version()
+    
+    return f"port-mcp-server/{version}"
+
+
+def _get_version() -> str:
+    """
+    Get the version from pyproject.toml or fallback to unknown.
+    
+    Returns:
+        str: Version string or "unknown" if not found
+    """
     try:
-        from src.config import config
-        mcp_client = config.mcp_client
-    except (ImportError, AttributeError):
-        # Fallback if config is not available
+        # Try to read version from pyproject.toml
+        project_root = Path(__file__).parent.parent.parent
+        pyproject_path = project_root / "pyproject.toml"
+        
+        if pyproject_path.exists():
+            with open(pyproject_path, encoding='utf-8') as f:
+                content = f.read()
+                # Look for version in [project] section
+                match = re.search(r'\[project\].*?version\s*=\s*["\']([^"\']+)["\']', content, re.DOTALL)
+                if match:
+                    return match.group(1)
+    except Exception:
+        # Ignore any errors reading the file
         pass
     
     try:
-        # Import version here to avoid circular imports
+        # Try importlib.metadata as backup
         import importlib.metadata
-        version = importlib.metadata.version("mcp-server-port")
+        return importlib.metadata.version("mcp-server-port")
     except (ImportError, Exception):
-        # Fallback to hardcoded version if package metadata is not available
-        try:
-            # Try to read from src.__init__.py if available
-            import os
-            import re
-            init_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "__init__.py")
-            if os.path.exists(init_path):
-                with open(init_path) as f:
-                    content = f.read()
-                    match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', content)
-                    if match:
-                        version = match.group(1)
-        except Exception:
-            # Final fallback
-            version = "0.2.7"
+        # Final fallback
+        pass
     
-    return f"port-mcp-server/{mcp_client}/{version}"
+    return "unknown"

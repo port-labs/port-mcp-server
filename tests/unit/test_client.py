@@ -4,7 +4,7 @@ import pytest
 from unittest.mock import Mock, patch, MagicMock
 
 from src.client.client import PortClient
-from src.utils import get_user_agent
+from src.utils.user_agent import get_user_agent
 
 
 @patch('src.client.client.pyport.PortClient')
