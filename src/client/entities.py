@@ -110,4 +110,4 @@ class PortEntityClient:
             logger.warning(message)
             raise PortError(message)
         logger.info(f"Deleted entity '{entity_identifier}' from blueprint '{blueprint_identifier}' in Port")
-        return cast("bool", response_json.get("ok"))
+        return cast(bool, response_json.get("ok"))
