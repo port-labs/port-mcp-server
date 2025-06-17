@@ -36,3 +36,25 @@ def test_inline_schema(schema: dict[str, Any]):
 
     assert isinstance(schema, dict)
     assert schema.get("$defs", None) is None
+
+
+def test_get_user_agent():
+    """Test that get_user_agent returns the correct format."""
+    # Import the function directly to avoid circular imports
+    from src.utils.user_agent import get_user_agent
+    
+    # Test with explicit version parameter
+    user_agent = get_user_agent('0.2.7')
+    
+    # Should match format: "port-mcp-server/{version}"
+    assert user_agent == "port-mcp-server/0.2.7"
+    
+    parts = user_agent.split("/")
+    assert len(parts) == 2
+    assert parts[0] == "port-mcp-server"
+    assert parts[1] == "0.2.7"
+    
+    # Test without parameters (should auto-detect version)
+    user_agent_auto = get_user_agent()
+    assert user_agent_auto.startswith("port-mcp-server/")
+    assert len(user_agent_auto.split("/")) == 2
