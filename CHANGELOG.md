@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Added `get_user_permissions` tool to retrieve current user's permissions from Port
+- Added `check_action_permission` tool to validate action execution permissions
+- Added `get_action_permissions` tool to retrieve action RBAC and permissions configuration
+- Added support for Port's dynamic permissions and policies through new MCP tools
+
 ## [0.2.15] - 2025-06-16
 
 ### Added

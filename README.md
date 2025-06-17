@@ -22,6 +22,12 @@ The [Port IO](https://www.getport.io/) MCP server is a [Model Context Protocol (
 - **Define rules** - "Add a rule that requires services to have a team owner to reach the Silver level"
 - **Setup quality gates** - "Create a rule that checks if services have proper documentation"
 
+### Manage Permissions & RBAC
+
+- **Check user permissions** - "What permissions do I have in Port?"
+- **Validate action access** - "Can I execute the deployment action for this service?"
+- **Review action policies** - "What are the approval requirements for this action?"
+
 We're continuously expanding Port MCP's capabilities. Have a suggestion? We'd love to hear your feedback on our [roadmap](https://roadmap.getport.io/ideas)!
 
 # Installation

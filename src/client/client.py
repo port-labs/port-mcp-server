@@ -54,6 +54,15 @@ class PortClient:
             self.actions = PortActionClient(self._client)
             self.action_runs = PortActionRunClient(self._client)
             self.permissions = PortPermissionsClient(self._client)
+        else:
+            self._client = None
+            self.agent = None
+            self.blueprints = None
+            self.entities = None
+            self.scorecards = None
+            self.actions = None
+            self.action_runs = None
+            self.permissions = None
 
     def handle_http_error(self, e: requests.exceptions.HTTPError) -> PortError:
         result = e.response.json()
