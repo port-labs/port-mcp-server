@@ -24,9 +24,9 @@ The [Port IO](https://www.getport.io/) MCP server is a [Model Context Protocol (
 
 ### Manage Permissions & RBAC
 
-- **Check user permissions** - "What permissions do I have in Port?"
-- **Validate action access** - "Can I execute the deployment action for this service?"
-- **Review action policies** - "What are the approval requirements for this action?"
+- **Fetch action permissions** - "What are the current permission settings for this action?"
+- **Update action policies** - "Configure approval workflows for the deployment action"
+- **Configure dynamic permissions** - "Set up team-based access control for this action"
 
 We're continuously expanding Port MCP's capabilities. Have a suggestion? We'd love to hear your feedback on our [roadmap](https://roadmap.getport.io/ideas)!
 
