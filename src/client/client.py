@@ -22,8 +22,6 @@ from src.models.scorecards import Scorecard
 from src.utils import PortError, logger
 
 T = TypeVar("T")
-
-
 class PortClient:
     """Client for interacting with the Port API."""
 
@@ -184,13 +182,8 @@ class PortClient:
     async def get_action_run(self, run_id: str) -> ActionRun:
         return await self.wrap_request(lambda: self.action_runs.get_action_run(run_id))
 
-    async def get_user_permissions(self) -> list[str]:
-        return await self.wrap_request(lambda: self.permissions.get_user_permissions())
-
-    async def check_action_permission(self, action_identifier: str, permissions: list[str]) -> bool:
-        if self.permissions is None:
-            raise PortError("Permissions client is not properly initialized")
-        return self.permissions.check_action_permission(action_identifier, permissions)
-
     async def get_action_permissions(self, action_identifier: str) -> dict[str, Any]:
         return await self.wrap_request(lambda: self.permissions.get_action_permissions(action_identifier))
+
+    async def update_action_policies(self, action_identifier: str, policies: dict[str, Any]) -> dict[str, Any]:
+        return await self.wrap_request(lambda: self.permissions.update_action_policies(action_identifier, policies))
