@@ -9,6 +9,7 @@ from src.client.actions import PortActionClient
 from src.client.agent import PortAgentClient
 from src.client.blueprints import PortBlueprintClient
 from src.client.entities import PortEntityClient
+from src.client.permissions import PortPermissionsClient
 from src.client.scorecards import PortScorecardClient
 from src.config import config
 from src.models.action_run.action_run import ActionRun
@@ -52,6 +53,7 @@ class PortClient:
             self.scorecards = PortScorecardClient(self._client)
             self.actions = PortActionClient(self._client)
             self.action_runs = PortActionRunClient(self._client)
+            self.permissions = PortPermissionsClient(self._client)
 
     def handle_http_error(self, e: requests.exceptions.HTTPError) -> PortError:
         result = e.response.json()
@@ -181,3 +183,14 @@ class PortClient:
 
     async def get_action_run(self, run_id: str) -> ActionRun:
         return await self.wrap_request(lambda: self.action_runs.get_action_run(run_id))
+
+    async def get_user_permissions(self) -> list[str]:
+        return await self.wrap_request(lambda: self.permissions.get_user_permissions())
+
+    async def check_action_permission(self, action_identifier: str, permissions: list[str]) -> bool:
+        if self.permissions is None:
+            raise PortError("Permissions client is not properly initialized")
+        return self.permissions.check_action_permission(action_identifier, permissions)
+
+    async def get_action_permissions(self, action_identifier: str) -> dict[str, Any]:
+        return await self.wrap_request(lambda: self.permissions.get_action_permissions(action_identifier))

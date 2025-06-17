@@ -26,6 +26,11 @@ from src.tools.entity import (
     GetEntityTool,
     UpdateEntityTool,
 )
+from src.tools.permissions import (
+    CheckActionPermissionTool,
+    GetActionPermissionsTool,
+    GetUserPermissionsTool,
+)
 from src.tools.scorecard import (
     CreateScorecardTool,
     DeleteScorecardTool,
@@ -57,4 +62,7 @@ __all__ = [
     "GetActionTool",
     "ListActionsTool",
     "TrackActionRunTool",
+    "GetUserPermissionsTool",
+    "CheckActionPermissionTool",
+    "GetActionPermissionsTool",
 ]
