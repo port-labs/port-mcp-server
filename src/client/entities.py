@@ -28,8 +28,7 @@ class PortEntityClient:
             for entity in entities_data:
                 filtered_entity = {
                     "identifier": entity.get("identifier"),
-                    "title": entity.get("title"),
-                    "blueprint": entity.get("blueprint")
+                    "title": entity.get("title")
                 }
                 filtered_entities.append(filtered_entity)
             entities_data = filtered_entities
