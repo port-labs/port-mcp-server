@@ -13,7 +13,7 @@ class GetEntitiesToolSchema(BaseModel):
     blueprint_identifier: str = Field(..., description="The identifier of the blueprint to get entities for")
     detailed: bool = Field(
         default=False,
-        description="If True, returns complete entity details including properties. If False (default), returns summary information only.",
+        description="Controls whether to return extended entity information. If True, returns complete entity details including all properties. If False (default), returns only identifier and title to keep context minimal. Prefer False unless specifically asked for detailed information.",
     )
 
 
@@ -49,8 +49,22 @@ class GetEntitiesTool(Tool[GetEntitiesToolSchema]):
             raise ValueError("Blueprint identifier is required")
 
         detailed = args.get("detailed", False)
-        raw_entities = await self.port_client.get_entities(blueprint_identifier, detailed)
-        processed_entities = [entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities]
+        raw_entities = await self.port_client.get_entities(blueprint_identifier)
+        
+        # Apply filtering logic based on detailed parameter
+        if detailed:
+            # Return full entities when detailed=True
+            processed_entities = [entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities]
+        else:
+            # Return only identifier and title when detailed=False for minimal context
+            processed_entities = []
+            for entity in raw_entities:
+                entity_dict = entity.model_dump(exclude_unset=True, exclude_none=True)
+                filtered_entity = {
+                    "identifier": entity_dict.get("identifier"),
+                    "title": entity_dict.get("title")
+                }
+                processed_entities.append(filtered_entity)
 
         response = GetEntitiesToolResponse.construct(entities=processed_entities)
         return response.model_dump(exclude_unset=True, exclude_none=True)

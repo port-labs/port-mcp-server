@@ -21,7 +21,7 @@ async def test_get_entities_tool_detailed_true(mock_client_with_entities):
 
     schema = {"blueprint_identifier": "test-blueprint", "detailed": True}
     result = await tool.get_entities(tool.validate_input(schema))
-    mock_client_with_entities.get_entities.assert_awaited_once_with("test-blueprint", True)
+    mock_client_with_entities.get_entities.assert_awaited_once_with("test-blueprint")
     assert result is not None
 
 
@@ -32,7 +32,7 @@ async def test_get_entities_tool_detailed_false(mock_client_with_entities):
 
     schema = {"blueprint_identifier": "test-blueprint", "detailed": False}
     result = await tool.get_entities(tool.validate_input(schema))
-    mock_client_with_entities.get_entities.assert_awaited_once_with("test-blueprint", False)
+    mock_client_with_entities.get_entities.assert_awaited_once_with("test-blueprint")
     assert result is not None
 
 
@@ -43,5 +43,5 @@ async def test_get_entities_tool_default_detailed(mock_client_with_entities):
 
     schema = {"blueprint_identifier": "test-blueprint"}
     result = await tool.get_entities(tool.validate_input(schema))
-    mock_client_with_entities.get_entities.assert_awaited_once_with("test-blueprint", False)
+    mock_client_with_entities.get_entities.assert_awaited_once_with("test-blueprint")
     assert result is not None

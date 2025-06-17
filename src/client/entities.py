@@ -15,23 +15,10 @@ class PortEntityClient:
     def __init__(self, client: PortClient):
         self._client = client
 
-    async def get_entities(self, blueprint_identifier: str, detailed: bool = False) -> list[EntityResult]:
-        logger.info(f"Getting entities for blueprint '{blueprint_identifier}' from Port (detailed={detailed})")
+    async def get_entities(self, blueprint_identifier: str) -> list[EntityResult]:
+        logger.info(f"Getting entities for blueprint '{blueprint_identifier}' from Port")
 
-        # Get all entities using the standard method
         entities_data = self._client.entities.get_entities(blueprint_identifier)
-
-        # If detailed=False, filter the entity data to only include identifier and title
-        if not detailed:
-            logger.debug("Filtering entities to minimal context (identifier and title only)")
-            filtered_entities = []
-            for entity in entities_data:
-                filtered_entity = {
-                    "identifier": entity.get("identifier"),
-                    "title": entity.get("title")
-                }
-                filtered_entities.append(filtered_entity)
-            entities_data = filtered_entities
 
         logger.info(f"Got {len(entities_data)} entities for blueprint '{blueprint_identifier}' from Port")
         logger.debug(f"Response for get entities: {entities_data}")
