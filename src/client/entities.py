@@ -29,6 +29,21 @@ class PortEntityClient:
             logger.debug("Skipping API validation for entities")
             return [EntityResult.construct(**entity_data) for entity_data in entities_data]
 
+    async def search_entities(self, blueprint_identifier: str, search_query: dict[str, Any]) -> list[EntityResult]:
+        logger.info(f"Searching entities for blueprint '{blueprint_identifier}' from Port")
+        logger.debug(f"Search query: {search_query}")
+
+        entities_data = self._client.entities.search_blueprint_entities(blueprint_identifier, search_query)
+
+        logger.info(f"Got {len(entities_data)} entities for blueprint '{blueprint_identifier}' from Port")
+        logger.debug(f"Response for search entities: {entities_data}")
+        if config.api_validation_enabled:
+            logger.debug("Validating entities")
+            return [EntityResult(**entity_data) for entity_data in entities_data]
+        else:
+            logger.debug("Skipping API validation for entities")
+            return [EntityResult.construct(**entity_data) for entity_data in entities_data]
+
     async def get_entity(self, blueprint_identifier: str, entity_identifier: str) -> EntityResult:
         logger.info(f"Getting entity '{entity_identifier}' from blueprint '{blueprint_identifier}' from Port")
 

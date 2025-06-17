@@ -49,22 +49,20 @@ class GetEntitiesTool(Tool[GetEntitiesToolSchema]):
             raise ValueError("Blueprint identifier is required")
 
         detailed = args.get("detailed", False)
-        raw_entities = await self.port_client.get_entities(blueprint_identifier)
         
-        # Apply filtering logic based on detailed parameter
-        if detailed:
-            # Return full entities when detailed=True
-            processed_entities = [entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities]
-        else:
-            # Return only identifier and title when detailed=False for minimal context
-            processed_entities = []
-            for entity in raw_entities:
-                entity_dict = entity.model_dump(exclude_unset=True, exclude_none=True)
-                filtered_entity = {
-                    "identifier": entity_dict.get("identifier"),
-                    "title": entity_dict.get("title")
-                }
-                processed_entities.append(filtered_entity)
+        # Build search query based on detailed parameter
+        search_query = {
+            "query": {
+                "$blueprint": {"=": blueprint_identifier}
+            }
+        }
+        
+        # If not detailed, only include identifier and title fields
+        if not detailed:
+            search_query["include"] = ["$identifier", "$title"]
+
+        raw_entities = await self.port_client.search_entities(blueprint_identifier, search_query)
+        processed_entities = [entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities]
 
         response = GetEntitiesToolResponse.construct(entities=processed_entities)
         return response.model_dump(exclude_unset=True, exclude_none=True)
