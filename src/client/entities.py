@@ -21,14 +21,22 @@ class PortEntityClient:
         # Construct the search query based on the detailed parameter
         search_query = {
             "query": {
-                "$blueprint": {"=": blueprint_identifier}
+                "combinator": "and",
+                "rules": [
+                    {
+                        "property": "$blueprint",
+                        "operator": "=",
+                        "value": blueprint_identifier,
+                    }
+                ],
             }
         }
-        
+
         # If not detailed, only include identifier and title
         if not detailed:
             search_query["include"] = ["$identifier", "$title"]
 
+        logger.debug(f"Searching entities with query: {search_query}")
         entities_data = self._client.entities.search_blueprint_entities(blueprint_identifier, search_query)
 
         logger.info(f"Got {len(entities_data)} entities for blueprint '{blueprint_identifier}' from Port")
