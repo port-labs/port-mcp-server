@@ -50,14 +50,12 @@ class GetEntitiesTool(Tool[GetEntitiesToolSchema]):
 
         detailed = args.get("detailed", False)
         
-        # Build search query based on detailed parameter
         search_query = {
             "query": {
                 "$blueprint": {"=": blueprint_identifier}
             }
         }
         
-        # If not detailed, only include identifier and title fields
         if not detailed:
             search_query["include"] = ["$identifier", "$title"]
 
