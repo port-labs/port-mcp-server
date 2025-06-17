@@ -32,27 +32,22 @@ def _get_version() -> str:
         str: Version string or "unknown" if not found
     """
     try:
-        # Try to read version from pyproject.toml
         project_root = Path(__file__).parent.parent.parent
         pyproject_path = project_root / "pyproject.toml"
         
         if pyproject_path.exists():
             with open(pyproject_path, encoding='utf-8') as f:
                 content = f.read()
-                # Look for version in [project] section
                 match = re.search(r'\[project\].*?version\s*=\s*["\']([^"\']+)["\']', content, re.DOTALL)
                 if match:
                     return match.group(1)
     except Exception:
-        # Ignore any errors reading the file
         pass
     
     try:
-        # Try importlib.metadata as backup
         import importlib.metadata
         return importlib.metadata.version("mcp-server-port")
     except (ImportError, Exception):
-        # Final fallback
         pass
     
     return "unknown"

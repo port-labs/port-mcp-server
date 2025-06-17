@@ -48,7 +48,6 @@ class PortClient:
                 us_region=(region == "US"),
             )
             
-            # Add custom User-Agent header to all requests
             self._setup_custom_headers()
             
             self.agent = PortAgentClient(self._client)
@@ -63,21 +62,17 @@ class PortClient:
         user_agent = get_user_agent()
         logger.debug(f"Setting User-Agent header: {user_agent}")
         
-        # Store original make_request method
         original_make_request = self._client.make_request
         
         def make_request_with_headers(*args, **kwargs):
             """Wrapper to add custom headers to all requests."""
-            # Add headers parameter if not present
             if 'headers' not in kwargs:
                 kwargs['headers'] = {}
             
-            # Add or update User-Agent header
             kwargs['headers']['User-Agent'] = user_agent
             
             return original_make_request(*args, **kwargs)
         
-        # Replace the make_request method
         self._client.make_request = make_request_with_headers
 
     def handle_http_error(self, e: requests.exceptions.HTTPError) -> PortError:
