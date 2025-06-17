@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added custom User-Agent header to all HTTP requests sent via the MCP server
 - User-Agent header format: `port-mcp-server/{version}`
-- Automatic version detection from pyproject.toml
 
 ## [0.2.15] - 2025-06-16
 
