@@ -1,6 +1,6 @@
 [project]
 name = "mcp-server-port"
-version = "0.2.16"
+version = "0.2.17"
 authors = [
   { name = "Matan Grady", email = "matan.grady@getport.io" }
 ]
@@ -11,7 +11,7 @@ dependencies = [
     "httpx>=0.28.1",
     "mcp[cli]>=1.6.0",
     "python-dotenv>=1.0.1",
-    "pyport (>=0.3.2,<=0.3.2)",
+    "pyport (>=0.3.3,<=0.3.3)",
     "loguru>=0.7.2",
     "pydantic (>=2.11.3,<3.0.0)"
 ]
@@ -32,7 +32,7 @@ include = [
 ]
 [tool.poetry]
 name = "mcp-server-port"
-version = "0.2.16"
+version = "0.2.17"
 description = "Port's MCP server"
 packages = [
     { include = "src" }

@@ -17,6 +17,7 @@ def mock_client():
 
     client.get_entity = AsyncMock()
     client.get_entities = AsyncMock()
+    client.search_entities = AsyncMock()
     client.create_entity = AsyncMock()
     client.update_entity = AsyncMock()
     client.delete_entity = AsyncMock()

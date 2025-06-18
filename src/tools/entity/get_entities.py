@@ -13,7 +13,7 @@ class GetEntitiesToolSchema(BaseModel):
     blueprint_identifier: str = Field(..., description="The identifier of the blueprint to get entities for")
     detailed: bool = Field(
         default=False,
-        description="If True, returns complete entity details including properties. If False (default), returns summary information only.",
+        description="Controls whether to return extended entity information. If True, returns complete entity details including all properties. If False (default), returns only identifier and title to keep context minimal. Prefer False unless specifically asked for detailed information.",
     )
 
 
@@ -48,7 +48,18 @@ class GetEntitiesTool(Tool[GetEntitiesToolSchema]):
         if not blueprint_identifier:
             raise ValueError("Blueprint identifier is required")
 
-        raw_entities = await self.port_client.get_entities(blueprint_identifier)
+        detailed = args.get("detailed", False)
+        
+        search_query = {
+            "query": {
+                "$blueprint": {"=": blueprint_identifier}
+            }
+        }
+        
+        if not detailed:
+            search_query["include"] = ["$identifier", "$title"]
+
+        raw_entities = await self.port_client.search_entities(blueprint_identifier, search_query)
         processed_entities = [entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities]
 
         response = GetEntitiesToolResponse.construct(entities=processed_entities)

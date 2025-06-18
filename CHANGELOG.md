@@ -4,8 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+=======
 
-## [0.2.16] - 2025-01-17
+## [0.2.17] - 2025-06-17
+
+### Added
+- Added `detailed` parameter support to `get_entities` tool for minimized context
+- Tool now returns only identifier and title when `detailed=False` for reduced context usage
+
+### Changed
+- Switched from `get_entities` to `search_blueprint_entities` API call for field filtering support
+- Upgrade Pyport pacackeg to 0.3.3.
+
+## [0.2.16] - 2025-06-17
 
 ### Added
 - Added custom User-Agent header to all HTTP requests sent via the MCP server
