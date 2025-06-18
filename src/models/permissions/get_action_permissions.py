@@ -16,7 +16,4 @@ class GetActionPermissionsToolSchema(BaseModel):
 class GetActionPermissionsToolResponse(BaseModel):
     """Response model for get action permissions tool."""
     
-    action_identifier: str = Field(description="The action identifier")
     permissions: dict[str, Any] = Field(description="Permissions configuration for the action")
-    approval_config: dict[str, Any] = Field(description="Approval configuration for the action")
-    execution_config: dict[str, Any] = Field(description="Execution configuration for the action")

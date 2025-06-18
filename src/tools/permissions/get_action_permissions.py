@@ -50,10 +50,7 @@ class GetActionPermissionsTool(Tool[GetActionPermissionsToolSchema]):
             raise ValueError(f"Action '{props.action_identifier}' not found or no permissions available")
 
         response = GetActionPermissionsToolResponse(
-            action_identifier=permissions_info.get("action_identifier", props.action_identifier),
-            permissions=permissions_info.get("permissions", {}),
-            approval_config=permissions_info.get("approval_config", {}),
-            execution_config=permissions_info.get("execution_config", {})
+            permissions=permissions_info
         )
         
         logger.info(f"Retrieved permissions configuration for action '{props.action_identifier}'")

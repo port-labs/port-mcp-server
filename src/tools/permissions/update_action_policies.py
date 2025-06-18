@@ -51,36 +51,81 @@ This tool allows comprehensive configuration of RBAC policies and permissions fo
 • **Team-based Access**: Restrict access to specific teams or team members
 • **Entity-based Permissions**: Apply permissions based on entity ownership, blueprint, or properties
 
+**🔑 CRITICAL LEARNINGS & BEST PRACTICES:**
+
+**1. Team Membership Queries:**
+- ✅ **CORRECT**: Use `"property": "$team"` (meta property) for querying user team membership
+- ❌ **INCORRECT**: Using `"property": "team"` (regular property) will not work
+- Use `"operator": "containsAny"` with team arrays: `["aws-experts", "platform-team"]`
+
+**2. Approval Conditions - Return User Identifiers:**
+- ✅ **CORRECT**: Approval conditions MUST return arrays of user identifiers
+- ❌ **INCORRECT**: Don't return boolean values or check `length > 0`
+- Example: `[.results.experts.entities[].identifier]` ✅
+- Not: `[.results.experts.entities[].identifier] | length > 0` ❌
+
+**3. Query Structure for User Team Membership:**
+```json
+{
+  "rules": [
+    {"property": "$blueprint", "operator": "=", "value": "_user"},
+    {"property": "$team", "operator": "containsAny", "value": ["team-name"]}
+  ],
+  "combinator": "and"
+}
+```
+
 **Policy Structure Examples:**
 
 1. **Team-based permissions**:
    ```json
    {
-     "execution": {
-       "type": "teams",
+     "execute": {
+       "roles": ["Member"],
        "teams": ["platform-team", "dev-ops"]
      }
    }
    ```
 
-2. **Dynamic conditions with entity properties**:
+2. **Cloud Provider Expertise-based Approval (Advanced)**:
    ```json
    {
-     "execution": {
-       "type": "condition",
-       "condition": ".entity.properties.owner == .user.email"
+     "execute": {"roles": ["Member"]},
+     "approve": {
+       "roles": ["Admin"],
+       "policy": {
+         "queries": {
+           "awsExperts": {
+             "rules": [
+               {"property": "$blueprint", "operator": "=", "value": "_user"},
+               {"property": "$team", "operator": "containsAny", "value": ["aws-experts"]}
+             ],
+             "combinator": "and"
+           }
+         },
+         "conditions": [
+           "if .inputs.cloud_provider == \\"AWS\\" then [.results.awsExperts.entities[].identifier] else [] end"
+         ]
+       }
      }
    }
    ```
 
-3. **Approval workflow**:
+3. **Prevent Self-Approval**:
    ```json
    {
-     "approval": {
-       "required": true,
-       "approvers": {
-         "type": "teams",
-         "teams": ["security-team"]
+     "execute": {"roles": ["Member"]},
+     "approve": {
+       "policy": {
+         "queries": {
+           "allApprovers": {
+             "rules": [{"property": "$blueprint", "operator": "=", "value": "_user"}],
+             "combinator": "and"
+           }
+         },
+         "conditions": [
+           "[.results.allApprovers.entities[] | select(.identifier != \\"{{.trigger.user.email}}\\") | .identifier]"
+         ]
        }
      }
    }

@@ -16,25 +16,53 @@ class UpdateActionPoliciesToolSchema(BaseModel):
     policies: dict[str, Any] = Field(
         description="""Policies configuration to update. This should contain the complete policies structure including:
 
-• **execution**: Defines who can execute the action
-  - type: "users", "teams", "roles", "condition" 
-  - users/teams/roles: List of allowed users/teams/roles
-  - condition: JQ expression for dynamic conditions
+• **execute**: Execution permissions configuration
+  - roles: List of roles allowed to execute (e.g., ["Member", "Admin"])
+  - users: List of specific users allowed to execute
+  - teams: List of teams allowed to execute  
+  - ownedByTeam: Boolean indicating if team ownership is required
+  - policy: Dynamic policy with queries and conditions
 
-• **approval**: Approval workflow configuration
-  - required: Boolean indicating if approval is needed
-  - approvers: Who can approve (same structure as execution)
-  - stages: Multi-stage approval configuration
+• **approve**: Approval workflow configuration
+  - roles: List of roles allowed to approve
+  - users: List of specific users allowed to approve
+  - teams: List of teams allowed to approve
+  - policy: Dynamic policy with queries and conditions for approval
 
-• **conditions**: Additional dynamic conditions
-  - entity_conditions: Conditions based on entity properties
-  - user_conditions: Conditions based on user properties
+• **policy**: Dynamic conditions using queries and JQ expressions
+  - queries: Named queries to fetch entities/users
+  - conditions: JQ expressions that evaluate to true/false
 
-Example structures:
-- Team-based: {"execution": {"type": "teams", "teams": ["platform-team"]}}
-- Conditional: {"execution": {"type": "condition", "condition": ".entity.properties.owner == .user.email"}}
-- With approval: {"execution": {...}, "approval": {"required": true, "approvers": {...}}}"""
+🔑 **CRITICAL IMPLEMENTATION NOTES:**
+
+1. **Team Queries**: Use "$team" meta property, not "team" regular property
+   - Correct: {"property": "$team", "operator": "containsAny", "value": ["team-name"]}
+   - Wrong: {"property": "team", "operator": "containsAny", "value": ["team-name"]}
+
+2. **Approval Conditions**: MUST return user identifier arrays, not booleans
+   - Correct: [.results.experts.entities[].identifier]
+   - Wrong: [.results.experts.entities[].identifier] | length > 0
+
+3. **User Team Membership Query Pattern**:
+   ```json
+   {
+     "rules": [
+       {"property": "$blueprint", "operator": "=", "value": "_user"},
+       {"property": "$team", "operator": "containsAny", "value": ["team-name"]}
+     ],
+     "combinator": "and"
+   }
+   ```
+
+Example structures based on Port's dynamic permissions:
+- Basic team-based: {"execute": {"roles": ["Member"], "teams": ["platform-team"]}}
+- Dynamic condition: {"execute": {"roles": ["Member"], "policy": {"queries": {...}, "conditions": [...]}}}
+- With approval workflow: {"execute": {...}, "approve": {"roles": ["Admin"], "policy": {...}}}
+- Prevent self-approval: Use policy conditions to exclude the executing user from approvers
+
+Supports Port's full dynamic permissions capabilities as described in the Port documentation."""
     )
+
 
 
 class UpdateActionPoliciesToolResponse(BaseModel):
