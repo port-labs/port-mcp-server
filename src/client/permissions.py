@@ -20,13 +20,12 @@ class PortPermissionsClient:
             result = response.json()
             
             if result.get("ok"):
-                permissions_data = result.get("permissions", {})
-                # Return the permissions data structure from the permissions endpoint
+                # The permissions endpoint returns the permissions data directly
                 permissions_info = {
                     "action_identifier": action_identifier,
-                    "permissions": permissions_data.get("permissions", {}),
-                    "approval_config": permissions_data.get("approval_config", {}),
-                    "execution_config": permissions_data.get("execution_config", {}),
+                    "permissions": result.get("permissions", {}),
+                    "approval_config": result.get("approval_config", {}),
+                    "execution_config": result.get("execution_config", {}),
                 }
                 logger.debug(f"Retrieved action permissions: {permissions_info}")
                 return permissions_info
@@ -49,10 +48,10 @@ class PortPermissionsClient:
             result = response.json()
             
             if result.get("ok"):
-                permissions_data = result.get("permissions", {})
+                # The permissions endpoint returns the updated permissions directly
                 updated_info = {
                     "action_identifier": action_identifier,
-                    "updated_policies": permissions_data.get("policies", {}),
+                    "updated_policies": result.get("permissions", {}),
                     "success": True,
                 }
                 logger.info(f"Successfully updated policies for action: {action_identifier}")
