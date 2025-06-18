@@ -4,13 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+=======
 
-## [0.2.17] - 2025-06-18
+
+## [0.2.18] - 2025-06-18
 
 ### Added
 - Added `get_action_permissions` tool to fetch action RBAC and permissions configuration
 - Added `update_action_policies` tool to update action policies and dynamic permissions configuration
 - Added support for Port's dynamic permissions and policies through new MCP tools
+
+## [0.2.17] - 2025-06-17
+
+### Added
+- Added `detailed` parameter support to `get_entities` tool for minimized context
+- Tool now returns only identifier and title when `detailed=False` for reduced context usage
+
+### Changed
+- Switched from `get_entities` to `search_blueprint_entities` API call for field filtering support
+- Upgrade Pyport pacackeg to 0.3.3.
 
 ## [0.2.16] - 2025-06-17
 
