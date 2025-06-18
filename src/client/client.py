@@ -9,6 +9,7 @@ from src.client.actions import PortActionClient
 from src.client.agent import PortAgentClient
 from src.client.blueprints import PortBlueprintClient
 from src.client.entities import PortEntityClient
+from src.client.permissions import PortPermissionsClient
 from src.client.scorecards import PortScorecardClient
 from src.config import config
 from src.models.action_run.action_run import ActionRun
@@ -22,8 +23,6 @@ from src.utils import PortError, logger
 from src.utils.user_agent import get_user_agent
 
 T = TypeVar("T")
-
-
 class PortClient:
     """Client for interacting with the Port API."""
 
@@ -56,6 +55,7 @@ class PortClient:
             self.scorecards = PortScorecardClient(self._client)
             self.actions = PortActionClient(self._client)
             self.action_runs = PortActionRunClient(self._client)
+            self.permissions = PortPermissionsClient(self._client)
 
     def _setup_custom_headers(self):
         """Setup custom headers for all HTTP requests."""
@@ -206,3 +206,9 @@ class PortClient:
 
     async def get_action_run(self, run_id: str) -> ActionRun:
         return await self.wrap_request(lambda: self.action_runs.get_action_run(run_id))
+
+    async def get_action_permissions(self, action_identifier: str) -> dict[str, Any]:
+        return await self.wrap_request(lambda: self.permissions.get_action_permissions(action_identifier))
+
+    async def update_action_policies(self, action_identifier: str, policies: dict[str, Any]) -> dict[str, Any]:
+        return await self.wrap_request(lambda: self.permissions.update_action_policies(action_identifier, policies))

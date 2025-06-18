@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 =======
 
+
+## [0.2.18] - 2025-06-18
+
+### Added
+- Added `get_action_permissions` tool to fetch action RBAC and permissions configuration
+- Added `update_action_policies` tool to update action policies and dynamic permissions configuration
+- Added support for Port's dynamic permissions and policies through new MCP tools
+- Added `required_approval` field to `Action` model
+
 ## [0.2.17] - 2025-06-17
 
 ### Added

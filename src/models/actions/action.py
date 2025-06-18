@@ -135,6 +135,12 @@ class ActionCommon(BaseModel):
         alias="invocationMethod",
         serialization_alias="invocationMethod",
     )
+    required_approval: bool | SkipJsonSchema[None] = Field(
+        None,
+        description="Whether approval is required",
+        alias="requiredApproval",
+        serialization_alias="requiredApproval",
+    )
     approval_notification: dict[str, Any] | SkipJsonSchema[None] = Field(
         None,
         description="Approval notification configuration",
