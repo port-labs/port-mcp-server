@@ -5,12 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.17] - 2025-06-18
 
 ### Added
 - Added `get_action_permissions` tool to fetch action RBAC and permissions configuration
 - Added `update_action_policies` tool to update action policies and dynamic permissions configuration
 - Added support for Port's dynamic permissions and policies through new MCP tools
+
+## [0.2.16] - 2025-06-17
+
+### Added
+- Added custom User-Agent header to all HTTP requests sent via the MCP server
+- User-Agent header format: `port-mcp-server/{version}`
 
 ## [0.2.15] - 2025-06-16
 
