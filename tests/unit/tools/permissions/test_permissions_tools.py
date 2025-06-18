@@ -46,11 +46,13 @@ async def test_get_action_permissions_tool(mock_client_with_permissions):
     result = await tool.get_action_permissions(tool.validate_input(schema))
 
     # Verify results
-    assert "action_identifier" in result
     assert "permissions" in result
-    assert "approval_config" in result
-    assert "execution_config" in result
-    assert result["action_identifier"] == "test-action"
+    permissions = result["permissions"]
+    assert "action_identifier" in permissions
+    assert "permissions" in permissions
+    assert "approval_config" in permissions
+    assert "execution_config" in permissions
+    assert permissions["action_identifier"] == "test-action"
 
 @pytest.mark.asyncio
 async def test_update_action_policies_tool(mock_client_with_permissions):
