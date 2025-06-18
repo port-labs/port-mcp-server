@@ -57,7 +57,64 @@ Port MCP Server can be installed using two methods:
 
 ### Package Installation (uvx)
 
-Use our official [Port MCP server](https://pypi.org/project/mcp-server-port/) package.
+Use our official [Port MCP server](https://pypi.org/project/mcp-server-port/) package with uvx for easy installation and management.
+
+#### Step-by-Step Installation Guide
+
+1. **Create a Python Virtual Environment** (Recommended)
+   ```bash
+   python -m venv venv
+   ```
+
+2. **Activate the Virtual Environment**
+   ```bash
+   # On Linux/macOS:
+   source venv/bin/activate
+   
+   # On Windows:
+   venv\Scripts\activate
+   ```
+
+3. **Install the UV Package Manager**
+   ```bash
+   # Using Homebrew (macOS/Linux):
+   brew install uv
+   
+   # Or using pip:
+   pip install uv
+   ```
+
+4. **Verify UV Installation**
+   ```bash
+   which uv
+   # Should return the path to the uv executable
+   ```
+
+5. **Set Required Environment Variables**
+   ```bash
+   export PORT_CLIENT_ID="your_port_client_id"
+   export PORT_CLIENT_SECRET="your_port_client_secret"
+   export PORT_REGION="EU"  # or "US"
+   ```
+
+6. **Set Python Path** (if using virtual environment)
+   ```bash
+   export PYTHONPATH="/path/to/your/venv/bin/python"
+   ```
+
+7. **Run the MCP Server**
+   ```bash
+   uvx mcp-server-port --client-id $PORT_CLIENT_ID --client-secret $PORT_CLIENT_SECRET --region $PORT_REGION --log-level DEBUG
+   ```
+
+8. **Verify Server is Running**
+   You should start seeing logs from the server. You can also check the log file:
+   ```bash
+   cat /tmp/port-mcp.log
+   ```
+
+>[!TIP]
+>For easier management, you can create a shell script with your environment variables and run commands, or use a `.env` file to store your credentials securely.
 
 ### Docker Installation
 
