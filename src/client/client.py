@@ -11,7 +11,7 @@ from src.client.blueprints import PortBlueprintClient
 from src.client.entities import PortEntityClient
 from src.client.permissions import PortPermissionsClient
 from src.client.scorecards import PortScorecardClient
-from src.config import config
+from src.config import get_config
 from src.models.action_run.action_run import ActionRun
 from src.models.actions.action import Action
 from src.models.agent import PortAgentResponse

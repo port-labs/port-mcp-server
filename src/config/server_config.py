@@ -79,4 +79,12 @@ def init_server_config(override: dict[str, Any] | None = None):
         raise PortError(message) from e
 
 
-config: McpServerConfig = init_server_config()
+config: McpServerConfig | None = None
+
+
+def get_config() -> McpServerConfig:
+    """Get the global config, initializing it if necessary."""
+    global config
+    if config is None:
+        config = init_server_config()
+    return config

@@ -6,12 +6,13 @@ import sys
 
 import loguru
 
-from src.config import config
+from src.config import get_config
 
 
 def setup_logging():
     # Remove default logger
     loguru.logger.remove()
+    config = get_config()
     # Add stdout handler
     loguru.logger.add(
         config.log_path if config.log_path else sys.stdout,
@@ -26,4 +27,12 @@ def setup_logging():
     return loguru.logger
 
 
-logger: loguru.Logger = setup_logging()
+logger: loguru.Logger | None = None
+
+
+def get_logger() -> loguru.Logger:
+    """Get the global logger, initializing it if necessary."""
+    global logger
+    if logger is None:
+        logger = setup_logging()
+    return logger
