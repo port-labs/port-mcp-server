@@ -13,6 +13,7 @@ from src.utils import logger
 class ToolMap:
     port_client: PortClient
     tools: dict[str, Tool] = field(default_factory=dict)
+    _dynamic_tools_loaded: bool = field(default=False, init=False)
 
     def __post_init__(self):
         # Register static tools
@@ -20,20 +21,48 @@ class ToolMap:
             module = mcp_tools.__dict__[tool]
             self.register_tool(module(self.port_client))
         logger.info(f"ToolMap initialized with {len(self.tools)} static tools")
-        self._register_dynamic_action_tools()
+        # Don't load dynamic tools here - they'll be loaded lazily when needed
+
+    async def ensure_dynamic_tools_loaded(self) -> None:
+        """Ensure dynamic action tools are loaded (async version)."""
+        if self._dynamic_tools_loaded:
+            return
+            
+        try:
+            logger.info("Loading dynamic action tools asynchronously...")
+            dynamic_manager = DynamicActionToolsManager(self.port_client)
+            dynamic_tools = await dynamic_manager.get_dynamic_action_tools()
+
+            for tool in dynamic_tools:
+                self.register_tool(tool)
+
+            logger.info(f"Successfully registered {len(dynamic_tools)} dynamic action tools")
+            if len(dynamic_tools) == 0:
+                logger.warning("No dynamic action tools were registered - this may indicate a configuration or network issue")
+                
+            self._dynamic_tools_loaded = True
+        except Exception as e:
+            logger.error(f"Failed to register dynamic action tools: {e}")
+            logger.exception("Full traceback for dynamic action tools registration failure:")
+            # Mark as loaded even if failed to avoid repeated attempts
+            self._dynamic_tools_loaded = True
 
     def _register_dynamic_action_tools(self) -> None:
-        """Register dynamic tools for each Port action."""
+        """Register dynamic tools for each Port action (legacy sync version)."""
         try:
+            logger.info("Starting dynamic action tools registration...")
             dynamic_manager = DynamicActionToolsManager(self.port_client)
             dynamic_tools = dynamic_manager.get_dynamic_action_tools_sync()
 
             for tool in dynamic_tools:
                 self.register_tool(tool)
 
-            logger.info(f"Registered {len(dynamic_tools)} dynamic action tools")
+            logger.info(f"Successfully registered {len(dynamic_tools)} dynamic action tools")
+            if len(dynamic_tools) == 0:
+                logger.warning("No dynamic action tools were registered - this may indicate a configuration or network issue")
         except Exception as e:
             logger.error(f"Failed to register dynamic action tools: {e}")
+            logger.exception("Full traceback for dynamic action tools registration failure:")
 
     def list_tools(self) -> list[types.Tool]:
         return [

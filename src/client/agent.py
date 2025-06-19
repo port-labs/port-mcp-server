@@ -3,7 +3,7 @@ from typing import Any
 
 from pyport import PortClient
 
-from src.config import config
+from src.config import get_config
 from src.models.agent.port_agent_response import PortAgentResponse, PortAgentTriggerResponse
 from src.utils import logger
 from src.utils.errors import PortError
@@ -59,7 +59,7 @@ class PortAgentClient:
                 if urls:
                     action_url = urls[0]
 
-            if config.api_validation_enabled:
+            if get_config().api_validation_enabled:
                 return PortAgentResponse(
                     identifier=identifier,
                     status=status,

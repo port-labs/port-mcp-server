@@ -3,7 +3,7 @@ from typing import Any
 
 from pyport import PortClient
 
-from src.config import config
+from src.config import get_config
 from src.models.actions import Action
 from src.utils import logger
 
@@ -52,7 +52,7 @@ class PortActionClient:
             else:
                 logger.debug(f"User lacks permission for action: {action_identifier}")
 
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating actions")
             return [Action(**action) for action in filtered_actions]
         else:
@@ -65,7 +65,7 @@ class PortActionClient:
         response = self._client.make_request("GET", f"actions/{action_identifier}")
         result = response.json().get("action")
 
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating action")
             return Action(**result)
         else:
@@ -88,7 +88,7 @@ class PortActionClient:
 
         result = result.get("action", {})
 
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating action")
             action = Action(**result)
         else:
@@ -114,7 +114,7 @@ class PortActionClient:
         logger.info(f"Action '{action_identifier}' updated in Port")
 
         result = result.get("action", {})
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating action")
             action = Action(**result)
         else:

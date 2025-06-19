@@ -2,7 +2,7 @@ from typing import Any, cast
 
 from pyport import PortClient
 
-from src.config import config
+from src.config import get_config
 from src.models.entities import EntityResult
 from src.utils import PortError, logger
 
@@ -22,7 +22,7 @@ class PortEntityClient:
 
         logger.info(f"Got {len(entities_data)} entities for blueprint '{blueprint_identifier}' from Port")
         logger.debug(f"Response for get entities: {entities_data}")
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating entities")
             return [EntityResult(**entity_data) for entity_data in entities_data]
         else:
@@ -37,7 +37,7 @@ class PortEntityClient:
 
         logger.info(f"Got {len(entities_data)} entities for blueprint '{blueprint_identifier}' from Port")
         logger.debug(f"Response for search entities: {entities_data}")
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating entities")
             return [EntityResult(**entity_data) for entity_data in entities_data]
         else:
@@ -51,7 +51,7 @@ class PortEntityClient:
 
         logger.info(f"Got entity '{entity_identifier}' from blueprint '{blueprint_identifier}' from Port")
         logger.debug(f"Response for get entity: {entity_data}")
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating entity")
             return EntityResult(**entity_data)
         else:
@@ -83,7 +83,7 @@ class PortEntityClient:
         entity = created_data.get("entity", {})
 
         logger.debug(f"Response for create entity: {entity}")
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating entity")
             return EntityResult(**entity)
         else:
@@ -105,7 +105,7 @@ class PortEntityClient:
         entity = updated_data.get("entity", {})
         logger.debug(f"Response for update entity: {entity}")
 
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating entity")
             return EntityResult(**entity)
         else:
