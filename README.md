@@ -563,6 +563,82 @@ If you encounter authentication errors, verify that:
 2. You have the necessary permissions.
 3. The credentials are properly copied to your configuration.
 
+## Corporate Proxies and CA Certificate Bundles
+
+If you're using the Port MCP server in a corporate environment with proxies or security tools that inspect HTTPS traffic (like Zscaler), you may need to configure custom CA certificate bundles.
+
+The Port MCP server uses the Python `requests` library internally, which supports custom CA certificates through the `REQUESTS_CA_BUNDLE` environment variable.
+
+### Configuration
+
+Add the `REQUESTS_CA_BUNDLE` environment variable to your MCP server configuration:
+
+#### Docker Configuration
+
+```json
+{
+  "mcpServers": {
+    "port": {
+      "command": "docker",
+      "args": [
+               "run",
+                "-i",
+                "--rm",
+                "-e",
+                "PORT_CLIENT_ID",
+                "-e",
+                "PORT_CLIENT_SECRET",
+                "-e",
+                "PORT_REGION",
+                "-e",
+                "REQUESTS_CA_BUNDLE",
+                "ghcr.io/port-labs/port-mcp-server:latest"
+              ],
+              "env": {
+                "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
+                "PORT_CLIENT_SECRET": "<PORT_CLIENT_SECRET>",
+                "PORT_REGION": "<PORT_REGION>",
+                "REQUESTS_CA_BUNDLE": "/path/to/your/ca-bundle.crt"
+              }
+    }
+  }
+}
+```
+
+#### uvx Configuration
+
+```json
+{
+  "mcpServers": {
+    "Port": {
+          "command": "uvx",
+          "args": [
+              "mcp-server-port@0.2.8",
+              "--client-id",
+              "<PORT_CLIENT_ID>",
+              "--client-secret",
+              "<PORT_CLIENT_SECRET>",
+              "--region",
+              "<PORT_REGION>"
+          ],
+          "env": {
+              "PORT_CLIENT_ID": "<PORT_CLIENT_ID>",
+              "PORT_CLIENT_SECRET": "<PORT_CLIENT_SECRET>",
+              "PORT_REGION": "<PORT_REGION>",
+              "REQUESTS_CA_BUNDLE": "/path/to/your/ca-bundle.crt"
+          }
+      }
+  }
+}
+```
+
+### Notes
+
+- Replace `/path/to/your/ca-bundle.crt` with the actual path to your certificate bundle file
+- The certificate bundle should contain your corporate root certificates in PEM format
+- For Docker usage, you may need to mount the certificate file into the container using volume mounts
+- This configuration resolves issues with corporate proxies and security tools that inspect HTTPS traffic
+
 # License
 
 This MCP server is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the [MIT License](https://github.com/port-labs/port-mcp-server/blob/main/LICENSE).
