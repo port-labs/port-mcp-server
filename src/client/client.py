@@ -31,10 +31,14 @@ class PortClient:
         client_id: str | None = None,
         client_secret: str | None = None,
         region: str = "EU",
-        base_url: str = config.port_api_base,
+        base_url: str | None = None,
     ):
         if not client_id or not client_secret:
             logger.warning("PortClient initialized without credentials")
+
+        # Set default base_url if not provided
+        if base_url is None:
+            base_url = get_config().port_api_base
 
         self.base_url = base_url
         self.client_id = client_id
