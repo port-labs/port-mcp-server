@@ -87,7 +87,6 @@ Use our official [Port MCP server](https://pypi.org/project/mcp-server-port/) pa
 4. **Verify UV Installation**
    ```bash
    which uv
-   # Should return the path to the uv executable
    ```
 
 5. **Set Required Environment Variables**
@@ -104,7 +103,7 @@ Use our official [Port MCP server](https://pypi.org/project/mcp-server-port/) pa
 
 7. **Run the MCP Server**
    ```bash
-   uvx mcp-server-port --client-id $PORT_CLIENT_ID --client-secret $PORT_CLIENT_SECRET --region $PORT_REGION --log-level DEBUG
+   uvx mcp-server-port --client-id your_port_client_id --client-secret your_port_client_secret --region EU --log-level DEBUG
    ```
 
 8. **Verify Server is Running**
@@ -113,9 +112,6 @@ Use our official [Port MCP server](https://pypi.org/project/mcp-server-port/) pa
    cat /tmp/port-mcp.log
    ```
 
->[!TIP]
->For easier management, you can create a shell script with your environment variables and run commands, or use a `.env` file to store your credentials securely.
-
 ### Docker Installation
 
 Use our official Docker image:
@@ -123,6 +119,8 @@ Use our official Docker image:
 ```bash
 docker pull ghcr.io/port-labs/port-mcp-server:latest
 ```
+
+See below for detailed instructions on each MCP client.
 
 ### Additional configurations
 
