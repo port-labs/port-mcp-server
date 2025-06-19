@@ -144,4 +144,16 @@ class DynamicActionToolsManager:
 
     def get_dynamic_action_tools_sync(self) -> list[Tool]:
         """Synchronous wrapper for getting dynamic action tools."""
-        return asyncio.run(self.get_dynamic_action_tools())
+        try:
+            # First try the simple approach
+            return asyncio.run(self.get_dynamic_action_tools())
+        except RuntimeError as e:
+            if "asyncio.run() cannot be called from a running event loop" in str(e):
+                logger.warning("Cannot call asyncio.run from running event loop, skipping dynamic actions")
+                return []
+            else:
+                logger.error(f"Failed to run dynamic action tools sync: {e}")
+                return []
+        except Exception as e:
+            logger.error(f"Failed to run dynamic action tools sync: {e}")
+            return []

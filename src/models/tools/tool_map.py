@@ -25,15 +25,19 @@ class ToolMap:
     def _register_dynamic_action_tools(self) -> None:
         """Register dynamic tools for each Port action."""
         try:
+            logger.info("Starting dynamic action tools registration...")
             dynamic_manager = DynamicActionToolsManager(self.port_client)
             dynamic_tools = dynamic_manager.get_dynamic_action_tools_sync()
 
             for tool in dynamic_tools:
                 self.register_tool(tool)
 
-            logger.info(f"Registered {len(dynamic_tools)} dynamic action tools")
+            logger.info(f"Successfully registered {len(dynamic_tools)} dynamic action tools")
+            if len(dynamic_tools) == 0:
+                logger.warning("No dynamic action tools were registered - this may indicate a configuration or network issue")
         except Exception as e:
             logger.error(f"Failed to register dynamic action tools: {e}")
+            logger.exception("Full traceback for dynamic action tools registration failure:")
 
     def list_tools(self) -> list[types.Tool]:
         return [
