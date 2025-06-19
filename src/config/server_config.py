@@ -5,7 +5,7 @@ from typing import Any, Literal, cast
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field, ValidationError
 
-from src.utils import PortError, logger
+from src.utils import PortError
 
 # Load environment variables from .env file if it exists, but don't override existing env vars
 load_dotenv(override=False)
@@ -56,6 +56,9 @@ def init_server_config(override: dict[str, Any] | None = None):
             log_level=override.get("log_level", "ERROR"),
             api_validation_enabled=override.get("api_validation_enabled", "false") == "true",
         )
+        # Update logger with new config
+        from src.utils.logger import update_logger_with_config
+        update_logger_with_config(config)
         return config
     try:
         client_id = os.environ.get("PORT_CLIENT_ID", "")
@@ -72,9 +75,14 @@ def init_server_config(override: dict[str, Any] | None = None):
             log_level=cast(Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], log_level),
             api_validation_enabled=api_validation_enabled,
         )
+        # Update logger with new config
+        from src.utils.logger import update_logger_with_config
+        update_logger_with_config(config)
         return config
     except ValidationError as e:
         message = f"❌ Error initializing server config: {e.errors()}"
+        # Import logger here to avoid circular dependency
+        from src.utils import logger
         logger.error(message)
         raise PortError(message) from e
 
