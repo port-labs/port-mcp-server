@@ -1,13 +1,40 @@
-from typing import Any
+import json
+from typing import Any, Union
 
+from pydantic import field_validator, model_validator
 from src.client.client import PortClient
 from src.models.actions import Action, ActionCreate
+from src.models.actions.action import ActionInvocationMethod
 from src.models.common.annotations import Annotations
 from src.models.tools.tool import Tool
 
 
 class CreateActionToolSchema(ActionCreate):
-    pass
+    @field_validator('invocation_method', mode='before')
+    @classmethod
+    def parse_invocation_method(cls, v) -> Union[ActionInvocationMethod, dict]:
+        """Parse invocation method if it's provided as a JSON string."""
+        if isinstance(v, str):
+            try:
+                # Parse the JSON string into a dictionary
+                parsed = json.loads(v)
+                return parsed
+            except json.JSONDecodeError as e:
+                raise ValueError(f"Invalid JSON string for invocationMethod: {e}")
+        return v
+
+    @model_validator(mode='before')
+    @classmethod
+    def handle_invocation_method_alias(cls, values):
+        """Handle both invocationMethod and invocation_method field names."""
+        if isinstance(values, dict):
+            # If invocationMethod is provided as a string, parse it
+            if 'invocationMethod' in values and isinstance(values['invocationMethod'], str):
+                try:
+                    values['invocationMethod'] = json.loads(values['invocationMethod'])
+                except json.JSONDecodeError as e:
+                    raise ValueError(f"Invalid JSON string for invocationMethod: {e}")
+        return values
 
 
 class CreateActionTool(Tool[CreateActionToolSchema]):
