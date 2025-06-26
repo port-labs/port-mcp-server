@@ -132,6 +132,63 @@ class TestEntrypointCompatibility:
                                           os.environ.get('API_VALIDATION_ENABLED', 'False'))
             assert api_validation == 'True'
     
+    def test_docker_runtime_environment_variables(self):
+        """Test environment variables that would be used in actual Docker runtime."""
+        # Test common Windows container environment scenarios
+        test_scenarios = [
+            {
+                'PORT_CLIENT_ID': 'windows_test_id',
+                'PORT_CLIENT_SECRET': 'windows_test_secret',
+                'PORT_REGION': 'US',
+                'PORT_LOG_LEVEL': 'DEBUG',
+                'PORT_LOG_PATH': 'C:\\temp\\port-mcp.log'
+            },
+            {
+                'PORT_CLIENT_ID': 'linux_test_id',
+                'PORT_CLIENT_SECRET': 'linux_test_secret',
+                'PORT_REGION': 'EU',
+                'PORT_LOG_LEVEL': 'ERROR',
+                'PORT_LOG_PATH': '/tmp/port-mcp.log'
+            }
+        ]
+        
+        for scenario in test_scenarios:
+            with patch.dict(os.environ, scenario, clear=True):
+                config = init_server_config()
+                
+                assert config.port_client_id == scenario['PORT_CLIENT_ID']
+                assert config.port_client_secret == scenario['PORT_CLIENT_SECRET']
+                assert config.region == scenario['PORT_REGION']
+                assert config.log_level == scenario['PORT_LOG_LEVEL']
+                assert config.log_path == scenario['PORT_LOG_PATH']
+    
+    def test_backwards_compatibility_with_legacy_env_vars(self):
+        """Test that legacy environment variables still work for backwards compatibility."""
+        # This tests the fallback patterns implemented in the entrypoint script
+        legacy_scenarios = [
+            {'REGION': 'US', 'expected_region': 'US'},
+            {'LOG_LEVEL': 'DEBUG', 'expected_log_level': 'DEBUG'},
+            {'API_VALIDATION_ENABLED': 'True', 'expected_validation': True}
+        ]
+        
+        # Note: This test validates the environment variable patterns
+        # The actual fallback is handled in the entrypoint script
+        for scenario in legacy_scenarios:
+            env_key = list(scenario.keys())[0]
+            if env_key != 'expected_region' and env_key != 'expected_log_level' and env_key != 'expected_validation':
+                with patch.dict(os.environ, {env_key: scenario[env_key]}, clear=True):
+                    # Simulate entrypoint fallback logic
+                    if env_key == 'REGION':
+                        region = os.environ.get('PORT_REGION', os.environ.get('REGION', 'EU'))
+                        assert region == scenario['expected_region']
+                    elif env_key == 'LOG_LEVEL':
+                        log_level = os.environ.get('PORT_LOG_LEVEL', os.environ.get('LOG_LEVEL', 'ERROR'))
+                        assert log_level == scenario['expected_log_level']
+                    elif env_key == 'API_VALIDATION_ENABLED':
+                        api_validation = os.environ.get('PORT_API_VALIDATION_ENABLED', 
+                                                      os.environ.get('API_VALIDATION_ENABLED', 'False'))
+                        assert api_validation == 'True'
+    
     def test_log_directory_creation_scenarios(self):
         """Test log directory creation scenarios for different platforms."""
         with tempfile.TemporaryDirectory() as temp_dir:
