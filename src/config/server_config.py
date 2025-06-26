@@ -49,12 +49,19 @@ class McpServerConfig(BaseModel):
 def init_server_config(override: dict[str, Any] | None = None):
     global config
     if override is not None:
+        api_validation = override.get("api_validation_enabled", False)
+        # Handle both boolean and string values
+        if isinstance(api_validation, bool):
+            api_validation_enabled = api_validation
+        else:
+            api_validation_enabled = str(api_validation).lower() == "true"
+        
         config = McpServerConfig(
             port_client_id=override.get("port_client_id", ""),
             port_client_secret=override.get("port_client_secret", ""),
             region=override.get("region", "EU"),
             log_level=override.get("log_level", "ERROR"),
-            api_validation_enabled=override.get("api_validation_enabled", "false") == "true",
+            api_validation_enabled=api_validation_enabled,
         )
         return config
     try:
@@ -79,4 +86,13 @@ def init_server_config(override: dict[str, Any] | None = None):
         raise PortError(message) from e
 
 
-config: McpServerConfig = init_server_config()
+def get_config() -> McpServerConfig:
+    """Get the current configuration, initializing if needed."""
+    global config
+    if config is None:
+        init_server_config()
+    return config
+
+
+# Initialize config as None, will be initialized when first accessed
+config: McpServerConfig | None = None

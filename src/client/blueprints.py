@@ -3,7 +3,7 @@ from typing import Any
 
 from pyport import PortClient
 
-from src.config import config
+from src.config import get_config
 from src.models.blueprints import Blueprint
 from src.utils import logger
 from src.utils.errors import PortError
@@ -23,7 +23,7 @@ class PortBlueprintClient:
         logger.info("Got blueprints from Port")
 
         logger.debug(f"Response for get blueprints: {blueprints}")
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating blueprints")
             return [Blueprint(**bp) for bp in blueprints]
         else:
@@ -39,7 +39,7 @@ class PortBlueprintClient:
 
         logger.info(f"Got blueprint '{blueprint_identifier}' from Port")
 
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating blueprint")
             return Blueprint(**bp_data)
         else:
@@ -62,7 +62,7 @@ class PortBlueprintClient:
 
         result = result.get("blueprint", {})
 
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating blueprint")
             blueprint = Blueprint(**result)
         else:
@@ -86,7 +86,7 @@ class PortBlueprintClient:
         logger.info("Blueprint updated in Port")
 
         result = result.get("blueprint", {})
-        if config.api_validation_enabled:
+        if get_config().api_validation_enabled:
             logger.debug("Validating blueprint")
             blueprint = Blueprint(**result)
         else:

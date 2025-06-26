@@ -8,14 +8,16 @@ import mcp.types as types
 from mcp.server.lowlevel import Server
 
 from src.handlers import execute_tool
-from src.maps.tool_map import tool_map
+from src.maps.tool_map import get_tool_map
 from src.utils import logger
-from src.config import config
+from src.config import get_config
 
 
 def main():
     try:
         # Set logging level based on debug flag
+        config = get_config()
+        tool_map = get_tool_map()
 
         logger.info("Starting Port MCP server...")
         logger.debug(f"Server config: {config}")
