@@ -8,9 +8,9 @@ import mcp.types as types
 from mcp.server.lowlevel import Server
 
 from src.handlers import execute_tool
-from src.maps.tool_map import tool_map
+from src.maps.tool_map import get_tool_map
 from src.utils import logger
-from src.config import config
+from src.config import get_config
 
 
 def main():
@@ -18,6 +18,7 @@ def main():
         # Set logging level based on debug flag
 
         logger.info("Starting Port MCP server...")
+        config = get_config()
         logger.debug(f"Server config: {config}")
         # Initialize Port.io client
 
@@ -26,12 +27,18 @@ def main():
 
         @mcp.call_tool()
         async def call_tool(tool_name: str, arguments: dict[str, Any]):
+            tool_map = get_tool_map()
+            # Ensure dynamic tools are loaded before calling
+            await tool_map.ensure_dynamic_tools_loaded()
             tool = tool_map.get_tool(tool_name)
             logger.debug(f"Calling tool: {tool_name} with arguments: {arguments}")
             return await execute_tool(tool, arguments)
 
         @mcp.list_tools()
         async def list_tools() -> list[types.Tool]:
+            tool_map = get_tool_map()
+            # Ensure dynamic tools are loaded before listing
+            await tool_map.ensure_dynamic_tools_loaded()
             return tool_map.list_tools()
 
         # Run the server

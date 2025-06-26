@@ -5,7 +5,7 @@ Command-line interface for the Port.io MCP Server.
 import argparse
 
 from src import main
-from src.config.server_config import McpServerConfig, init_server_config
+from src.config.server_config import init_server_config
 
 
 def parse_args():
@@ -27,16 +27,19 @@ def cli_main():
     """
     # Parse command-line arguments
     args = parse_args()
+    
+    # Initialize server config with CLI arguments - this will also update the logger
     init_server_config(
-        McpServerConfig(
-            port_client_id=args.client_id,
-            port_client_secret=args.client_secret,
-            region=args.region,
-            log_level=args.log_level,
-            api_validation_enabled=args.api_validation_enabled.lower() == "true",
-        ).model_dump()
+        {
+            "port_client_id": args.client_id,
+            "port_client_secret": args.client_secret,
+            "region": args.region,
+            "log_level": args.log_level,
+            "api_validation_enabled": args.api_validation_enabled.lower() == "true",
+        }
     )
-    # Call the main function with command-line arguments
+    
+    # Call the main function 
     main()
 
 

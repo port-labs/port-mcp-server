@@ -11,7 +11,7 @@ from src.client.blueprints import PortBlueprintClient
 from src.client.entities import PortEntityClient
 from src.client.permissions import PortPermissionsClient
 from src.client.scorecards import PortScorecardClient
-from src.config import config
+from src.config import get_config
 from src.models.action_run.action_run import ActionRun
 from src.models.actions.action import Action
 from src.models.agent import PortAgentResponse
@@ -31,10 +31,14 @@ class PortClient:
         client_id: str | None = None,
         client_secret: str | None = None,
         region: str = "EU",
-        base_url: str = config.port_api_base,
+        base_url: str | None = None,
     ):
         if not client_id or not client_secret:
             logger.warning("PortClient initialized without credentials")
+
+        # Set default base_url if not provided
+        if base_url is None:
+            base_url = get_config().port_api_base
 
         self.base_url = base_url
         self.client_id = client_id
