@@ -120,6 +120,47 @@ Use our official Docker image:
 docker pull ghcr.io/port-labs/port-mcp-server:latest
 ```
 
+#### Windows Container Support
+
+The Port MCP Server supports both Linux and Windows containers. For Windows users:
+
+**Windows PowerShell:**
+```powershell
+# Set environment variables
+$env:PORT_CLIENT_ID="your_client_id"
+$env:PORT_CLIENT_SECRET="your_client_secret"
+$env:PORT_REGION="EU"
+$env:PORT_LOG_PATH="C:\temp\port-mcp.log"
+
+# Run the container
+docker run -i --rm `
+  -e PORT_CLIENT_ID `
+  -e PORT_CLIENT_SECRET `
+  -e PORT_REGION `
+  -e PORT_LOG_PATH `
+  ghcr.io/port-labs/port-mcp-server:latest
+```
+
+**Windows Command Prompt:**
+```cmd
+rem Set environment variables
+set PORT_CLIENT_ID=your_client_id
+set PORT_CLIENT_SECRET=your_client_secret
+set PORT_REGION=EU
+set PORT_LOG_PATH=C:\temp\port-mcp.log
+
+rem Run the container
+docker run -i --rm ^
+  -e PORT_CLIENT_ID ^
+  -e PORT_CLIENT_SECRET ^
+  -e PORT_REGION ^
+  -e PORT_LOG_PATH ^
+  ghcr.io/port-labs/port-mcp-server:latest
+```
+
+> [!TIP]
+> **Windows Users**: When specifying log paths, use Windows-style paths (e.g., `C:\temp\port-mcp.log`) for better compatibility. The container will automatically handle path conversion.
+
 See below for detailed instructions on each MCP client.
 
 ### Additional configurations
@@ -131,6 +172,7 @@ You can pass these additional arguments for more advanced configuration:
 |------------------------|----------|---------------------------|-------------|---------------|
 | Log Level | `log-level` | `PORT_LOG_LEVEL` | Controls the level of log output | `ERROR` |
 | API Validation | `api-validation-enabled` | `PORT_API_VALIDATION_ENABLED` | Controls if API schema should be validated and fail if it's not valid | `False` |
+| Log File Path | N/A | `PORT_LOG_PATH` | Custom path for the log file (supports Windows and Unix paths) | `/tmp/port-mcp.log` |
 
 
 ## Usage with Claude Desktop
@@ -617,6 +659,49 @@ If you encounter authentication errors, verify that:
 1. Your Port credentials are correctly set in the arguments.
 2. You have the necessary permissions.
 3. The credentials are properly copied to your configuration.
+
+## Windows-Specific Issues
+
+### Docker on Windows
+
+If you experience issues running Docker containers on Windows:
+
+1. **Path Issues**: Use Windows-style paths for `PORT_LOG_PATH`:
+   ```powershell
+   $env:PORT_LOG_PATH="C:\temp\port-mcp.log"
+   ```
+
+2. **Virtual Environment Detection**: The entrypoint script automatically detects both Unix (`/.venv/bin/activate`) and Windows (`/.venv/Scripts/activate`) virtual environments.
+
+3. **Line Endings**: If you encounter script execution errors, ensure the `entrypoint.sh` file has Unix line endings (LF) rather than Windows line endings (CRLF).
+
+4. **Docker Desktop**: Ensure Docker Desktop is running and configured to use Linux containers for the best compatibility.
+
+### Environment Variables
+
+For Windows users setting environment variables:
+
+**PowerShell:**
+```powershell
+$env:PORT_CLIENT_ID="your_client_id"
+$env:PORT_CLIENT_SECRET="your_client_secret"
+$env:PORT_REGION="EU"
+```
+
+**Command Prompt:**
+```cmd
+set PORT_CLIENT_ID=your_client_id
+set PORT_CLIENT_SECRET=your_client_secret
+set PORT_REGION=EU
+```
+
+### Log File Access
+
+If you cannot access log files:
+
+1. Check that the log directory exists and is writable
+2. Use a Windows-accessible path like `C:\temp\port-mcp.log`
+3. Verify Docker has access to the specified directory
 
 # License
 
