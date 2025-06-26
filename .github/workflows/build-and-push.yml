@@ -47,7 +47,7 @@ jobs:
         with:
           context: .
           file: Dockerfile
-          platforms: linux/amd64,linux/arm64/v8
+          platforms: linux/amd64,linux/arm64/v8,windows/amd64
           push: true
           tags: |
             ghcr.io/port-labs/port-mcp-server:${{ steps.version.outputs.VERSION }}
