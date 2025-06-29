@@ -35,11 +35,9 @@ class PortEntityClient:
 
         response_data = self._client.entities.search_blueprint_entities(blueprint_identifier, search_query)
         
-        # Extract entities from the response dictionary
         entities_data = response_data.get("entities", [])
 
         logger.info(f"Got {len(entities_data)} entities for blueprint '{blueprint_identifier}' from Port")
-        logger.debug(f"Response for search entities: {response_data}")
         if config.api_validation_enabled:
             logger.debug("Validating entities")
             return [EntityResult(**entity_data) for entity_data in entities_data]
