@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 =======
 
+## [0.2.19] - 2025-06-29
+
+### Fixed
+- Fixed self-service action creation when `invocationMethod` is provided as JSON string instead of object
+- Added field validation and model validation to parse JSON strings into proper invocation method objects
+- Enhanced tool description and field descriptions to guide AI models to provide correct format from start
+
+### Added
+- Comprehensive test cases for string-based invocation method inputs (WEBHOOK and GITHUB types)
+- Support for both `invocationMethod` and `invocation_method` field name variants when parsing JSON strings
+
 
 ## [0.2.18] - 2025-06-18
 
