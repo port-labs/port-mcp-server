@@ -52,15 +52,27 @@ class GetEntitiesTool(Tool[GetEntitiesToolSchema]):
         
         search_query = {
             "query": {
-                "$blueprint": {"=": blueprint_identifier}
+                "combinator": "and",
+                "rules": [
+                    {
+                        "property": "$blueprint",
+                        "operator": "=",
+                        "value": blueprint_identifier
+                    }
+                ]
             }
         }
         
         if not detailed:
-            search_query["include"] = ["$identifier", "$title"]
+            search_query["include"] = ["identifier", "title"]
 
         raw_entities = await self.port_client.search_entities(blueprint_identifier, search_query)
-        processed_entities = [entity.model_dump(exclude_unset=True, exclude_none=True) for entity in raw_entities]
+        
+        processed_entities = []
+        for entity in raw_entities:
+            entity_dict = entity.model_dump(exclude_unset=True, exclude_none=True)
+            entity_dict["blueprint"] = blueprint_identifier
+            processed_entities.append(entity_dict)
 
-        response = GetEntitiesToolResponse.construct(entities=processed_entities)
+        response = GetEntitiesToolResponse(entities=processed_entities)
         return response.model_dump(exclude_unset=True, exclude_none=True)
