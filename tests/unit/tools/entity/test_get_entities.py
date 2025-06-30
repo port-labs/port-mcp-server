@@ -23,7 +23,6 @@ async def test_get_entities_tool_detailed_true(mock_client_with_entities):
     result = await tool.get_entities(tool.validate_input(schema))
     
     expected_query = {
-        "query": {
             "combinator": "and",
             "rules": [
                 {
@@ -33,8 +32,11 @@ async def test_get_entities_tool_detailed_true(mock_client_with_entities):
                 }
             ]
         }
-    }
-    mock_client_with_entities.search_entities.assert_awaited_once_with("test-blueprint", expected_query)
+    mock_client_with_entities.search_entities.assert_awaited_once_with(
+        blueprint_identifier="test-blueprint", 
+        query=expected_query, 
+        include=None
+    )
     assert result is not None
     assert "entities" in result
     assert result["entities"][0]["blueprint"] == "test-blueprint"
@@ -49,19 +51,20 @@ async def test_get_entities_tool_detailed_false(mock_client_with_entities):
     result = await tool.get_entities(tool.validate_input(schema))
     
     expected_query = {
-        "query": {
-            "combinator": "and",
-            "rules": [
-                {
-                    "property": "$blueprint",
-                    "operator": "=",
-                    "value": "test-blueprint"
-                }
-            ]
-        },
-        "include": ["identifier", "title"]
+        "combinator": "and",
+        "rules": [
+            {
+                "property": "$blueprint",
+                "operator": "=",
+                "value": "test-blueprint"
+            }
+        ]
     }
-    mock_client_with_entities.search_entities.assert_awaited_once_with("test-blueprint", expected_query)
+    mock_client_with_entities.search_entities.assert_awaited_once_with(
+        blueprint_identifier="test-blueprint", 
+        query=expected_query, 
+        include=["$identifier", "$title"]
+    )
     assert result is not None
     assert "entities" in result
     assert result["entities"][0]["blueprint"] == "test-blueprint"
@@ -76,19 +79,20 @@ async def test_get_entities_tool_default_detailed(mock_client_with_entities):
     result = await tool.get_entities(tool.validate_input(schema))
     
     expected_query = {
-        "query": {
-            "combinator": "and",
-            "rules": [
-                {
-                    "property": "$blueprint",
-                    "operator": "=",
-                    "value": "test-blueprint"
-                }
-            ]
-        },
-        "include": ["identifier", "title"]
+        "combinator": "and",
+        "rules": [
+            {
+                "property": "$blueprint",
+                "operator": "=",
+                "value": "test-blueprint"
+            }
+        ]
     }
-    mock_client_with_entities.search_entities.assert_awaited_once_with("test-blueprint", expected_query)
+    mock_client_with_entities.search_entities.assert_awaited_once_with(
+        blueprint_identifier="test-blueprint", 
+        query=expected_query, 
+        include=["$identifier", "$title"]
+    )
     assert result is not None
     assert "entities" in result
     assert result["entities"][0]["blueprint"] == "test-blueprint"
