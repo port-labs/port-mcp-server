@@ -50,23 +50,24 @@ class GetEntitiesTool(Tool[GetEntitiesToolSchema]):
 
         detailed = args.get("detailed", False)
         
-        search_query = {
-            "query": {
-                "combinator": "and",
-                "rules": [
-                    {
-                        "property": "$blueprint",
-                        "operator": "=",
-                        "value": blueprint_identifier
-                    }
-                ]
-            }
+        query = {
+            "combinator": "and",
+            "rules": [
+                {
+                    "property": "$blueprint",
+                    "operator": "=",
+                    "value": blueprint_identifier
+                }
+            ]
         }
         
-        if not detailed:
-            search_query["include"] = ["identifier", "title"]
+        include = ["$identifier", "$title"] if not detailed else None
 
-        raw_entities = await self.port_client.search_entities(blueprint_identifier, search_query)
+        raw_entities = await self.port_client.search_entities(
+            blueprint_identifier=blueprint_identifier,
+            query=query,
+            include=include
+        )
         
         processed_entities = []
         for entity in raw_entities:
