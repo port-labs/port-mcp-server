@@ -1,8 +1,8 @@
 """Port.io action model."""
 
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
-from pydantic import Field
+from pydantic import Discriminator, Field
 from pydantic.json_schema import SkipJsonSchema
 
 from src.models.common.base_pydantic import BaseModel
@@ -110,13 +110,14 @@ class ActionInvocationMethodKafka(BaseModel):
 
 
 # Union type for all invocation methods
-ActionInvocationMethod = (
+ActionInvocationMethod = Annotated[
     ActionInvocationMethodGitHub
     | ActionInvocationMethodGitLab
     | ActionInvocationMethodAzureDevOps
     | ActionInvocationMethodWebhook
-    | ActionInvocationMethodKafka
-)
+    | ActionInvocationMethodKafka,
+    Discriminator("type")
+]
 
 
 class ActionCommon(BaseModel):
