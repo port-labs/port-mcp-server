@@ -43,16 +43,7 @@ class CreateActionTool(Tool[CreateActionToolSchema]):
     def __init__(self, port_client: PortClient):
         super().__init__(
             name="create_action",
-            description="""Create a new self-service action or automation in your Port account. 
-
-IMPORTANT: When providing the invocationMethod, always provide it as a JSON object, NOT as a JSON string. 
-
-Examples of correct invocationMethod formats:
-- WEBHOOK: {"type": "WEBHOOK", "url": "https://example.com/webhook", "method": "POST"}
-- GITHUB: {"type": "GITHUB", "org": "my-org", "repo": "my-repo", "workflow": "deploy.yml"}
-- GITLAB: {"type": "GITLAB", "projectName": "my-project", "groupName": "my-group", "agent": true}
-
-To learn more about actions and automations, check out the documentation at https://docs.port.io/actions-and-automations/""",
+            description="Create a new self-service action.",
             function=self.create_action,
             input_schema=CreateActionToolSchema,
             output_schema=Action,
