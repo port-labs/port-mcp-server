@@ -131,7 +131,7 @@ class ActionCommon(BaseModel):
     trigger: ActionTrigger = Field(..., description="The trigger configuration")
     invocation_method: ActionInvocationMethod = Field(
         ...,
-        description="The invocation method configuration",
+        description="The invocation method configuration. Must be a JSON object (not a string) with 'type' field and method-specific properties.",
         alias="invocationMethod",
         serialization_alias="invocationMethod",
     )
