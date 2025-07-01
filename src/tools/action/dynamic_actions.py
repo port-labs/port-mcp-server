@@ -109,11 +109,7 @@ class DynamicActionToolsManager:
 
             for action_data in actions:
                 try:
-                    action_identifier = (
-                        action_data.get("identifier")
-                        if isinstance(action_data, dict)
-                        else action_data.identifier
-                    )
+                    action_identifier = action_data.get("identifier") if isinstance(action_data, dict) else action_data.identifier
 
                     if not action_identifier:
                         logger.warning("Skipping action with no identifier")
@@ -130,9 +126,7 @@ class DynamicActionToolsManager:
                         tools.append(dynamic_tool)
 
                 except Exception as e:
-                    logger.warning(
-                        f"Failed to create dynamic tool for action {action_identifier}: {e}"
-                    )
+                    logger.warning(f"Failed to create dynamic tool for action {action_identifier}: {e}")
                     continue
 
             logger.info(f"Created {len(tools)} dynamic action tools")

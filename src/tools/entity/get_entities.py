@@ -49,13 +49,9 @@ class GetEntitiesTool(Tool[GetEntitiesToolSchema]):
             raise ValueError("Blueprint identifier is required")
 
         detailed = args.get("detailed", False)
-        
-        search_query = {
-            "query": {
-                "$blueprint": {"=": blueprint_identifier}
-            }
-        }
-        
+
+        search_query = {"query": {"$blueprint": {"=": blueprint_identifier}}}
+
         if not detailed:
             search_query["include"] = ["$identifier", "$title"]
 

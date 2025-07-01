@@ -14,21 +14,21 @@ from src.utils import logger
 
 class UpdateActionPoliciesTool(Tool[UpdateActionPoliciesToolSchema]):
     """Update policies configuration for a specific action in Port.
-    
+
     This tool enables updating Port's dynamic permissions and RBAC policies for actions.
     Port's dynamic permissions system allows flexible permission assignment based on:
-    
+
     - User properties (e.g., team membership, role)
     - Entity properties (e.g., entity ownership, blueprint, properties)
     - Time-based conditions
     - Custom policies using JQ expressions
-    
+
     The policies configuration includes:
     - Execution permissions: Who can execute the action
     - Approval workflows: Multi-stage approval requirements
     - Conditions: Dynamic conditions for permission evaluation
     - Teams and roles: Team-based and role-based access control
-    
+
     Example policy configurations:
     - Team-based: Allow only specific teams to execute actions
     - Entity ownership: Allow only entity owners to perform actions
@@ -153,15 +153,13 @@ Supports Port's full dynamic permissions capabilities as described in the Port d
             raise ValueError("Permissions client not available")
 
         # Update action policies using the permissions client
-        result = await self.port_client.permissions.update_action_policies(
-            props.action_identifier, props.policies
-        )
+        result = await self.port_client.permissions.update_action_policies(props.action_identifier, props.policies)
 
         response = UpdateActionPoliciesToolResponse(
             action_identifier=result.get("action_identifier", props.action_identifier),
             updated_policies=result.get("updated_policies", {}),
-            success=result.get("success", False)
+            success=result.get("success", False),
         )
-        
+
         logger.info(f"Policy update result for '{props.action_identifier}': {response.success}")
         return response.model_dump(exclude_unset=True, exclude_none=True)
