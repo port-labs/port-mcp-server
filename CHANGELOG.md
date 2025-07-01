@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 =======
 
 
+## [0.2.19] - 2025-06-30
+
+### Changed
+- `get_entities` now returns also the blueprint identifier for consistency.
+
+### Fixed
+- `get_entities` tool now returns proper results when called with `details=False`.
+
 ## [0.2.18] - 2025-06-18
 
 ### Added

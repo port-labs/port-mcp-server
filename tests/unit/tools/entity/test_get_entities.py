@@ -7,7 +7,7 @@ from src.tools.entity import GetEntitiesTool
 @pytest.fixture
 def mock_client_with_entities(mock_client):
     """Add specific return values for this test"""
-    mock_client.search_entities.return_value = [EntityResult(identifier="test-entity", blueprint="test-blueprint")]
+    mock_client.search_entities.return_value = [EntityResult(identifier="test-entity", blueprint="test-blueprint", title="Test Entity")]
     return mock_client
 
 
@@ -22,10 +22,24 @@ async def test_get_entities_tool_detailed_true(mock_client_with_entities):
     schema = {"blueprint_identifier": "test-blueprint", "detailed": True}
     result = await tool.get_entities(tool.validate_input(schema))
     
-    # Verify search_entities was called with correct query (no include filter for detailed=True)
-    expected_query = {"query": {"$blueprint": {"=": "test-blueprint"}}}
-    mock_client_with_entities.search_entities.assert_awaited_once_with("test-blueprint", expected_query)
+    expected_query = {
+            "combinator": "and",
+            "rules": [
+                {
+                    "property": "$blueprint",
+                    "operator": "=",
+                    "value": "test-blueprint"
+                }
+            ]
+        }
+    mock_client_with_entities.search_entities.assert_awaited_once_with(
+        blueprint_identifier="test-blueprint", 
+        query=expected_query, 
+        include=None
+    )
     assert result is not None
+    assert "entities" in result
+    assert result["entities"][0]["blueprint"] == "test-blueprint"
 
 
 @pytest.mark.asyncio
@@ -36,13 +50,24 @@ async def test_get_entities_tool_detailed_false(mock_client_with_entities):
     schema = {"blueprint_identifier": "test-blueprint", "detailed": False}
     result = await tool.get_entities(tool.validate_input(schema))
     
-    # Verify search_entities was called with correct query (include filter for detailed=False)
     expected_query = {
-        "query": {"$blueprint": {"=": "test-blueprint"}},
-        "include": ["$identifier", "$title"]
+        "combinator": "and",
+        "rules": [
+            {
+                "property": "$blueprint",
+                "operator": "=",
+                "value": "test-blueprint"
+            }
+        ]
     }
-    mock_client_with_entities.search_entities.assert_awaited_once_with("test-blueprint", expected_query)
+    mock_client_with_entities.search_entities.assert_awaited_once_with(
+        blueprint_identifier="test-blueprint", 
+        query=expected_query, 
+        include=["$identifier", "$title"]
+    )
     assert result is not None
+    assert "entities" in result
+    assert result["entities"][0]["blueprint"] == "test-blueprint"
 
 
 @pytest.mark.asyncio
@@ -53,10 +78,21 @@ async def test_get_entities_tool_default_detailed(mock_client_with_entities):
     schema = {"blueprint_identifier": "test-blueprint"}
     result = await tool.get_entities(tool.validate_input(schema))
     
-    # Verify search_entities was called with correct query (include filter for default detailed=False)
     expected_query = {
-        "query": {"$blueprint": {"=": "test-blueprint"}},
-        "include": ["$identifier", "$title"]
+        "combinator": "and",
+        "rules": [
+            {
+                "property": "$blueprint",
+                "operator": "=",
+                "value": "test-blueprint"
+            }
+        ]
     }
-    mock_client_with_entities.search_entities.assert_awaited_once_with("test-blueprint", expected_query)
+    mock_client_with_entities.search_entities.assert_awaited_once_with(
+        blueprint_identifier="test-blueprint", 
+        query=expected_query, 
+        include=["$identifier", "$title"]
+    )
     assert result is not None
+    assert "entities" in result
+    assert result["entities"][0]["blueprint"] == "test-blueprint"
