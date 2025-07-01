@@ -71,7 +71,7 @@ class PortActionClient:
         else:
             logger.debug("Skipping API validation for action")
             return Action.construct(**result)
-
+        
     async def create_action(self, action_data: dict[str, Any]) -> Action:
         """Create a new action"""
         data_json = json.dumps(action_data)
@@ -104,7 +104,9 @@ class PortActionClient:
         logger.info(f"Updating action '{action_identifier}' in Port")
         logger.debug(f"Input from tool to update action: {data_json}")
 
-        response = self._client.make_request("PUT", f"actions/{action_identifier}", json=action_data)
+        response = self._client.make_request(
+            "PUT", f"actions/{action_identifier}", json=action_data
+        )
         result = response.json()
         if not result.get("ok"):
             message = f"Failed to update action: {result}"

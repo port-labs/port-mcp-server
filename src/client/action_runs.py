@@ -10,7 +10,9 @@ class PortActionRunClient:
 
     async def create_global_action_run(self, action_identifier: str, **kwargs) -> ActionRun:
         logger.info(f"Creating global action run for: {action_identifier}")
-        response = self._client.make_request("POST", f"actions/{action_identifier}/runs", json=kwargs)
+        response = self._client.make_request(
+            "POST", f"actions/{action_identifier}/runs", json=kwargs
+        )
         action_run_data = response.json().get("run", response.json())
         return ActionRun.construct(**action_run_data)
 

@@ -16,7 +16,7 @@ class PortPermissionsClient:
     async def get_action_permissions(self, action_identifier: str) -> dict[str, Any]:
         """Get permissions configuration for a specific action."""
         logger.info(f"Getting permissions for action: {action_identifier}")
-
+        
         try:
             response = self._client.make_request("GET", f"actions/{action_identifier}/permissions")
             result = response.json()
@@ -41,18 +41,21 @@ class PortPermissionsClient:
     async def update_action_policies(self, action_identifier: str, policies: dict[str, Any]) -> dict[str, Any]:
         """Update policies configuration for a specific action."""
         logger.info(f"Updating policies for action: {action_identifier}")
-
+        
         try:
             # Prepare the payload for updating policies - the policies should be sent directly
             payload = policies
-
+            
             response = self._client.make_request("PATCH", f"actions/{action_identifier}/permissions", json=payload)
             result = response.json()
             permissions = result.get("permissions", {})
             if result.get("ok"):
                 updated_info = {
                     "action_identifier": action_identifier,
-                    "updated_policies": {"execute": permissions.get("execute", {}), "approve": permissions.get("approve", {})},
+                    "updated_policies": {
+                        "execute": permissions.get("execute", {}),
+                        "approve": permissions.get("approve", {})
+                    },
                     "success": True,
                 }
                 logger.info(f"Successfully updated policies for action: {action_identifier}")

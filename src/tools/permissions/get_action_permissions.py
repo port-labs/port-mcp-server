@@ -42,12 +42,16 @@ class GetActionPermissionsTool(Tool[GetActionPermissionsToolSchema]):
             raise ValueError("Permissions client not available")
 
         # Get action permissions configuration
-        permissions_info = await self.port_client.permissions.get_action_permissions(props.action_identifier)
-
+        permissions_info = await self.port_client.permissions.get_action_permissions(
+            props.action_identifier
+        )
+        
         if not permissions_info:
             raise ValueError(f"Action '{props.action_identifier}' not found or no permissions available")
 
-        response = GetActionPermissionsToolResponse(permissions=permissions_info)
-
+        response = GetActionPermissionsToolResponse(
+            permissions=permissions_info
+        )
+        
         logger.info(f"Retrieved permissions configuration for action '{props.action_identifier}'")
         return response.model_dump(exclude_unset=True, exclude_none=True)
