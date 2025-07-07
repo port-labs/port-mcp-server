@@ -34,3 +34,4 @@ async def test_get_scorecards_tool(mock_client_with_scorecards):
     result = await tool.get_scorecards(tool.validate_input(schema))
     mock_client_with_scorecards.get_scorecards.assert_awaited_once_with("test-blueprint")
     assert result is not None
+    assert result["scorecards"][0]["identifier"] == "test-scorecard"

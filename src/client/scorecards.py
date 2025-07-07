@@ -18,17 +18,36 @@ class PortScorecardClient:
     async def get_scorecards(self, blueprint_identifier: str) -> list[Scorecard]:
         logger.info(f"Getting all scorecards for blueprint '{blueprint_identifier}' from Port")
 
-        scorecards_data = self._client.scorecards.get_scorecards(blueprint_identifier)
+        response = self._client.scorecards.get_scorecards(blueprint_identifier)
 
-        logger.info(f"Got {len(scorecards_data)} scorecards for blueprint '{blueprint_identifier}' from Port")
-        logger.debug(f"Response for get scorecards: {scorecards_data}")
+        logger.info(f"Got {len(response.get('scorecards', []))} scorecards for blueprint '{blueprint_identifier}' from Port")
+        logger.debug(f"Response for get scorecards: {response}")
 
-        if config.api_validation_enabled:
-            logger.debug("Validating scorecards")
-            return [Scorecard(**scorecard_data) for scorecard_data in scorecards_data]
-        else:
-            logger.debug("Skipping API validation for scorecards")
-            return [Scorecard.construct(**scorecard_data) for scorecard_data in scorecards_data]
+        scorecards_data = response.get("scorecards", [])
+        processed_scorecards = []
+        for scorecard_data in scorecards_data:
+            data = scorecard_data
+            if isinstance(data, str):
+                try:
+                    data = json.loads(data)
+                except json.JSONDecodeError:
+                    logger.warning(
+                        f"Skipping scorecard item because it's not a valid JSON string: {scorecard_data}"
+                    )
+                    continue
+
+            if not isinstance(data, dict):
+                logger.warning(f"Skipping scorecard item because it's not a dictionary: {scorecard_data}")
+                continue
+
+            if config.api_validation_enabled:
+                logger.debug("Validating scorecard")
+                processed_scorecards.append(Scorecard(**data))
+            else:
+                logger.debug("Skipping API validation for scorecard")
+                processed_scorecards.append(Scorecard.construct(**data))
+
+        return processed_scorecards
 
     async def get_scorecard(self, blueprint_id: str, scorecard_id: str) -> Scorecard:
         logger.info(f"Getting scorecard '{scorecard_id}' from blueprint '{blueprint_id}' from Port")
