@@ -26,10 +26,10 @@ class PortScorecardClient:
 
         if config.api_validation_enabled:
             logger.debug("Validating scorecards")
-            return [Scorecard(**scorecard_data) for scorecard_data in scorecards_data if isinstance(scorecard_data, dict)]
+            return [Scorecard(**scorecard_data) for scorecard_data in scorecards_data]
         else:
             logger.debug("Skipping API validation for scorecards")
-            return [Scorecard.construct(**scorecard_data) for scorecard_data in scorecards_data if isinstance(scorecard_data, dict)]
+            return [Scorecard.construct(**scorecard_data) for scorecard_data in scorecards_data]
 
     async def get_scorecard(self, blueprint_id: str, scorecard_id: str) -> Scorecard:
         logger.info(f"Getting scorecard '{scorecard_id}' from blueprint '{blueprint_id}' from Port")
