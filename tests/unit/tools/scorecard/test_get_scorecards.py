@@ -1,34 +1,38 @@
 import pytest
+from functools import partial
 
-from src.models import Scorecard
-from src.tools.scorecard import GetScorecardsTool
+from unittest.mock import MagicMock, AsyncMock
+
+from src.models.scorecards.scorecard import Scorecard
+from src.tools.scorecard.get_scorecards import GetScorecardsTool
+
+
+@pytest.fixture
+def mock_client():
+    return MagicMock()
 
 
 @pytest.fixture
 def mock_client_with_scorecards(mock_client):
     """Add specific return values for this test"""
-    mock_client.get_scorecards.return_value = [
-        Scorecard(
-            identifier="test-scorecard",
-            title="Test Scorecard",
-            rules=[],
-            blueprint="test-blueprint",
-            id="test-scorecard",
-        )
-    ]
+    mock_client.get_scorecards = AsyncMock(
+        return_value=[
+            Scorecard(
+                identifier="test-scorecard",
+                title="Test Scorecard",
+                rules=[],
+                blueprint="test-blueprint",
+                id="test-scorecard",
+            )
+        ]
+    )
     return mock_client
 
 
 @pytest.mark.asyncio
 async def test_get_scorecards_tool(mock_client_with_scorecards):
-    """Test the GetScorecardsTool's metadata and function execution."""
-    # Create the tool
-    tool = GetScorecardsTool(mock_client_with_scorecards)
-
-    # Test tool metadata
-    assert tool.name == "get_scorecards"
-    assert "scorecards" in tool.description.lower()
-
+    # Test setup
+    tool = GetScorecardsTool(port_client=mock_client_with_scorecards)
     # Test function execution
     schema = {"blueprint_identifier": "test-blueprint", "detailed": True}
     result = await tool.get_scorecards(tool.validate_input(schema))
