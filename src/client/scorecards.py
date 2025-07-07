@@ -18,10 +18,11 @@ class PortScorecardClient:
     async def get_scorecards(self, blueprint_identifier: str) -> list[Scorecard]:
         logger.info(f"Getting all scorecards for blueprint '{blueprint_identifier}' from Port")
 
-        scorecards_data = self._client.scorecards.get_scorecards(blueprint_identifier)
+        response = self._client.scorecards.get_scorecards(blueprint_identifier)
 
+        scorecards_data = response.get("scorecards", [])
         logger.info(f"Got {len(scorecards_data)} scorecards for blueprint '{blueprint_identifier}' from Port")
-        logger.debug(f"Response for get scorecards: {scorecards_data}")
+        logger.debug(f"Response for get scorecards: {response}")
 
         if config.api_validation_enabled:
             logger.debug("Validating scorecards")
