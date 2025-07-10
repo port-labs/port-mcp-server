@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/port-labs-port-mcp-server-badge.png)](https://mseep.ai/app/port-labs-port-mcp-server)
+
 # Port MCP Server
 
 The [Port IO](https://www.getport.io/) MCP server is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) server, enabling advanced automations and natual language interactions for developers and AI applications.
