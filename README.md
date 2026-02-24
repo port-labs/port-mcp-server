@@ -1,3 +1,17 @@
+# ⚠️ This Repository is No Longer Maintained
+
+> [!WARNING]
+> **This repository has been deprecated and is no longer actively maintained or supported.**
+> No further updates, bug fixes, or security patches will be provided.
+
+## [Migrate to Port's Remote MCP Server](https://docs.port.io/ai-interfaces/port-mcp-server/overview-and-installation#installing-port-mcp)
+
+We strongly encourage all users to migrate to **Port's Remote MCP Server**, which is the actively maintained and supported solution.
+
+The Remote MCP Server offers full feature parity and ongoing improvements backed by the Port team.
+
+---
+
 # Port MCP Server
 
 The [Port IO](https://www.getport.io/) MCP server is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) server, enabling advanced automations and natual language interactions for developers and AI applications.
